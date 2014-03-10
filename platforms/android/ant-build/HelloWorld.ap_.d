@@ -87,6 +87,7 @@
 /home/vagrant/dev/bible/platforms/android/assets/www/res/screen/ios/screen-ipad-landscape.png \
 /home/vagrant/dev/bible/platforms/android/assets/www/res/screen/ios/screen-iphone-portrait-2x.png \
 /home/vagrant/dev/bible/platforms/android/assets/www/res/screen/ios/screen-iphone-landscape-2x.png \
+/home/vagrant/dev/bible/platforms/android/assets/www/css/slide.css \
 /home/vagrant/dev/bible/platforms/android/assets/www/css/index.css \
 /home/vagrant/dev/bible/platforms/android/assets/www/spec/lib \
 /home/vagrant/dev/bible/platforms/android/assets/www/spec/index.js \
@@ -96,5 +97,10 @@
 /home/vagrant/dev/bible/platforms/android/assets/www/spec/lib/jasmine-1.2.0/jasmine.js \
 /home/vagrant/dev/bible/platforms/android/assets/www/spec/lib/jasmine-1.2.0/jasmine.css \
 /home/vagrant/dev/bible/platforms/android/assets/www/spec/lib/jasmine-1.2.0/jasmine-html.js \
+/home/vagrant/dev/bible/platforms/android/assets/www/js/jquery.min.js \
+/home/vagrant/dev/bible/platforms/android/assets/www/js/slide.js \
+/home/vagrant/dev/bible/platforms/android/assets/www/js/jquery.min.map \
+/home/vagrant/dev/bible/platforms/android/assets/www/js/jquery.mobile.min.js \
+/home/vagrant/dev/bible/platforms/android/assets/www/js/jquery.mobile-1.4.2.min.map \
 /home/vagrant/dev/bible/platforms/android/assets/www/js/index.js \
 /home/vagrant/dev/bible/platforms/android/ant-build/AndroidManifest.xml \
