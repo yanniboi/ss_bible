@@ -38,6 +38,7 @@ function txSuccess() {
 
 function loadRepos() {
     $.ajax("https://api.github.com/legacy/repos/search/javascript").done(function(data) {
+        console.log("started");
         var i, repo;
         //var test = data.repositories[0].created;
         console.log(data.repositories[0].created);
