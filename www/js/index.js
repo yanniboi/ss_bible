@@ -16,9 +16,7 @@ var app = {
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         var db;
-        console.log("Load Start");
         loadRepos();
-        console.log("Load finish");
         db = window.openDatabase("repodb","0.1","GitHub Repo Db", 1000);
         db.transaction(createDb, txError, txSuccess);
     }
@@ -41,6 +39,9 @@ function txSuccess() {
 function loadRepos() {
     $.ajax("https://api.github.com/legacy/repos/search/javascript").done(function(data) {
         var i, repo;
+        //var test = data.repositories[0].created;
+        console.log(data.repositories[0].created);
+
         $.each(data.repositories, function (i, repo) {
             $("#allRepos").append("<li><a href='repo-detail.html?owner=" + repo.username + "&name=" + repo.name + "'>"
             + "<h4>" + repo.name + "</h4>"
