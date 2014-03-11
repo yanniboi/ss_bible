@@ -37,19 +37,19 @@ function txSuccess() {
 }
 
 function loadRepos() {
-    $.ajax("https://api.github.com/legacy/repos/search/javascript").done(function(data) {
+    jQuery.ajax("https://api.github.com/legacy/repos/search/javascript").done(function(data) {
         console.log("started");
         var i, repo;
         //var test = data.repositories[0].created;
         console.log(data.repositories[0].created);
 
-        $.each(data.repositories, function (i, repo) {
-            $("#allRepos").append("<li><a href='repo-detail.html?owner=" + repo.username + "&name=" + repo.name + "'>"
+        jQuery.each(data.repositories, function (i, repo) {
+            jQuery("#allRepos").append("<li><a href='repo-detail.html?owner=" + repo.username + "&name=" + repo.name + "'>"
             + "<h4>" + repo.name + "</h4>"
             + "<p>" + repo.username + "</p></a></li>");
         });
         console.log("Avout to refresh");
-        $('#allRepos').listview('refresh');
+        jQuery('#allRepos').listview('refresh');
     });
 }
 
@@ -65,31 +65,31 @@ function getUrlVars() {
     return vars;
 }
 
-$('#reposDetail').live('pageshow', function(event) {
+jQuery('#reposDetail').live('pageshow', function(event) {
     var owner = getUrlVars().owner;
     var name = getUrlVars().name;
     loadRepoDetail(owner,name);
-    $("#saveBtn").bind("click", saveFave);
+    jQuery("#saveBtn").bind("click", saveFave);
     checkFave();
 });
 
 function loadRepoDetail(owner,name) {
-     $.ajax("https://api.github.com/repos/" + owner + "/" + name).done(function(data) {
+     jQuery.ajax("https://api.github.com/repos/" + owner + "/" + name).done(function(data) {
          console.log(data);
      });
 }
 
 function loadRepoDetail(owner,name) {
-     $.ajax("https://api.github.com/repos/" + owner + "/" + name).done(function(data) {
+     jQuery.ajax("https://api.github.com/repos/" + owner + "/" + name).done(function(data) {
          var repo = data;
          console.log(data);
 
-         $('#repoName').html("<a href='" + repo.homepage + "'>" + repo.name + "</a>");
-         $('#description').text(repo.description);
-         $('#forks').html("<strong>Forks:</strong> " + repo.forks + "<br><strong>Watchers:</strong> " + repo.watchers);
+         jQuery('#repoName').html("<a href='" + repo.homepage + "'>" + repo.name + "</a>");
+         jQuery('#description').text(repo.description);
+         jQuery('#forks').html("<strong>Forks:</strong> " + repo.forks + "<br><strong>Watchers:</strong> " + repo.watchers);
 
-         $('#avatar').attr('src', repo.owner.avatar_url);
-         $('#ownerName').html("<strong>Owner:</strong> <a href='" + repo.owner.url + "'>" + repo.owner.login + "</a>");
+         jQuery('#avatar').attr('src', repo.owner.avatar_url);
+         jQuery('#ownerName').html("<strong>Owner:</strong> <a href='" + repo.owner.url + "'>" + repo.owner.login + "</a>");
      });
 }
 
@@ -113,10 +113,10 @@ function txSuccessFave() {
 
 function disableSaveButton() {
     // change the button text and style
-    var ctx = $("#saveBtn").closest(".ui-btn");
-    $('span.ui-btn-text',ctx).text("Saved").closest(".ui-btn-inner").addClass("ui-btn-up-b");
+    var ctx = jQuery("#saveBtn").closest(".ui-btn");
+    jQuery('span.ui-btn-text',ctx).text("Saved").closest(".ui-btn-inner").addClass("ui-btn-up-b");
 
-    $("#saveBtn").unbind("click", saveFave);
+    jQuery("#saveBtn").unbind("click", saveFave);
 }
 
 function checkFave() {
@@ -138,7 +138,7 @@ function txSuccessCheckFave(tx,results) {
          disableSaveButton();
 }
 
-$('#favesHome').live('pageshow', function(event) {
+jQuery('#favesHome').live('pageshow', function(event) {
     db.transaction(loadFavesDb, txError, txSuccess);
 });
 
@@ -155,11 +155,11 @@ function txSuccessLoadFaves(tx,results) {
         for (var i=0; i < len; i = i + 1) {
             repo = results.rows.item(i);
             console.log(repo);
-            $("#savedItems").append("<li><a href='repo-detail.html?owner=" + repo.user + "&name=" + repo.name + "'>"
+            jQuery("#savedItems").append("<li><a href='repo-detail.html?owner=" + repo.user + "&name=" + repo.name + "'>"
             + "<h4>" + repo.name + "</h4>"
             + "<p>" + repo.user + "</p></a></li>");
         };
-        $('#savedItems').listview('refresh');
+        jQuery('#savedItems').listview('refresh');
     }
     else {
        if (navigator.notification)
@@ -169,5 +169,5 @@ function txSuccessLoadFaves(tx,results) {
 }
 
 function alertDismissed() {
-    $.mobile.changePage("index.html");
+    jQuery.mobile.changePage("index.html");
 }
