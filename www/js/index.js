@@ -1,7 +1,9 @@
 var db;
 
 $('#reposHome').bind('pageinit', function(event) {
+    console.log("Load Start");
     loadRepos();
+    console.log("Load finish");
     db = window.openDatabase("repodb","0.1","GitHub Repo Db", 1000);
     db.transaction(createDb, txError, txSuccess);
 });
@@ -28,6 +30,7 @@ function loadRepos() {
             + "<h4>" + repo.name + "</h4>"
             + "<p>" + repo.username + "</p></a></li>");
         });
+        console.log("Avout to refresh");
         $('#allRepos').listview('refresh');
     });
 }
