@@ -1,35 +1,33 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-</head>
+    <head>
+    </head>
+    <body>
+       <div id="reposDetail" data-role="page">
+           <div data-role="header">
+               <a href="#externalpanel" class="ui-btn-left" data-icon="arrow-l">Browse</a>
+               <h1>Repository Details</h1>
+           </div>
 
-<body>
+            <div data-role="content">
+                <div id="repoDetails">
+                    <h3 id="repoName"></h3>
+                    <p id="description"></p>
+                    <p id="forks"></p>
+                </div>
+                <div id="ownerDetails">
+                    <img id="avatar" align="left" style="padding-right: 5px;" />
+                    <h3 id="ownerName"></h3>
+                </div>
+            </div>
 
-<div id="reposDetail" data-role="page">
+            <div data-role="footer" class="ui-bar" data-position="fixed">
+                <div data-role="content">
+                    &nbsp;
+                    <a id="saveBtn" href="faves.html" data-role="button" class="ui-btn-right" data-icon="star">Read!</a>
+                </div>
+            </div>
 
-	<div data-role="header">
-        <a id="saveBtn" data-icon="star" class="ui-btn-right">Save as Favorite</a>
-        <a href="#externalpanel" class="ui-btn-left" data-icon="arrow-l">Browse</a>
-		<h1>Repository Details</h1>
-	</div>
-
-    <div data-role="content">
-        <div id="repoDetails">
-            <h3 id="repoName"></h3>
-            <p id="description"></p>
-            <p id="forks"></p>
         </div>
-        <div id="ownerDetails">
-            <img id="avatar" align="left" style="padding-right: 5px;" />
-            <h3 id="ownerName"></h3>
-        </div>
-    </div>
-    
-             <!--   <div data-role="panel" data-position="left" data-display="overlay" id="mypanel">
-                <ul id="allRepos" data-role="listview"  data-filter="true">
-                </ul>
-            </div><!-- /panel -->
-
-</div>
-
-</body>
+    </body>
+    </html>
