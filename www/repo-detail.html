@@ -5,10 +5,11 @@
 
 <body>
 
-<div id="reposDetail" data-role="page" data-add-back-btn="true">
+<div id="reposDetail" data-role="page">
 
 	<div data-role="header">
-        <button id="saveBtn" data-icon="star" class="ui-btn-right">Save as Favorite</button>
+        <a id="saveBtn" data-icon="star" class="ui-btn-right">Save as Favorite</a>
+        <a href="#externalpanel" class="ui-btn-left" data-icon="arrow-l">Browse</a>
 		<h1>Repository Details</h1>
 	</div>
 
@@ -23,6 +24,11 @@
             <h3 id="ownerName"></h3>
         </div>
     </div>
+    
+             <!--   <div data-role="panel" data-position="left" data-display="overlay" id="mypanel">
+                <ul id="allRepos" data-role="listview"  data-filter="true">
+                </ul>
+            </div><!-- /panel -->
 
 </div>
 

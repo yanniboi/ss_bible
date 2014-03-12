@@ -1,26 +1,10 @@
-var app = {
-    // Application Constructor
-    initialize: function() {
-        this.bindEvents();
-    },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-    },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicity call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
-        var db;
-        loadRepos();
-        db = window.openDatabase("repodb","0.1","GitHub Repo Db", 1000);
-        db.transaction(createDb, txError, txSuccess);
-    }
-};
+var db;
+
+$('#reposHome').bind('pageinit', function(event) {
+    loadRepos();
+    db = window.openDatabase("repodb","0.1","GitHub Repo Db", 1000);
+    db.transaction(createDb, txError, txSuccess);
+});
 
 function createDb(tx) {
     tx.executeSql("DROP TABLE IF EXISTS repos");
@@ -36,22 +20,121 @@ function txSuccess() {
     console.log("Success");
 }
 
-function loadRepos() {
-    jQuery.ajax("https://api.github.com/legacy/repos/search/javascript").done(function(data) {
-        console.log("started");
-        var i, repo;
-        //var test = data.repositories[0].created;
-        console.log(data.repositories[0].created);
+function saveFave() {
+    db = window.openDatabase("repodb","0.1","GitHub Repo Db", 1000);
+    db.transaction(saveFaveDb, txError, txSuccessFave);
+}
 
-        jQuery.each(data.repositories, function (i, repo) {
-            jQuery("#allRepos").append("<li><a href='repo-detail.html?owner=" + repo.username + "&name=" + repo.name + "'>"
+function saveFaveDb(tx) {
+    var owner = getUrlVars().owner;
+    var name = getUrlVars().name;
+        
+    tx.executeSql("INSERT INTO repos(user,name) VALUES (?, ?)",[owner,name]);
+}
+
+function txSuccessFave() {
+    console.log("Save success");
+        
+    disableSaveButton();
+}
+
+function checkFave() {
+    db.transaction(checkFaveDb, txError);
+}
+
+function checkFaveDb(tx) {
+    var owner = getUrlVars().owner;
+    var name = getUrlVars().name;
+    
+    tx.executeSql("SELECT * FROM repos WHERE user = ? AND name = ?",[owner,name],txSuccessCheckFave);
+}
+
+function txSuccessCheckFave(tx,results) {
+    console.log("Read success");
+    console.log(results);
+    
+    if (results.rows.length)
+        disableSaveButton();
+}
+
+function alertDismissed() {
+    $.mobile.changePage("index.html");
+}
+
+function disableSaveButton() {
+    // change the button text and style
+    var ctx = $("#saveBtn").closest(".ui-btn");
+    $('span.ui-btn-text',ctx).text("Saved").closest(".ui-btn-inner").addClass("ui-btn-up-b");
+    
+    $("#saveBtn").unbind("click", saveFave);
+}
+
+$('#favesHome').live('pageshow', function(event) {
+    db.transaction(loadFavesDb, txError, txSuccess);
+});
+
+function loadFavesDb(tx) {
+    tx.executeSql("SELECT * FROM repos",[],txSuccessLoadFaves);
+}
+
+function txSuccessLoadFaves(tx,results) {
+    console.log("Read success");
+    
+    if (results.rows.length) {
+        var len = results.rows.length;
+        var repo;
+        for (var i=0; i < len; i = i + 1) {
+            repo = results.rows.item(i);
+            console.log(repo);
+            $("#savedItems").append("<li><a href='repo-detail.html?owner=" + repo.user + "&name=" + repo.name + "'>"
+            + "<h4>" + repo.name + "</h4>"
+            + "<p>" + repo.user + "</p></a></li>");
+        };
+        $('#savedItems').listview('refresh');
+    }
+    else {
+        if (navigator.notification)
+            navigator.notification.alert("You haven't saved any favorites yet.", alertDismissed);
+        else
+            alert("You haven't saved any favorites yet.");
+    }
+}
+
+function loadRepos() {
+    $.ajax("https://api.github.com/legacy/repos/search/javascript").done(function(data) {
+        var i, repo;
+        $.each(data.repositories, function (i, repo) {
+            $("#allRepos").append("<li><a href='repo-detail.html?owner=" + repo.username + "&name=" + repo.name + "'>"
             + "<h4>" + repo.name + "</h4>"
             + "<p>" + repo.username + "</p></a></li>");
         });
-        console.log("Avout to refresh");
-        jQuery('#allRepos').listview('refresh');
+        $('#allRepos').listview('refresh');
+        $("[data-role='panel']").panel().enhanceWithin();
     });
 }
+
+$('#reposDetail').live('pageshow', function(event) {
+    var owner = getUrlVars().owner;
+    var name = getUrlVars().name;
+    loadRepoDetail(owner,name);
+    checkFave();
+    $("#saveBtn").bind("click", saveFave);
+});
+
+function loadRepoDetail(owner,name) {
+     $.ajax("https://api.github.com/repos/" + owner + "/" + name).done(function(data) {
+         var repo = data;
+         console.log(data);
+         
+         $('#repoName').html("<a href='" + repo.homepage + "'>" + repo.name + "</a>");
+         $('#description').text(repo.description);
+         $('#forks').html("<strong>Forks:</strong> " + repo.forks + "<br><strong>Watchers:</strong> " + repo.watchers);
+         
+         $('#avatar').attr('src', repo.owner.avatar_url);
+         $('#ownerName').html("<strong>Owner:</strong> <a href='" + repo.owner.url + "'>" + repo.owner.login + "</a>");
+     });
+}
+
 
 function getUrlVars() {
     var vars = [], hash;
@@ -63,111 +146,4 @@ function getUrlVars() {
         vars[hash[0]] = hash[1];
     }
     return vars;
-}
-
-jQuery('#reposDetail').live('pageshow', function(event) {
-    var owner = getUrlVars().owner;
-    var name = getUrlVars().name;
-    loadRepoDetail(owner,name);
-    jQuery("#saveBtn").bind("click", saveFave);
-    checkFave();
-});
-
-function loadRepoDetail(owner,name) {
-     jQuery.ajax("https://api.github.com/repos/" + owner + "/" + name).done(function(data) {
-         console.log(data);
-     });
-}
-
-function loadRepoDetail(owner,name) {
-     jQuery.ajax("https://api.github.com/repos/" + owner + "/" + name).done(function(data) {
-         var repo = data;
-         console.log(data);
-
-         jQuery('#repoName').html("<a href='" + repo.homepage + "'>" + repo.name + "</a>");
-         jQuery('#description').text(repo.description);
-         jQuery('#forks').html("<strong>Forks:</strong> " + repo.forks + "<br><strong>Watchers:</strong> " + repo.watchers);
-
-         jQuery('#avatar').attr('src', repo.owner.avatar_url);
-         jQuery('#ownerName').html("<strong>Owner:</strong> <a href='" + repo.owner.url + "'>" + repo.owner.login + "</a>");
-     });
-}
-
-function saveFave() {
-    db = window.openDatabase("repodb","0.1","GitHub Repo Db", 1000);
-    db.transaction(saveFaveDb, txError, txSuccessFave);
-}
-
-function saveFaveDb(tx) {
-    var owner = getUrlVars().owner;
-    var name = getUrlVars().name;
-
-    tx.executeSql("INSERT INTO repos(user,name) VALUES (?, ?)",[owner,name]);
-}
-
-function txSuccessFave() {
-    console.log("Save success");
-
-    disableSaveButton();
-}
-
-function disableSaveButton() {
-    // change the button text and style
-    var ctx = jQuery("#saveBtn").closest(".ui-btn");
-    jQuery('span.ui-btn-text',ctx).text("Saved").closest(".ui-btn-inner").addClass("ui-btn-up-b");
-
-    jQuery("#saveBtn").unbind("click", saveFave);
-}
-
-function checkFave() {
-    db.transaction(checkFaveDb, txError);
-}
-
-function checkFaveDb(tx) {
-    var owner = getUrlVars().owner;
-    var name = getUrlVars().name;
-
-    tx.executeSql("SELECT * FROM repos WHERE user = ? AND name = ?",[owner,name],txSuccessCheckFave);
-}
-
-function txSuccessCheckFave(tx,results) {
-    console.log("Read success");
-    console.log(results);
-
-    if (results.rows.length)
-         disableSaveButton();
-}
-
-jQuery('#favesHome').live('pageshow', function(event) {
-    db.transaction(loadFavesDb, txError, txSuccess);
-});
-
-function loadFavesDb(tx) {
-    tx.executeSql("SELECT * FROM repos",[],txSuccessLoadFaves);
-}
-
-function txSuccessLoadFaves(tx,results) {
-    console.log("Read success");
-
-    if (results.rows.length) {
-        var len = results.rows.length;
-        var repo;
-        for (var i=0; i < len; i = i + 1) {
-            repo = results.rows.item(i);
-            console.log(repo);
-            jQuery("#savedItems").append("<li><a href='repo-detail.html?owner=" + repo.user + "&name=" + repo.name + "'>"
-            + "<h4>" + repo.name + "</h4>"
-            + "<p>" + repo.user + "</p></a></li>");
-        };
-        jQuery('#savedItems').listview('refresh');
-    }
-    else {
-       if (navigator.notification)
-                navigator.notification.alert("You haven't saved any favorites yet.", alertDismissed);
-
-    }
-}
-
-function alertDismissed() {
-    jQuery.mobile.changePage("index.html");
 }
