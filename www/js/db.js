@@ -67,7 +67,7 @@ function txSuccessLoadDay(tx,results) {
         var date = new Date(day.date*1000);
         $('#date').html(date.toUTCString());
         $('#body').html(day.body);
-        $('#youtube').attr('src', "http://www.youtube.com/embed/" + day.youtube);
+        $('#youtube').attr('src', "http://www.youtube.com/embed/" + day.youtube + "?wmode=opaque");
         //$('#repoName').html("<a href='" + repo.homepage + "'>" + repo.name + "</a>");
         //$('#description').text(repo.description);
         //$('#avatar').attr('src', repo.owner.avatar_url);

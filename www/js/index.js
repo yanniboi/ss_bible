@@ -1,5 +1,6 @@
 $('#reposHome').bind('pageinit', function(event) {
-    loadRepos();
+    //loadRepos();
+    loadDays();
 });
 
 function alertDismissed() {
@@ -18,6 +19,34 @@ $('#favesHome').live('pageshow', function(event) {
     var db = window.openDatabase("readingdb","0.1","DatabaseForReadings", 1000);
     db.transaction(loadDaysDb, txError, txSuccess);
 });
+
+function loadPanelDb(tx) {
+    tx.executeSql("SELECT * FROM days",[],txSuccessLoadPanel);
+}
+
+function txSuccessLoadPanel(tx,results) {
+    console.log("Read success");
+    
+    if (results.rows.length) {
+        var len = results.rows.length;
+        var repo;
+        for (var i=0; i < len; i = i + 1) {
+            repo = results.rows.item(i);
+            console.log(repo);
+            $("#allRepos").append("<li><a href='repo-detail.html?day=" + repo.day + "'>"
+            + "<h4>Day " + repo.day + " - " + repo.date + "</h4>"
+            + "<p>" + repo.body + "</p></a></li>");
+        };
+        $('#allRepos').listview('refresh');
+        $("[data-role='panel']").panel().enhanceWithin();
+    }
+}
+
+function loadDays() {
+    var db = window.openDatabase("readingdb","0.1","DatabaseForReadings", 1000);
+    db.transaction(loadPanelDb, txError, txSuccess);
+}
+
 
 function loadRepos() {
     $.ajax("https://api.github.com/legacy/repos/search/javascript").done(function(data) {
