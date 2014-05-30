@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="initial-scale=1 width=device-width" />
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile.structure-1.4.2.min.css" />
+        <link rel="stylesheet" href="css/themes/ss_bible.css" />
+        <link rel="stylesheet" href="css/index.css" />
+        <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" /> 
+        <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
+        <title>Bible in One Year</title>
+    </head>
+    <body>
+        <div id="reposHome" data-role="page">
+            <div data-role="header" data-position="fixed">
+                <h1>Bible in One Year</h1>
+                <a id='browser' href="#externalpanel" class="ui-btn-left" data-icon="arrow-l">Browse</a>
+            </div>
+            
+            <div data-role="content">
+                <div style="text-align:center;">
+                    <h4>The Bible in One Year with Soul Survivor</h4>
+                    <p>Share thoughts, reflections and questions as we journey together in reading the Bible In One Year</p>
+                    <a id="db-delete" data-role="button" data-icon="delete">Clear Database</a>
+                    <a id="db-refresh" data-role="button" data-icon="refresh">Load from server</a>
+                </div>
+            </div>
+            <div data-role="footer" class="ui-bar" data-id="foo1" data-position="fixed">
+                <div data-role="content">
+                    &nbsp;
+                    <a href="faves.html" data-role="button" class="ui-btn-right" data-icon="arrow-r">Today's Reading</a>
+                </div>
+            </div>
+        </div><!-- /page -->
+        <div data-role="panel" id="externalpanel" data-position="left" data-display="overlay" data-theme="a">
+            <h3 style="text-align:center;">Days</h3>
+            <div data-role="ui-panel-inner">
+                <ul id="allRepos" data-role="listview">
+                </ul>
+            </div>
+        </div><!-- /panel -->
+        <script type="text/javascript" src="phonegap.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/db.js"></script>
+        <script>
+        $( document ).bind( "mobileinit", function() {
+            $.mobile.allowCrossDomainPages = true;
+            console.log('cors');
+        }); 
+        </script>
+        <script src="js/enhance.js"></script>
+        <script src="js/slide.js"></script>
+        <script src="js/Day.js"></script>
+        <script src="phonegap.js"></script>
+        <script type="text/javascript">
+            //app.initialize();
+        </script>
+    </body>
+</html>
