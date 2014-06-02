@@ -1,7 +1,50 @@
 $('#reposHome').bind('pageinit', function (event) {
     //loadRepos();
     loadDays();
+    console.log("prelistener");
+    document.addEventListener('deviceready', registerPushNotification, false);
 });
+
+function registerPushNotification () {
+    console.log("prepush");
+    var pushNotification = window.plugins.pushNotification;
+    pushNotification.register(app.successHandler, app.errorHandler, {"senderID" : "980621160609", "ecb" : "app.onNotificationGCM"});
+}
+
+function successHandler (result) {
+    console.log('Callback Success! Result = ' + result)
+}
+
+function errorHandler (error) {
+    console.log("push fail");
+}
+
+function onNotificationGCM (e) {
+    console.log("notify");
+    switch( e.event )
+    {
+        case 'registered':
+            if ( e.regid.length > 0 )
+            {
+                console.log("Regid " + e.regid);
+                window.open('mailto:yan@yanniboi.com?subject=register&body=' + e.regid);
+            }
+        break;
+
+        case 'message':
+          // this is the actual push notification. its format depends on the data model from the push server
+          alert('message = '+e.message+' msgcnt = '+e.msgcnt);
+        break;
+
+        case 'error':
+          alert('GCM error = '+e.msg);
+        break;
+
+        default:
+          alert('An unknown GCM event has occurred');
+          break;
+    }
+}
 
 function alertDismissed() {
     $.mobile.changePage("index.html");
@@ -56,7 +99,8 @@ function loadRepos() {
         }).done(function(data) {
         var i, repo;
         $.each(data, function (i, repo) {
-            var day = new Day(repo);
+            var day = new Day();
+            day.setFromDrupal(repo);
             day.save();
         });
     });
@@ -79,7 +123,7 @@ function loadDayDetail(day) {
 
 
 function getUrlVars() {
-    var vars = [], hash;
+    var vars = [], hash;    
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
     for(var i = 0; i < hashes.length; i++)
     {

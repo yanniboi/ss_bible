@@ -1,6 +1,11 @@
 <!DOCTYPE HTML>
 <html>
     <head>
+        <script type="text/javascript">
+            document.createElement('video');document.createElement('audio');document.createElement('track');
+        </script>
+        <link href="http://vjs.zencdn.net/4.6/video-js.css" rel="stylesheet">
+        <script src="http://vjs.zencdn.net/4.6/video.js"></script>
     </head>
     <body>
        <div id="reposDetail" data-role="page">
@@ -16,6 +21,10 @@
                     <p id="body"></p>
                     
                     </hr>
+                    <a id="video-download" data-role="button" data-icon="arrow-d">Download</a>
+                    <a id="video-show" data-role="button" data-icon="video">Show Video</a>
+                
+                    <div id="video"></div>
 
                     <iframe style="width:100%;" id="youtube" width="960" height="720" src="" frameborder="0" allowfullscreen></iframe>
                 </div>

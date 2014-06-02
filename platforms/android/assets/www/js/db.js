@@ -67,13 +67,20 @@ function txSuccessLoadDay(tx,results) {
     console.log("Read success");
     
     if (results.rows.length) {
-        var day = results.rows.item(0);
+        var day = new Day();
+        day.setFromDb(results.rows.item(0));
+        
         $('#pageTitle').html("Day " + day.day);
         var date = new Date(day.date*1000);
         $('#title').html(day.title);
         $('#date').html(date.toUTCString());
         $('#body').html(day.body);
         $('#youtube').attr('src', "http://www.youtube.com/embed/" + day.youtube + "?wmode=opaque");
+        //var button = $('#video-show');
+        //var event = day.showVideo();
+        $('#video-show').click(day.showVideo);
+        $('#video-download').click(day.downloadVideo);
+
         //$('#repoName').html("<a href='" + repo.homepage + "'>" + repo.name + "</a>");
         //$('#description').text(repo.description);
         //$('#avatar').attr('src', repo.owner.avatar_url);

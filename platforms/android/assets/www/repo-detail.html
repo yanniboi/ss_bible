@@ -1,6 +1,11 @@
 <!DOCTYPE HTML>
 <html>
     <head>
+        <script type="text/javascript">
+            document.createElement('video');document.createElement('audio');document.createElement('track');
+        </script>
+        <link href="http://vjs.zencdn.net/4.6/video-js.css" rel="stylesheet">
+        <script src="http://vjs.zencdn.net/4.6/video.js"></script>
     </head>
     <body>
        <div id="reposDetail" data-role="page">
@@ -16,12 +21,17 @@
                     <p id="body"></p>
                     
                     </hr>
+                
+                    <a id="video-show" data-role="button" data-icon="refresh">Load from server</a>
+                    <a id="video-download" data-role="button" data-icon="refresh">Load from server</a>
+                
+                    <div id="video"></div>
 
                     <iframe style="width:100%;" id="youtube" width="960" height="720" src="" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
 
-            <div data-role="footer" class="ui-bar" data-id="foo1" data-position="fixed">
+            <div data-role="footer" class="ui-bar" data-position="fixed">
                 <div data-role="content">
                     &nbsp;
                     <a id="saveBtn" href="faves.html" data-role="button" class="ui-btn-right" data-icon="star">Read!</a>
