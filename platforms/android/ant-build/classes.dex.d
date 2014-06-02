@@ -68,5 +68,3 @@
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bible/Manifest.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bible/Manifest$permission.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/dexedLibs/classes-f2b7d13ac204865e97732d1572117f43.jar \
-/var/www/mobile/ss_bible/platforms/android/ant-build/dexedLibs/gcm-2d0f8f3a842793fd62e6bda3d93bc088.jar \
-/var/www/mobile/ss_bible/platforms/android/ant-build/dexedLibs/android-support-v13-c87fe26e9ba9d43167ef1934fd392355.jar \

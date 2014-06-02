@@ -15,6 +15,7 @@ var Day = function () {
         this.date = data.date;
         this.day = data.day;
         this.youtube = data.youtube;
+        this.download = data.download;
     };
 
     this.initialize = function (values) {
@@ -33,16 +34,21 @@ var Day = function () {
                 function (tx, results) {
                     if (results.rows.length === 0) {
                         tx.executeSql(
-                            "INSERT INTO days (title,day,date,youtube,body) VALUES (?,?, ?, ?, ?)",
-                            [values.title, values.day, '1394650272', values.youtube, values.body]
+                            "INSERT INTO days (title,day,date,youtube,body,download) VALUES (?,?, ?, ?, ?, ?)",
+                            [values.title, values.day, '1394650272', values.youtube, values.body, 0]
                         );
                     }
                 });
         });
     };
     
-    this.showVideo = function () {
-        var fileUrl = "file:///storage/emulated/0/small.mp4";
+    this.hasFile = function (day) {
+        
+    
+    };
+    
+    this.showVideo = function (day) {
+        var fileUrl = "file:///storage/emulated/0/" + day.data + ".mp4";
         
         var divVid = document.getElementById("video");
         var vidVid = document.createElement("video");
@@ -55,10 +61,11 @@ var Day = function () {
         sourceVid.setAttribute("src", fileUrl);
         sourceVid.setAttribute("type", "video/mp4");
         vidVid.appendChild(sourceVid);
-        divVid.appendChild(vidVid);
+        $(divVid).html(vidVid);
     };
     
-    this.downloadVideo = function () {
+    this.downloadVideo = function (day) {
+        $('#download-progress').html("Download " + day.data + " Started");
         window.requestFileSystem(
             LocalFileSystem.PERSISTENT,
             0,
@@ -71,13 +78,42 @@ var Day = function () {
                         var sPath = fileEntry.fullPath.replace("dummy.html", "");
                         var fileTransfer = new FileTransfer();
                         fileEntry.remove();
+                        
+                        var progress = $('#download-progress');
+                        progress.html('');
+                        
+                        fileTransfer.onprogress = function (progressEvent) {
+                            if (progressEvent.lengthComputable) {
+                                var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+                                progress.html(perc + "% Downloaded...");
+                            } else {
+                                if (progress.html() === "") {
+                                    progress.html("Downloading");
+                                } else {
+                                    progress.html().append(".");
+                                }
+                            }
+                        };
 
                         fileTransfer.download(
-                            "http://techslides.com/demos/sample-videos/small.mp4",
-                            fileSystem.root.toURL() + "small.mp4",
+                            "http://bible.soulsurvivor.com/sites/default/files/" + day.data + ".mp4",
+                            //"http://techslides.com/demos/sample-videos/small.mp4",
+
+                            fileSystem.root.toURL() + day.data + ".mp4",
                             function (theFile) {
-                                console.log("download complete: " + theFile.toURI());
-                                showLink(theFile.toURI());
+                                $('#download-progress').html("Download Finished");
+                                $('#video-show').css("display", "block");
+                                $('#video-download').css("display", "none");
+                                
+                                var db = window.openDatabase("readingdb", "0.1", "DatabaseForReadings", 1000);
+                                db.transaction(function (tx) {
+                                    tx.executeSql(
+                                        "UPDATE days SET download = 1 WHERE day = ? ;",
+                                        [day.data],
+                                        function (tx, results) {console.log("database download bool updated"); },
+                                        function (tx, error) {console.log("database download bool failed! error - ") ;}
+                                    );
+                                });
                             },
                             function (error) {
                                 console.log("download error source " + error.source);

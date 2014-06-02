@@ -101,3 +101,17 @@ h1 {
 video {
     width: 100%;
 }
+
+#externalpanel {
+    position: fixed;
+}
+
+#externalpanel ul#allRepos {
+    overflow-y: scroll;
+    /*height: 193px;*/
+    padding-right: 0;
+}
+
+#video-show {
+    display: none;
+}

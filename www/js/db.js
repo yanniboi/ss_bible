@@ -1,12 +1,13 @@
 $('#reposHome').bind('pageinit', function(event) {
     var db = window.openDatabase("readingdb","0.1","DatabaseForReadings", 1000);
-    db.transaction(createDb, txError, txCreateSuccess);
+    //db.transaction(createDb, txError, txCreateSuccess);
 });
 
 function createDb(tx) {
     //Create table for days.
+    console.trace();
     tx.executeSql("DROP TABLE IF EXISTS days");
-    tx.executeSql("CREATE TABLE days(title,day,date,youtube,body)");
+    tx.executeSql("CREATE TABLE days(title,day,date,youtube,body,download)");
     
     /*
     tx.executeSql("INSERT INTO days (day,date,youtube,body) VALUES (1,1394650272,'IjjXEIcbPYA','Hello little ones')");
@@ -28,8 +29,9 @@ function createDb(tx) {
 }
 
 function clearDb(tx) {
+    console.log("Database cleared!")
     tx.executeSql("DROP TABLE IF EXISTS days");
-    tx.executeSql("CREATE TABLE days(title,day,date,youtube,body)");
+    tx.executeSql("CREATE TABLE days(title,day,date,youtube,body,download)");
 }
 
 function loadDaysDb(tx) {
@@ -75,11 +77,14 @@ function txSuccessLoadDay(tx,results) {
         $('#title').html(day.title);
         $('#date').html(date.toUTCString());
         $('#body').html(day.body);
-        $('#youtube').attr('src', "http://www.youtube.com/embed/" + day.youtube + "?wmode=opaque");
-        //var button = $('#video-show');
-        //var event = day.showVideo();
-        $('#video-show').click(day.showVideo);
-        $('#video-download').click(day.downloadVideo);
+        //$('#youtube').attr('src', "http://www.youtube.com/embed/" + day.youtube + "?wmode=opaque");
+        $('#video-show').click(day.day, day.showVideo);
+        $('#video-download').click(day.day, day.downloadVideo);
+        
+        if (day.download) {
+            $('#video-show').css( "display", "block");
+            $('#video-download').css( "display", "none");
+        }
 
         //$('#repoName').html("<a href='" + repo.homepage + "'>" + repo.name + "</a>");
         //$('#description').text(repo.description);

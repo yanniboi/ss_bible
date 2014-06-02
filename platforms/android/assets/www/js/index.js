@@ -1,5 +1,5 @@
 $('#reposHome').bind('pageinit', function (event) {
-    //loadRepos();
+    loadRepos();
     loadDays();
     console.log("prelistener");
     document.addEventListener('deviceready', registerPushNotification, false);

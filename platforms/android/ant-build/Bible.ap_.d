@@ -49,6 +49,7 @@
 /var/www/mobile/ss_bible/platforms/android/assets/www/js/slide.js \
 /var/www/mobile/ss_bible/platforms/android/assets/www/js/index.js \
 /var/www/mobile/ss_bible/platforms/android/assets/www/js/jquery.mobile-1.3.0.min.js \
+/var/www/mobile/ss_bible/platforms/android/assets/www/img/preview.jpg \
 /var/www/mobile/ss_bible/platforms/android/assets/www/img/logo.png \
 /var/www/mobile/ss_bible/platforms/android/assets/www/css/slide.css \
 /var/www/mobile/ss_bible/platforms/android/assets/www/css/images \
@@ -297,10 +298,7 @@
 /var/www/mobile/ss_bible/platforms/android/assets/www/res/icon/ios/icon-57-2x.png \
 /var/www/mobile/ss_bible/platforms/android/assets/www/res/icon/ios/icon-72-2x.png \
 /var/www/mobile/ss_bible/platforms/android/assets/www/res/icon/tizen/icon-128.png \
-/var/www/mobile/ss_bible/platforms/android/assets/www/res/icon/android/icon-48-mdpi.png \
-/var/www/mobile/ss_bible/platforms/android/assets/www/res/icon/android/icon-36-ldpi.png \
-/var/www/mobile/ss_bible/platforms/android/assets/www/res/icon/android/icon-72-hdpi.png \
-/var/www/mobile/ss_bible/platforms/android/assets/www/res/icon/android/icon-96-xhdpi.png \
+/var/www/mobile/ss_bible/platforms/android/assets/www/res/icon/android/icon.png \
 /var/www/mobile/ss_bible/platforms/android/assets/www/res/screen/blackberry \
 /var/www/mobile/ss_bible/platforms/android/assets/www/res/screen/windows-phone \
 /var/www/mobile/ss_bible/platforms/android/assets/www/res/screen/bada-wac \
