@@ -7,6 +7,7 @@
 angular.module('bioy', [
     'ionic',
     'bioy.controllers',
+    'bioy.directives',
     'bioy.memoryServices'
 ])
 
@@ -47,7 +48,8 @@ angular.module('bioy', [
       url: "/search",
       views: {
         'menuContent' :{
-          templateUrl: "templates/search.html"
+          templateUrl: "templates/search.html",
+          controller: 'SearchCtrl'
         }
       }
     })

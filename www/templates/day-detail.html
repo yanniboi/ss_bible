@@ -1,24 +1,25 @@
 
 
 <ion-view title="Day {{day.dayId}}">
+    <ion-tabs class="tabs-icon-top">
+
+        <!-- Video Tab -->
+        <ion-tab title="Video" icon="icon ion-play">
+            <ion-content has-header="true" padding="true">
+                <h2>{{day.title}}</h2>
+                {{day.body}}
+                <video videojs videoid="{{day.dayId}}" class="video-js vjs-default-skin vjs-controls-enabled vjs-has-started vjs-paused vjs-user-inactive" ng-model="video"></video>
+            </ion-content>
+        </ion-tab>
 
 
-<ion-tabs class="tabs-icon-top">
-
-  <!-- Video Tab -->
-  <ion-tab title="Video" icon="icon ion-heart">
-                <ion-content has-header="true" padding="true">
-                        <h2>{{day.title}}</h2>
-      {{day.body}}
-                </ion-content>  </ion-tab>
-
-
-  <!-- Verses Tab -->
-  <ion-tab title="Verses" icon="icon ion-gear-b">
-                <ion-content has-header="true" padding="true">
-                    <h2>Day {{day.dayId}} Verses</h2>
-                    {{day.title}}
-                </ion-content>  </ion-tab>
-
-</ion-tabs>
+        <!-- Verses Tab -->
+        <ion-tab title="Verses" icon="icon ion-chatboxes">
+            <ion-content has-header="true" padding="true">
+                <h2>Day {{day.dayId}} Verses</h2>
+                {{day.title}}
+                <div>{{day.videoUrl}}</div>
+            </ion-content>
+        </ion-tab>
+    </ion-tabs>
 </ion-view>
