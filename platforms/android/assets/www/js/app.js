@@ -54,6 +54,16 @@ angular.module('bioy', [
       }
     })
   
+    .state('app.todo', {
+      url: "/todo",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/todo.html",
+          controller: 'TodoCtrl'
+        }
+      }
+    })
+  
     .state('app.browse', {
       url: "/browse",
       views: {

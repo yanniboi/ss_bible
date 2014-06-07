@@ -5,10 +5,21 @@
 
         <!-- Video Tab -->
         <ion-tab title="Video" icon="icon ion-play">
-            <ion-content has-header="true" padding="true">
+            <ion-content overflow-scroll="true" has-header="true" padding="true">
                 <h2>{{day.title}}</h2>
                 {{day.body}}
-                <video videojs videoid="{{day.dayId}}" class="video-js vjs-default-skin vjs-controls-enabled vjs-has-started vjs-paused vjs-user-inactive" ng-model="video"></video>
+                <div class="button-bar">
+                    <a class="button button-outline button-positive" ng-click="showVideo({{day.dayId}})">Stream Video</a>
+                    <a class="button button-outline button-dark" ng-click="downloadVideo({{day.dayId}})">Download Video</a>
+                    <a class="button button-outline button-dark" ng-click="showDownload({{day.dayId}})">Show Download</a>
+
+                </div>
+                <div id="download-progress"></div>
+                <!--<video videojs videoid="{{day.dayId}}" class="video-js vjs-default-skin vjs-controls-enabled vjs-has-started vjs-paused vjs-user-inactive" ng-model="video"></video>-->
+                
+                <div id="streamed-video"></div>
+                <div id="downloaded-video"></div>
+                
             </ion-content>
         </ion-tab>
 

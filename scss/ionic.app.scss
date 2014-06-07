@@ -16,6 +16,9 @@ $dark:                            #444 !default;
 */
 
 body {
+    .video-js {
+        /*display: none;*/
+    }
     video {
         width: 100%;
     }

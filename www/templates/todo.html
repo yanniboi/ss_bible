@@ -1,0 +1,26 @@
+<ion-view title="Home">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+<h1>Todo list - store items to local database</h1>
+
+     <h3>Use Google chomre to inspect the content of the local database by pressing F12 and selecting the Resources tab</h3>
+
+    <div ng-controller="TodoCtrl">
+        <label>Task:</label>
+        <input ng-model="newTodo.task" />
+        <label>Completed:</label>
+        <input type="checkbox" ng-model="newTodo.done" />
+        <a class="button button-outline button-positive" ng-click="addNew(newTodo)">Add new</a>
+
+        <ul>
+            <li ng-repeat="todo in todos">{{todo.Id}},{{todo.task}}, Completed:
+                <input type="checkbox" ng-model="todo.done" ng-click="todo.save()" /> 
+                <a class="button button-outline button-positive" ng-click="remove(todo)">Remove</a>
+            </li>
+        </ul>
+    </div>
+
+  </ion-content>
+</ion-view>

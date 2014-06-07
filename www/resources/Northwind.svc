@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<service xml:base="http://jaydata.org/examples/Northwind.svc/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app" xmlns="http://www.w3.org/2007/app">
+  <workspace>
+    <atom:title>Default</atom:title>
+    <collection href="Categories">
+      <atom:title>Categories</atom:title>
+    </collection>
+    <collection href="Customers">
+      <atom:title>Customers</atom:title>
+    </collection>
+    <collection href="Employees">
+      <atom:title>Employees</atom:title>
+    </collection>
+    <collection href="Order_Details">
+      <atom:title>Order_Details</atom:title>
+    </collection>
+    <collection href="Orders">
+      <atom:title>Orders</atom:title>
+    </collection>
+    <collection href="Products">
+      <atom:title>Products</atom:title>
+    </collection>
+    <collection href="Shippers">
+      <atom:title>Shippers</atom:title>
+    </collection>
+    <collection href="Suppliers">
+      <atom:title>Suppliers</atom:title>
+    </collection>
+  </workspace>
+</service>
