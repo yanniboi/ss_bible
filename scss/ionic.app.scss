@@ -15,8 +15,14 @@ $royal:                           #8a6de9 !default;
 $dark:                            #444 !default;
 */
 
-video {
-    width: 100%;
+body {
+    video {
+        width: 100%;
+    }
+
+    .popup {
+        width: 70%;   
+    }
 }
 
 // The path for our ionicons font files, relative to the built CSS in www/css

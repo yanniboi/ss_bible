@@ -1,1 +1,13 @@
 /* Empty. Add your own CSS if you like */
+
+/* global styles */
+
+/* video */
+video {
+    width: 100%;
+}
+
+/* popups */
+.popup {
+ width: 70%;   
+}

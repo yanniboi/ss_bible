@@ -1,10 +1,15 @@
-// Ionic Starter App
+// Ionic Bible in One Year App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
+// 'bioy' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+// 'bioy.controllers' is found in controllers.js
+angular.module('bioy', [
+    'ionic',
+    'bioy.controllers',
+    'bioy.directives',
+    'bioy.memoryServices'
+])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -30,43 +35,45 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       controller: 'AppCtrl'
     })
 
+  .state('app.home', {
+    url: "/home",
+    views: {
+        'menuContent' :{
+            templateUrl: "templates/home.html"
+        }
+    }
+  })
+  
     .state('app.search', {
       url: "/search",
       views: {
         'menuContent' :{
-          templateUrl: "templates/search.html"
+          templateUrl: "templates/search.html",
+          controller: 'SearchCtrl'
         }
       }
     })
-
+  
     .state('app.browse', {
       url: "/browse",
       views: {
         'menuContent' :{
-          templateUrl: "templates/browse.html"
-        }
-      }
-    })
-    .state('app.playlists', {
-      url: "/playlists",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/playlists.html",
-          controller: 'PlaylistsCtrl'
+          templateUrl: "templates/browse.html",
+          controller: 'DaysCtrl'
         }
       }
     })
 
-    .state('app.single', {
-      url: "/playlists/:playlistId",
+    .state('app.day', {
+      url: "/days/:dayId",
       views: {
         'menuContent' :{
-          templateUrl: "templates/playlist.html",
-          controller: 'PlaylistCtrl'
+          templateUrl: "templates/day-detail.html",
+          controller: 'DayDetailCtrl'
         }
       }
     });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/home');
 });
 
