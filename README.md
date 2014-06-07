@@ -35,6 +35,13 @@ $ sudo npm install -g cordova ionic gulp
 $ npm install
 $ gulp install
 ```
+## Plugins
+
+The following plugins are required:
+
+```bash
+$ cordova plugin add org.apache.cordova.file
+$ cordova plugin add org.apache.cordova.file-transfer
 
 ## Using Sass (optional)
 
