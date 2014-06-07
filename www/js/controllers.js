@@ -3,7 +3,7 @@ angular.module('bioy.controllers', [])
     .controller('AppCtrl', function ($scope) {
     })
 
-    .controller('DayDetailCtrl', ['$scope', '$stateParams', 'Day', function ($scope, $stateParams, Day) {
+    .controller('DayDetailCtrl', ['$scope', '$stateParams', '$ionicPopup', 'Day', function ($scope, $stateParams, $ionicPopup, Day) {
         //$scope.day = Day.get({dayId: $routeParams.dayId});
         var day = [],
             data = Day.get({dayId: $stateParams.dayId});
@@ -14,6 +14,16 @@ angular.module('bioy.controllers', [])
         day.nid = data.nid[0].value;
 
         $scope.day = day;
+        // An alert dialog
+        $scope.showPopup = function(number) {
+            var alertPopup = $ionicPopup.alert({
+                title: 'Psalm 90:2,4 NIV! ' + number,
+                templateUrl: "templates/verse.html",
+            });
+            alertPopup.then(function(res) {
+                console.log('Thank you for not eating my delicious ice cream cone');
+            });
+        };
 
     }])
 

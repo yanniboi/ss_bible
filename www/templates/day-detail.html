@@ -19,6 +19,11 @@
                 <h2>Day {{day.dayId}} Verses</h2>
                 {{day.title}}
                 <div>{{day.videoUrl}}</div>
+                <div class="button-bar">
+                    <a class="button button-outline button-positive" ng-click="showPopup(1)">Old Testament</a>
+                    <a class="button button-outline button-dark" ng-click="showPopup(1)">New Testament</a>
+                    <a class="button button-outline" ng-click="showPopup(1)">Psalms</a>
+                </div>
             </ion-content>
         </ion-tab>
     </ion-tabs>

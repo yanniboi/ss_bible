@@ -6,3 +6,8 @@
 video {
     width: 100%;
 }
+
+/* popups */
+.popup {
+ width: 70%;   
+}
