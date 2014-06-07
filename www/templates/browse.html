@@ -5,9 +5,21 @@
     <ion-content class="has-header">
         <h1>Browse</h1>
         <ion-list>
-            <ion-item ng-repeat="day in days" href="#/app/days/{{day.nid[0].value}}">
-                {{day.title[0].value}}                
-            </ion-item>
+            <div ng-repeat="month in months">
+                <ion-item class="item-stable"
+                          ng-click="toggleGroup(month)"
+                          ng-class="{active: isGroupShown(month)}">
+                    <i class="icon" ng-class="isGroupShown(month) ? 'ion-minus' : 'ion-plus'"></i>
+                    &nbsp;
+                    {{month.name}}
+                </ion-item>
+                <ion-item class="item-accordion"
+                          ng-repeat="day in month.items"
+                          href="#/app/days/{{day.nid[0].value}}"
+                          ng-show="isGroupShown(month)">
+                    {{day.title[0].value}}
+                </ion-item>
+            </div>
         </ion-list>
     </ion-content>
 </ion-view>
