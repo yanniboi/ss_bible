@@ -153,7 +153,7 @@ angular.module('bioy.controllers', [])
 
     }])
 
-    .controller('DaysCtrl', ['$scope', 'Day', function ($scope, Day) {
+    .controller('DaysCtrl', ['$scope', '$timeout', '$http', 'Day', function ($scope, $timeout, $http, Day) {
         var days = Day.query();
         $scope.months = [];
 
@@ -182,17 +182,53 @@ angular.module('bioy.controllers', [])
             return $scope.shownGroup === group;
         };
         $scope.days = days;
+
+        /* temp*/
+        $scope.stored = [Day.get({"dayId" : "1"})];
+        
+        var db = $data.define("Days", {
+            title: String,
+            day: Number,
+            nid: Number,
+            created: String
+        });
+        
+        $scope.doRefresh = function () {
+            console.log('Refreshing!');
+            $timeout( function() {
+                $http({method: 'GET', url: 'http://bible.soulsurvivor.com/rest/views/days'}).
+                success(function(data, status, headers, config) {
+                    var test = data;
+                    data.forEach(function (day) {
+                        var data = [];
+                        data.day = day.field_day_number[0].value;
+                        data.title = day.title[0].value;
+                        data.created = day.created[0].value;
+                        data.nid = day.nid[0].value;
+                        db.save(data);
+                        $scope.stored.push(day);
+                    });
+                }).
+                error(function(data, status, headers, config) {
+                    console.log(status);
+
+                });
+
+                /*$scope.stored.push(
+                    Day.get({"dayId" : "3"})
+                );*/
+                
+
+                //Stop the ion-refresher from spinning
+                $scope.$broadcast('scroll.refreshComplete');
+
+            }, 1000);
+        };
     }])
 
 
     .controller('TodoCtrl', ['$scope', function ($scope) {
         $scope.todos = [];
-        
-        $data.initService('/resources/Northwind.svc')
-        .then(function (northwind) {
-            $scope.northwind = northwind;
-            $scope.categories = northwind.Categories.toLiveArray();
-        });
 
         var Todo = $data.define("Todo", {
             task: String,

@@ -74,6 +74,16 @@ angular.module('bioy', [
       }
     })
 
+    .state('app.recent', {
+      url: "/recent",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/recent.html",
+          controller: 'DaysCtrl'
+        }
+      }
+    })
+  
     .state('app.day', {
       url: "/days/:dayId",
       views: {
