@@ -1,4 +1,4 @@
-<ion-view title="Day {{day.dayId}}">
+<ion-view class="day-detail" title="Day {{day.dayId}}">
     <ion-tabs class="tabs-icon-top">
 
         <!-- Video Tab -->
@@ -19,7 +19,7 @@
                 <div class="list card">
                     
                     <div class="item item-avatar">
-                        <img src="/resources/andy.jpg">
+                        <img src="resources/andy.jpg">
                         <h2>{{day.title}}</h2>
                         <div ng-bind-html="day.body">></div>
                     </div>

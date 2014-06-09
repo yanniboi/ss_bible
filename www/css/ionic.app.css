@@ -17,10 +17,17 @@ $dark:                            #444 !default;
 h1, h2, h3, h4, h5 {
   text-align: center; }
 
+.day-detail .list.card {
+  margin-bottom: 20px; }
+  .day-detail .list.card h2 {
+    text-align: left; }
+
 body video {
   width: 100%; }
 body .popup {
-  width: 70%; }
+  width: 70%;
+  height: 60%;
+  overflow: scroll; }
 
 /*!
   Ionicons, v1.4.1
