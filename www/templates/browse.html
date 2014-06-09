@@ -14,10 +14,10 @@
                     {{month.name}}
                 </ion-item>
                 <ion-item class="item-accordion"
-                          ng-repeat="day in month.items"
-                          href="#/app/days/{{day.nid[0].value}}"
+                          ng-repeat="day in stored"
+                          href="#/app/days/{{day.nid}}"
                           ng-show="isGroupShown(month)">
-                    {{day.title[0].value}}
+                    {{day.title}}
                 </ion-item>
             </div>
         </ion-list>

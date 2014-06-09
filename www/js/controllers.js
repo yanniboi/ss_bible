@@ -153,7 +153,7 @@ angular.module('bioy.controllers', [])
 
     }])
 
-    .controller('DaysCtrl', ['$scope', '$timeout', '$http', 'Day', function ($scope, $timeout, $http, Day) {
+    .controller('DaysCtrl', ['$scope', '$timeout', '$http', '$data', 'Day', function ($scope, $timeout, $http, $data, Day) {
         var days = Day.query();
         $scope.months = [];
 
@@ -184,45 +184,74 @@ angular.module('bioy.controllers', [])
         $scope.days = days;
 
         /* temp*/
-        $scope.stored = [Day.get({"dayId" : "1"})];
+        $scope.stored = [];
         
-        var db = $data.define("Days", {
-            title: String,
-            day: Number,
-            nid: Number,
-            created: String
+        $data.Entity.extend("Days", {
+            title: {type: String, required: true, maxLength: 200 },
+            day: { type: "int" },
+            nid: { type: "int", key: true, computed: true },
+            created: { type: String }
+        });
+
+		$data.EntityContext.extend("DayDatabase", {
+   			Days: { type: $data.EntitySet, elementType: Days }
+		});
+        
+        var dayDB = new DayDatabase({
+            provider: 'sqLite' , databaseName: 'MyDayDatabase'
         });
         
+        dayDB.onReady(function() {
+            var storedData = dayDB.Days.filter(true).toLiveArray();
+            storedData.then(function (results) {
+                results.forEach(function (day) {
+                    $scope.stored.push({
+                        'title' : day.title,
+                        'day' : day.day,
+                        'created' : day.created,
+                        'nid' : day.nid,
+                    });
+                });
+            });
+        });
+            
         $scope.doRefresh = function () {
             console.log('Refreshing!');
-            $timeout( function() {
-                $http({method: 'GET', url: 'http://bible.soulsurvivor.com/rest/views/days'}).
-                success(function(data, status, headers, config) {
-                    var test = data;
-                    data.forEach(function (day) {
-                        var data = [];
-                        data.day = day.field_day_number[0].value;
-                        data.title = day.title[0].value;
-                        data.created = day.created[0].value;
-                        data.nid = day.nid[0].value;
-                        db.save(data);
-                        $scope.stored.push(day);
+            dayDB.onReady(function() {
+                $timeout( function() {
+                    $http({method: 'GET', url: 'http://bible.soulsurvivor.com/rest/views/days'}).
+                    success(function(data, status, headers, config) {
+                        var test = data;
+                        data.forEach(function (day) {
+                            var data = [];
+                            data.day = day.field_day_number[0].value;
+                            data.title = day.title[0].value;
+                            data.created = day.created[0].value;
+                            data.nid = day.nid[0].value;
+                            
+                            var existingTasks = dayDB.Days.filter("nid", "==", data.nid).toLiveArray();
+                            existingTasks.then(function(results) {
+                                var todo = dayDB.Days.attachOrGet(data);
+                                todo = data;
+
+                                if (results.length == 0) {
+                                    //create
+                                    dayDB.Days.add(data);
+                                }                                
+                            });
+                        });
+                        dayDB.saveChanges();
+                    }).
+                    error(function(data, status, headers, config) {
+                        console.log(status);
                     });
-                }).
-                error(function(data, status, headers, config) {
-                    console.log(status);
 
-                });
+                    //Stop the ion-refresher from spinning
+                    $scope.$broadcast('scroll.refreshComplete');
 
-                /*$scope.stored.push(
-                    Day.get({"dayId" : "3"})
-                );*/
-                
+                }, 1000);                
+            });
 
-                //Stop the ion-refresher from spinning
-                $scope.$broadcast('scroll.refreshComplete');
-
-            }, 1000);
         };
     }])
 

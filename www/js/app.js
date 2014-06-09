@@ -8,7 +8,8 @@ angular.module('bioy', [
     'ionic',
     'bioy.controllers',
     'bioy.directives',
-    'bioy.memoryServices'
+    'bioy.memoryServices',
+    'jaydata'
 ])
 
 .run(function($ionicPlatform) {
