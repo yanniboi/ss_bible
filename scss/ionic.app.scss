@@ -15,6 +15,16 @@ $royal:                           #8a6de9 !default;
 $dark:                            #444 !default;
 */
 
+$light: #f5f5f5;
+$stable: #dddddd;
+$positive: #00685e;
+$calm: #009d8e;
+$dark: #4c4c4c;
+
+h1,h2,h3,h4,h5 {
+    text-align: center;   
+}
+
 body {
     .video-js {
         /*display: none;*/

@@ -1,25 +1,71 @@
-
-
 <ion-view title="Day {{day.dayId}}">
     <ion-tabs class="tabs-icon-top">
 
         <!-- Video Tab -->
         <ion-tab title="Video" icon="icon ion-play">
-            <ion-content overflow-scroll="true" has-header="true" padding="true">
+            <!--<ion-content overflow-scroll="true" has-header="true" padding="true">
                 <h2>{{day.title}}</h2>
                 {{day.body}}
                 <div class="button-bar">
                     <a class="button button-outline button-positive" ng-click="showVideo({{day.dayId}})">Stream Video</a>
                     <a class="button button-outline button-dark" ng-click="downloadVideo({{day.dayId}})">Download Video</a>
                     <a class="button button-outline button-dark" ng-click="showDownload({{day.dayId}})">Show Download</a>
-
                 </div>
                 <div id="download-progress"></div>
-                <!--<video videojs videoid="{{day.dayId}}" class="video-js vjs-default-skin vjs-controls-enabled vjs-has-started vjs-paused vjs-user-inactive" ng-model="video"></video>-->
-                
                 <div id="streamed-video"></div>
                 <div id="downloaded-video"></div>
-                
+            </ion-content>-->
+            <ion-content overflow-scroll="true" has-header="true" padding="true">
+                <div class="list card">
+                    
+                    <div class="item item-avatar">
+                        <img src="/resources/andy.jpg">
+                        <h2>{{day.title}}</h2>
+                        <div ng-bind-html="day.body">></div>
+                    </div>
+
+                    <div class="item item-body">
+                        <div id="download-progress"></div>
+                        <div id="streamed-video"></div>
+                        <div id="downloaded-video"></div>
+                        <p>
+                            Click 'Download' to watch this video offline!
+                        </p>
+                        <p>
+                            <a href="#" class="subdued">1 Like</a>
+                            <a href="#" class="subdued">5 Comments</a>
+                        </p>
+                    </div>
+
+                    <!--<div class="item">
+                        <div class="button-bar">
+                            <button class="item ion-thumbsup">
+                                Like
+                            </button>
+                            <button class="item ion-chatbox">
+                                Comment
+                            </button>
+                            <button class="item ion-share" >
+                                Share
+                            </button>
+                        </div>
+                    </div>-->
+                    <div class="item tabs tabs-secondary tabs-icon-left">
+                        <a class="tab-item" ng-click="downloadVideo({{day.dayId}})">
+                            <i class="icon ion-arrow-down-a"></i>
+                            Download
+                        </a>
+                        <a class="tab-item" ng-click="">
+                            <i class="icon ion-chatbox"></i>
+                            Comment
+                        </a>
+                        <a class="tab-item" ng-click="">
+                            <i class="icon ion-share"></i>
+                            Share
+                        </a>
+                    </div>
+
+                </div>
             </ion-content>
         </ion-tab>
 
@@ -37,5 +83,6 @@
                 </div>
             </ion-content>
         </ion-tab>
+
     </ion-tabs>
 </ion-view>
