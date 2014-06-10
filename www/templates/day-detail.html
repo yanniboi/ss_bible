@@ -21,6 +21,7 @@
                     <div class="item item-avatar">
                         <img src="resources/andy.jpg">
                         <h2>{{day.title}}</h2>
+                        <p>{{day.created | date:'MMM d, y h:mma'}}</p>
                         <div ng-bind-html="day.body">></div>
                     </div>
 

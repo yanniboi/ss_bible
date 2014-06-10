@@ -1,7 +1,107 @@
 angular.module('bioy.controllers', [])
 
-    .controller('AppCtrl', function ($scope) {
-    })
+    .controller('AppCtrl', ['$scope', '$state', '$ionicModal', function ($scope, $state, $ionicModal) {
+        /*if ($scope.login == null) {
+            $scope.login = false;
+        }
+        
+        // Check for login
+        $scope.checkLogin = function () {
+            console.log("checking login");
+        };
+        
+        $scope.checkLogin();
+        if (!$scope.login) {
+            $state.go('login');
+        }*/
+        
+        $ionicModal.fromTemplateUrl(
+            'templates/login.html',
+            function(modal) {
+                $scope.loginModal = modal;
+            },
+            {
+                scope: $scope,
+                animation: 'slide-in-up',
+                focusFirstInput: true
+            }
+        );
+        //Be sure to cleanup the modal by removing it from the DOM
+        $scope.$on('$destroy', function() {
+            $scope.loginModal.remove();
+        });
+        
+    }])
+
+    .controller('HomeCtrl', ['$state', '$scope', function ($state, $scope) {
+        $scope.settings = function () {
+            $state.go('app.settings');
+        }
+    }])
+
+    .controller('SettingsCtrl', ['$state', '$scope', 'localStorageService', function ($state, $scope, localStorageService) {
+        /*if (window.localStorage.getItem('lightsabre') == null ||
+            window.localStorage.getItem('download') == null) {
+            
+        }*/
+        $scope.settings = {
+            'lightsabre': window.localStorage.getItem('lightsabre'),
+            'download': JSON.parse(window.localStorage.getItem('download'))
+        };
+        
+        $scope.save = function () {
+            window.localStorage.setItem('lightsabre', $scope.settings.lightsabre);
+            window.localStorage.setItem('download', $scope.settings.download);
+            $state.go('app.home');
+            
+            // You can also play with cookies the same way
+            //localStorageService.cookie.add('localStorageKey','I am a cookie value now');
+            
+        }
+    }])
+
+    .controller('LoginCtrl', ['$scope', '$state', '$http', 'AuthenticationService', function ($scope, $state, $http, AuthenticationService) {
+        $scope.user = {
+            username: null,
+            password: null
+        };
+        
+        /*$scope.login = function(user) {
+            var auth = btoa(user.username+":"+user.password);
+            $http.defaults.headers.common.Authorization = 'Basic ' + auth;
+            $scope.login = true;
+            $state.go('app.home');
+        };*/
+        
+        $scope.message = "";
+
+        $scope.login = function() {
+            AuthenticationService.login($scope.user);
+        };
+
+        $scope.$on('event:auth-loginRequired', function(e, rejection) {
+            $scope.loginModal.show();
+        });
+
+        $scope.$on('event:auth-loginConfirmed', function() {
+            $scope.username = null;
+            $scope.password = null;
+            $scope.loginModal.hide();
+        });
+
+        $scope.$on('event:auth-login-failed', function(e, status) {
+            var error = "Login failed.";
+            if (status == 401) {
+                error = "Invalid Username or Password.";
+            }
+            $scope.message = error;
+        });
+
+        $scope.$on('event:auth-logout-complete', function() {
+            $state.go('app.home', {}, {reload: true, inherit: false});
+        }); 
+        
+    }])
 
     .controller('DayDetailCtrl', ['$scope', '$stateParams', '$ionicPopup', 'Day', function ($scope, $stateParams, $ionicPopup, Day) {
         //$scope.day = Day.get({dayId: $routeParams.dayId});
@@ -85,7 +185,7 @@ angular.module('bioy.controllers', [])
                         'title' : results[0].title,
                         'body' : results[0].body,
                         'dayId' : results[0].day,
-                        'created' : results[0].created,
+                        'created' : results[0].created * 1000,
                         'nid' : results[0].nid,
                     };
                     $scope.init();
@@ -167,7 +267,7 @@ angular.module('bioy.controllers', [])
         };
     }])
 
-    .controller('DaysCtrl', ['$scope', '$timeout', '$http', '$data', 'Day', function ($scope, $timeout, $http, $data, Day) {
+    .controller('DaysCtrl', ['$scope', '$timeout', '$http', '$data', '$ionicLoading', 'Day', function ($scope, $timeout, $http, $data, $ionicLoading, Day) {
         $scope.days = [];
     
         var dayDB = Day.query;
@@ -175,6 +275,15 @@ angular.module('bioy.controllers', [])
         $scope.months = [];
         $scope.dbIsEmpty = true;
 
+        
+        $http.get('https://customers')
+            .success(function (data, status, headers, config) {
+                console.log("Error occurred.  Status:" + status);
+            })
+            .error(function (data, status, headers, config) {
+                console.log("Error occurred.  Status:" + status);
+            });
+        
         
         $scope.clearMonths = function () {
             var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
@@ -201,7 +310,7 @@ angular.module('bioy.controllers', [])
                         'nid' : day.nid,
                     });
                     var month = new Date(day.created * 1000).getMonth(); 
-                    $scope.months[month - 1].items.push(day);
+                    $scope.months[month].items.push(day);
                 });
 
             });
@@ -222,9 +331,19 @@ angular.module('bioy.controllers', [])
         $scope.hasChildren = function(group) {
             return group.items.length;
         };
+        
+        $scope.show = function() {
+            $scope.loading = $ionicLoading.show({
+                template: 'Loading feed...'
+            });
+        };
+        $scope.hide = function(){
+            $scope.loading.hide();
+        };
                 
          $scope.doRefresh = function () {
             console.log('Refreshing!');
+             $scope.show();
             $timeout( function() {
                 $http({method: 'GET', url: 'http://bible.soulsurvivor.com/rest/views/days'}).
                 success(function(data, status, headers, config) {
@@ -259,7 +378,7 @@ angular.module('bioy.controllers', [])
                                 }
                                 dayTestDB.saveChanges();
                                 var month = new Date(day.created * 1000).getMonth(); 
-                                $scope.months[month - 1].items.push(day);
+                                $scope.months[month].items.push(day);
                                 //$scope.months[month - 1].items[day.nid] = day;
                             });
                         });
@@ -273,6 +392,7 @@ angular.module('bioy.controllers', [])
                 $scope.$broadcast('scroll.refreshComplete');
 
             }, 1000);
+             $scope.hide();
         };
 
     }])

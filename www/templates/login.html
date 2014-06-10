@@ -1,0 +1,43 @@
+<!--<ion-view title="Login">
+    <ion-content class="has-header">
+        <h4>Login</h4>
+        <div class="list list-inset">
+            <div class="item item-text-wrap">
+                <p>Share thoughts, reflections and questions as we journey together in reading the Bible In One Year</p>
+            </div>
+            <label class="item-input">
+                <input type="text" placeholder="Username" ng-model="user.username" required>
+            </label>
+            <label class="item-input">
+                <input type="password" placeholder="Password" ng-model="user.password" required>
+            </label>
+            <button class="button icon icon-left button-block button-calm" ng-click="login(user)">
+                <i class="icon ion-forward"></i>
+                Login
+            </button>
+        </div>
+    </ion-content>
+</ion-view>-->
+
+<div class="modal" ng-controller="LoginCtrl">
+    <ion-header-bar class="bar-stable">
+      <h1 class="title">Login</h1>
+    </ion-header-bar> 
+    <ion-content has-header="true" padding="true">
+      <form class="list">
+        <div class="item item-divider">
+          Just tap the login button to simulate a successful login
+        </div>
+        <div>{{message}}</div>
+        <label class="item item-input">
+          <input type="text" placeholder="Username" ng-model="user.username" required>
+        </label>
+        <label class="item item-input">
+          <input type="password" placeholder="Password" ng-model="user.password" required>
+        </label>
+        <div class="padding">
+          <button class="button button-block button-stable" ng-click="login()">Login</button>
+        </div>
+      </form>
+    </ion-content>
+</div>
