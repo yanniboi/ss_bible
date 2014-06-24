@@ -111,12 +111,7 @@ angular.module('bioy.controllers', [])
         $scope.nid = $stateParams.dayId,
         $scope.day = [];
         $scope.offline = false;
-        
 
-        /*day.title = data.title[0].value;
-        day.dayId = data.field_day_number[0].value;
-        day.body = data.body[0].value;
-        day.nid = data.nid[0].value;*/
         // An alert dialog
         $scope.showPopup = function (number) {
             var alertPopup = $ionicPopup.alert({
@@ -128,32 +123,37 @@ angular.module('bioy.controllers', [])
             });
         };
         
-        $scope.showVideo = function (day) {
-            var url = "http://bible.soulsurvivor.com/sites/default/files/" + day + ".mp4";
+        $scope.showVideo = function () {
+            var url = "http://bible.soulsurvivor.com/sites/default/files/" + $scope.day.dayId + ".mp4";
             var video = $scope.buildVideo(url);
             
             var vidEl = document.getElementById("streamed-video");
             vidEl.appendChild(video); 
+            
+            var vidPrev = document.getElementById("video-preview");
+            vidPrev.style.display = 'none';
+
         };
         
-        $scope.showDownload = function (day) {
-            var fileUrl = "file:///storage/emulated/0/" + day + ".mp4";
-            //var fileUrl = "http://techslides.com/demos/sample-videos/small.mp4";
+        $scope.showDownload = function () {
+            var fileUrl = "file:///storage/emulated/0/" + $scope.day.dayId + ".mp4";
             var video = $scope.buildVideo(fileUrl);
             
             var vidEl = document.getElementById("downloaded-video");
-            vidEl.appendChild(video);             
+            vidEl.appendChild(video); 
+            
+            var vidPrev = document.getElementById("video-preview");
+            vidPrev.style.display = 'none';
         }
         
         $scope.buildVideo = function (url) {
-            //var fileUrl = "file:///storage/emulated/0/" + day + ".mp4";
-            //var fileUrl = "http://techslides.com/demos/sample-videos/small.mp4";
         
             var vidVid = document.createElement("video");
             var sourceVid = document.createElement("source");
             vidVid.setAttribute("class", "video-js vjs-default-skin");
             vidVid.setAttribute("preload", "auto");
             vidVid.setAttribute("controls", "true");
+            vidVid.setAttribute("autoplay", "true");
             vidVid.setAttribute("poster", "img/preview.jpg");
             vidVid.setAttribute("data-setup", "{}");
             sourceVid.setAttribute("src", url);
@@ -163,14 +163,37 @@ angular.module('bioy.controllers', [])
             return vidVid; 
         }
         
-        // Decide which video to display.
         $scope.init = function () {
+            var path = $scope.day.dayId + ".mp4";
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem){
+                fileSystem.root.getFile(path, { create: false }, fileExists, fileDoesNotExist);
+            }, getFSFail);
+        }
+        
+        function fileExists(fileEntry){
+            $scope.$apply(function () {
+                $scope.offline = true;
+            });
+            $scope.startVideo($scope.day.dayId);
+        }
+        
+        function fileDoesNotExist(){
+            $scope.$apply(function () {
+                $scope.offline = false;
+            });
+            $scope.startVideo($scope.day.dayId);
+
+        }
+        
+        function getFSFail(evt) {
+            console.log(evt.target.error.code);
+        }
+        
+        $scope.startVideo = function (day) {
             if ($scope.offline) {
-                // Show offline version.
                 $scope.showDownload($scope.day.dayId);
             }
             else {
-                // Show streamed version.
                 $scope.showVideo($scope.day.dayId);
             }
         }
@@ -194,9 +217,9 @@ angular.module('bioy.controllers', [])
 
             });
         });
-
         
-        $scope.downloadVideo = function (day) {
+        $scope.downloadVideo = function () {
+            var day = $scope.day.dayId;
             var progEl = document.getElementById('download-progress');
 
 
@@ -232,25 +255,17 @@ angular.module('bioy.controllers', [])
 
                             fileTransfer.download(
                                 "http://bible.soulsurvivor.com/sites/default/files/" + day + ".mp4",
-                                //"http://techslides.com/demos/sample-videos/small.mp4",
 
                                 fileSystem.root.toURL() + day + ".mp4",
                                 function (theFile) {
                                     var progEl = document.getElementById('download-progress');
-
                                     progEl.innerHTML = "Download Finished";
-                                    //$('#video-show').css("display", "block");
-                                    //$('#video-download').css("display", "none");
-
-                                    /*var db = window.openDatabase("readingdb", "0.1", "DatabaseForReadings", 1000);
-                                    db.transaction(function (tx) {
-                                    tx.executeSql(
-                                    "UPDATE days SET download = 1 WHERE day = ? ;",
-                                    [day.data],
-                                    function (tx, results) {console.log("database download bool updated"); },
-                                    function (tx, error) {console.log("database download bool failed! error - ") ;}
+                                    window.plugins.toast.showShortTop(
+                                        'File downloaded!'
                                     );
-                                    });*/
+                                    $scope.$apply(function () {
+                                        $scope.offline = true;
+                                    });
                                 },
                                 function (error) {
                                     console.log("download error source " + error.source);
@@ -265,6 +280,37 @@ angular.module('bioy.controllers', [])
                 function () {console.log("an error occured - 24")}
             );
         };
+        
+        
+        $scope.deleteVideo = function () {
+            window.requestFileSystem(
+                LocalFileSystem.PERSISTENT,
+                0,
+                function(fileSystem) {
+                    var root = fileSystem.root;
+                    
+                    var remove_file = function(entry) {
+                        entry.remove(function() {
+                            window.plugins.toast.showShortTop(
+                                'Local file deleted!'
+                            );
+                            $scope.$apply(function () {
+                                $scope.offline = false;
+                            });
+                        }, function () {console.log("an error occured - 27")});
+                    };
+
+                    // retrieve a file and truncate it
+                    root.getFile(
+                        $scope.day.dayId + '.mp4',
+                        {create: false},
+                        remove_file,
+                        function () {console.log("an error occured - 25")}
+                    );
+                },
+                function () {console.log("an error occured - 26")}
+            );
+        };
     }])
 
     .controller('DaysCtrl', ['$scope', '$timeout', '$http', '$data', '$ionicLoading', 'Day', function ($scope, $timeout, $http, $data, $ionicLoading, Day) {
@@ -275,14 +321,14 @@ angular.module('bioy.controllers', [])
         $scope.months = [];
         $scope.dbIsEmpty = true;
 
-        
-        $http.get('https://customers')
+        /*get login box*/
+        /*$http.get('https://customers')
             .success(function (data, status, headers, config) {
                 console.log("Error occurred.  Status:" + status);
             })
             .error(function (data, status, headers, config) {
                 console.log("Error occurred.  Status:" + status);
-            });
+            });*/
         
         
         $scope.clearMonths = function () {

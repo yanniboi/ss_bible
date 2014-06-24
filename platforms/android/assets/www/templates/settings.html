@@ -1,0 +1,37 @@
+<ion-view title="The Bible in One Year with Soul Survivor">
+    <div class="bar-calm">
+        <ion-nav-buttons side="right">
+            <button ng-click="save()" class="button button-light">Save</button>
+        </ion-nav-buttons>
+    </div>
+    <ion-content class="has-header">
+        <h4>Settings</h4>
+        <div class="list">
+
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Lightsaber
+                </div>
+                <select ng-model="settings.lightsabre">
+                    <option>Blue</option>
+                    <option selected>Green</option>
+                    <option>Red</option>
+                </select>
+            </label>
+            <label class="item item-toggle">
+                <div class="input-label">
+                    Automatic Downloads
+                </div>
+                <label class="toggle toggle-positive">
+                    <input type="checkbox" ng-model="settings.download">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </label>
+            <div class="padding">
+                <button class="button button-block button-stable" ng-click="save()">Save</button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

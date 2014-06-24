@@ -1,23 +1,37 @@
-<ion-view title="Browse">
-    <ion-nav-buttons side="left">
-        <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
-    </ion-nav-buttons>
-    <ion-content class="has-header">
-        <h1>Browse</h1>
+<ion-view title="Bible in One Year">
+    <div class="bar-calm">
+        <ion-nav-buttons class="bar-calm" side="left">
+            <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
+        </ion-nav-buttons>
+    </div>
+    <ion-content class="ionic has-header">
+        <h4>Browse</h4>
+        <ion-refresher
+                       pulling-text="Pull to refresh..."
+                       refreshing-text="Refreshing..."
+                       pulling-icon="ion-arrow-down-c"
+                       refreshing-icon="ion-looping"
+                       on-refresh="doRefresh()">
+        </ion-refresher>
+        <div class="pull-info" ng-cloak ng-show="dbIsEmpty">
+            Pull down to refresh...
+        </div>
         <ion-list>
             <div ng-repeat="month in months">
                 <ion-item class="item-stable"
+                          ng-show="hasChildren(month)"
                           ng-click="toggleGroup(month)"
                           ng-class="{active: isGroupShown(month)}">
                     <i class="icon" ng-class="isGroupShown(month) ? 'ion-minus' : 'ion-plus'"></i>
                     &nbsp;
                     {{month.name}}
                 </ion-item>
-                <ion-item class="item-accordion"
+                <ion-item class="item-accordion item item-icon-left"
                           ng-repeat="day in month.items"
-                          href="#/app/days/{{day.nid[0].value}}"
+                          href="#/app/days/{{day.nid}}"
                           ng-show="isGroupShown(month)">
-                    {{day.title[0].value}}
+                    <i class="icon ion-email"></i>
+                    {{day.title}}
                 </ion-item>
             </div>
         </ion-list>

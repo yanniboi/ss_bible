@@ -25,6 +25,15 @@ h1,h2,h3,h4,h5 {
     text-align: center;   
 }
 
+.day-detail {
+    .list.card {
+        h2 {
+            text-align: left;
+        }
+        margin-bottom: 20px;
+    }
+}
+
 body {
     .video-js {
         /*display: none;*/
@@ -34,7 +43,9 @@ body {
     }
 
     .popup {
-        width: 70%;   
+        width: 70%; 
+        height: 60%;
+        overflow: scroll;
     }
 }
 

@@ -53,6 +53,8 @@
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/file/FileUtils$FileOp.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/file/FileUtils$14.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/device/Device.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/nl/xservices/plugins/Toast.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/nl/xservices/plugins/Toast$1.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/ionicframework/starter/R$xml.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/ionicframework/starter/HelloCordova.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/ionicframework/starter/R$drawable.class \
