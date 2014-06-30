@@ -1,4 +1,18 @@
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes.dex : \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppChromeClient.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowser$5$4.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowserDialog.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowser$5$1.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowser$3.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowser.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowser$InAppBrowserClient.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowser$1.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowser$5$3.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowser$5.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowser$4.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowser$2.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowser$4$1.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/inappbrowser/InAppBrowser$5$2.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/filetransfer/FileTransfer$2.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/filetransfer/FileTransfer$RequestContext.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/filetransfer/FileTransfer$TrackingInputStream.class \
@@ -53,8 +67,12 @@
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/file/FileUtils$FileOp.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/file/FileUtils$14.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/device/Device.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/nl/xservices/plugins/SocialSharing$1.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/nl/xservices/plugins/SocialSharing.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/nl/xservices/plugins/Toast.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/nl/xservices/plugins/Toast$1.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/nl/xservices/plugins/SocialSharing$SocialSharingRunnable.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/nl/xservices/plugins/SocialSharing$2.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/ionicframework/starter/R$xml.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/ionicframework/starter/HelloCordova.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/ionicframework/starter/R$drawable.class \

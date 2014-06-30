@@ -311,6 +311,39 @@ angular.module('bioy.controllers', [])
                 function () {console.log("an error occured - 26")}
             );
         };
+        
+        $scope.comment = function() {
+            window.open('http://bible.soulsurvivor.com/node/' + $scope.nid + '#comment-form', '_blank', 'location=no');
+        }
+        
+        $scope.share = function() {
+            window.plugins.socialsharing.shareViaFacebook(
+                'Message via Facebook',
+                null,
+                'http://bible.soulsurvivor.com/node/' + $scope.nid,
+                function() {console.log('share ok')},
+                function(errormsg){
+                    //alert(errormsg)
+                    $ionicPopup.show({
+                        title: 'Facebook',
+                        templateUrl: "templates/facebook_error.html",
+                        subTitle: 'Looks like you haven\'t got the Facebook App installed',
+                        buttons: [
+                          { text: 'Close' },
+                          {
+                            text: '<b>Download</b>',
+                            type: 'button-positive',
+                            onTap: function() {
+                                window.open('http://m.facebook.com/install', '_blank', 'location=no');
+                            }
+                          }
+                        ]
+                    }).then(function (res) {
+                        console.log('Thank you for not eating my delicious ice cream cone');
+                    });
+                }
+            )
+        };
     }])
 
     .controller('DaysCtrl', ['$scope', '$timeout', '$http', '$data', '$ionicLoading', 'Day', function ($scope, $timeout, $http, $data, $ionicLoading, Day) {

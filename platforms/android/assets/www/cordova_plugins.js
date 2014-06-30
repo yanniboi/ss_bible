@@ -36,6 +36,20 @@ module.exports = [
         ]
     },
     {
+        "file": "plugins/nl.x-services.plugins.socialsharing/www/SocialSharing.js",
+        "id": "nl.x-services.plugins.socialsharing.SocialSharing",
+        "clobbers": [
+            "window.plugins.socialsharing"
+        ]
+    },
+    {
+        "file": "plugins/org.apache.cordova.inappbrowser/www/inappbrowser.js",
+        "id": "org.apache.cordova.inappbrowser.inappbrowser",
+        "clobbers": [
+            "window.open"
+        ]
+    },
+    {
         "file": "plugins/org.apache.cordova.file/www/DirectoryEntry.js",
         "id": "org.apache.cordova.file.DirectoryEntry",
         "clobbers": [
@@ -173,6 +187,8 @@ module.exports.metadata =
     "org.apache.cordova.device": "0.2.9",
     "org.apache.cordova.file-transfer": "0.4.3",
     "nl.x-services.plugins.toast": "2.0",
+    "nl.x-services.plugins.socialsharing": "4.3.1",
+    "org.apache.cordova.inappbrowser": "0.5.0",
     "org.apache.cordova.file": "1.1.0"
 }
 // BOTTOM OF METADATA
