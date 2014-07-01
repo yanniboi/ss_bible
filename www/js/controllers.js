@@ -121,6 +121,11 @@ angular.module('bioy.controllers', [])
             alertPopup.then(function (res) {
                 console.log('Thank you for not eating my delicious ice cream cone');
             });
+
+            // Scroll to top!
+            setTimeout( function () {
+                jQuery('.popup-showing').animate({ scrollTop: 0 }, "slow");
+            }, 500 );
         };
         
         $scope.showVideo = function () {
