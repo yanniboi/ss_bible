@@ -10,7 +10,7 @@
                         <img src="resources/andy.jpg">
                         <h2>{{day.title}}</h2>
                         <p>{{day.created | date:'MMM d, y h:mma'}}</p>
-                        <div ng-bind-html="day.body"></div>
+                        <div ng-bind-html="day.subtitle"></div>
                     </div>
 
                     <div class="item item-body">
@@ -31,7 +31,7 @@
                     </div>
 
                     <div class="item tabs tabs-secondary tabs-icon-left">
-                        <a class="tab-item" ng-show="!offline" ng-click="downloadVideo()">
+                        <!--<a class="tab-item" ng-show="!offline" ng-click="downloadVideo()">
                             <i class="icon ion-arrow-down-a"></i>
                             Download
                         </a>
@@ -42,7 +42,7 @@
                         <a class="tab-item" ng-click="comment()">
                             <i class="icon ion-chatbox"></i>
                             Comment
-                        </a>
+                        </a>-->
                         <a ng-show="!day.read" class="tab-item" ng-click="markRead()">
                             <i class="icon ion-checkmark"></i>
                             Mark as Read
@@ -52,8 +52,8 @@
                             Mark as Unread
                         </a>
                         <a class="tab-item" ng-click="share()">
-                            <i class="icon ion-share"></i>
-                            Share
+                            <i class="icon ion-social-facebook"></i>
+                            Share on Facebook
                         </a>
                     </div>
 

@@ -297,12 +297,30 @@ angular.module('bioy.controllers', [])
         }
         
         $scope.startVideo = function (day) {
-            if ($scope.offline) {
+            // No longer doing video downloads.
+            /*if ($scope.offline) {
                 $scope.showDownload($scope.day.dayId);
             }
             else {
                 $scope.showVideo($scope.day.dayId);
-            }
+            }*/
+            $scope.showYoutube();
+        }
+        
+        $scope.showYoutube = function () {
+            //var fileUrl = "file:///storage/emulated/0/" + $scope.day.dayId + ".mp4";
+            var vidVid = document.createElement("iframe");
+            vidVid.setAttribute("width", "auto");
+            vidVid.setAttribute("height", "315");
+            vidVid.setAttribute("src", "http://www.youtube.com/embed/" + $scope.day.youtube + "?modestbranding=1&rel=0&theme=light&color=white&autohide=0&disablekb=1");
+            vidVid.setAttribute("frameborder", "0");
+            vidVid.setAttribute("allowfullscreen", "true");
+                        
+            var vidEl = document.getElementById("downloaded-video");
+            vidEl.appendChild(vidVid); 
+            
+            var vidPrev = document.getElementById("video-preview");
+            vidPrev.style.display = 'none';
         }
         
         dayDB.onReady(function() {
@@ -317,6 +335,8 @@ angular.module('bioy.controllers', [])
                         'dayId' : results[0].day,
                         'created' : results[0].created * 1000,
                         'nid' : results[0].nid,
+                        'youtube' : results[0].youtube,
+                        'subtitle' : results[0].subtitle,
                         'read' : results[0].read,
                     };
                     $scope.init();
@@ -495,6 +515,8 @@ angular.module('bioy.controllers', [])
                         'body' : day.body,
                         'created' : day.created,
                         'nid' : day.nid,
+                        'youtube' : day.youtube,
+                        'subtitle' : day.subtitle,
                     });
                     var month = new Date(day.created * 1000).getMonth(); 
                     //var month = new Date(day.created).getMonth(); 
@@ -589,6 +611,8 @@ angular.module('bioy.controllers', [])
                         day.created = data.node.date;
                         day.nid = data.node.nid;
                         day.read = data.node.read;
+                        day.youtube = data.node.youtube;
+                        day.subtitle = data.node.subtitle;
 
 
                         days.push(day);
