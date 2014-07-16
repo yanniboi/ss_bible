@@ -81,11 +81,11 @@ angular.module('bioy', [
             }
         })
         
-        /*.state('login', {
+        .state('login', {
             url: "/login",
                     templateUrl: "templates/login.html",
                     controller: 'LoginCtrl'
-        })*/
+        })
 
         .state('app.search', {
             url: "/search",

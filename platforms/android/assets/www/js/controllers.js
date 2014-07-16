@@ -1,7 +1,7 @@
 angular.module('bioy.controllers', [])
 
     .controller('AppCtrl', ['$scope', '$state', '$ionicModal', function ($scope, $state, $ionicModal) {
-        /*if ($scope.login == null) {
+        if ($scope.login == null) {
             $scope.login = false;
         }
         
@@ -12,8 +12,8 @@ angular.module('bioy.controllers', [])
         
         $scope.checkLogin();
         if (!$scope.login) {
-            $state.go('login');
-        }*/
+            //$state.go('login');
+        }
         
         $ionicModal.fromTemplateUrl(
             'templates/login.html',
@@ -58,11 +58,23 @@ angular.module('bioy.controllers', [])
             //localStorageService.cookie.add('localStorageKey','I am a cookie value now');
             
         }
+        
+        $scope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
+        
+        $scope.doLogout = function() {
+            window.localStorage.setItem('user_login', 0);
+            window.localStorage.setItem('user_uid', 0);
+            $scope.isLoggedIn = 0;
+        }
+        
+        $scope.doLogin = function() {
+            $scope.loginModal.show();
+        }
     }])
 
-    .controller('LoginCtrl', ['$scope', '$state', '$http', 'AuthenticationService', function ($scope, $state, $http, AuthenticationService) {
+    .controller('LoginCtrl', ['$scope', '$state', '$http', '$ionicPopup', 'AuthenticationService', function ($scope, $state, $http, $ionicPopup, AuthenticationService) {
         $scope.user = {
-            username: null,
+            username: window.localStorage.getItem('user_name'),
             password: null
         };
         
@@ -74,12 +86,65 @@ angular.module('bioy.controllers', [])
         };*/
         
         $scope.message = "";
-
+        
         $scope.login = function() {
-            AuthenticationService.login($scope.user);
+            //AuthenticationService.login($scope.user);
+            var test = $scope.user;
+            window.localStorage.setItem('user_name', $scope.user.username);
+            window.localStorage.setItem('user_password', $scope.user.password);
+            
+            //var url = "http://soulsurvivor.bible/phonegap/user/login/";
+            var url = "http://bible.soulsurvivor.com/phonegap/user/login/";
+            var method = "POST";
+            var postData = '{ "username" : "' + $scope.user.username + '", "password" : "' + $scope.user.password + '" }';
+
+            // You REALLY want async = true.
+            // Otherwise, it'll block ALL execution waiting for server response.
+            var async = true;
+
+            var request = new XMLHttpRequest();
+            
+            // Define what to do with response.
+            request.onload = function () {
+
+                // You can get all kinds of information about the HTTP response.
+                var status = request.status; // HTTP response status, e.g., 200 for "200 OK"
+                if (status == 200) {
+                   
+                    var data =  JSON.parse(request.responseText); // Returned data, e.g., an HTML document.
+                    
+                    // Store user data
+                    window.localStorage.setItem('user_uid', data.user.uid);
+                    window.localStorage.setItem('user_login', 1);
+                    
+                    $scope.$apply(function () {
+                        $scope.isLoggedIn = 0;
+                    });
+                    
+                    var stop = '';
+                    $scope.loginModal.remove();
+
+                }
+                else {
+                    $scope.$apply(function () {
+                        $scope.message = "Your details are incorrect. Please try again.";
+                    });
+                    //$scope.message = "Your details are incorrect. Please try again.";
+                    $scope.user.password = null;
+                    console.log('error with connection. status: '+ status);
+                }
+            }
+
+            request.open(method, url, async);
+
+            request.setRequestHeader("Content-Type", "application/json");
+            request.setRequestHeader("Accept", "application/json");
+
+            // Actually sends the request to the server.
+            request.send(postData);            
         };
 
-        $scope.$on('event:auth-loginRequired', function(e, rejection) {
+        /*$scope.$on('event:auth-loginRequired', function(e, rejection) {
             $scope.loginModal.show();
         });
 
@@ -99,7 +164,7 @@ angular.module('bioy.controllers', [])
 
         $scope.$on('event:auth-logout-complete', function() {
             $state.go('app.home', {}, {reload: true, inherit: false});
-        }); 
+        }); */
         
     }])
 
@@ -121,6 +186,11 @@ angular.module('bioy.controllers', [])
             alertPopup.then(function (res) {
                 console.log('Thank you for not eating my delicious ice cream cone');
             });
+
+            // Scroll to top!
+            setTimeout( function () {
+                jQuery('.popup-showing').animate({ scrollTop: 0 }, "slow");
+            }, 500 );
         };
         
         $scope.showVideo = function () {
@@ -170,6 +240,43 @@ angular.module('bioy.controllers', [])
             }, getFSFail);
         }
         
+        $scope.markRead = function () {
+            $scope.day.read = 1;
+            
+            var dayTestDB = new DayDatabase({
+                provider: 'sqLite' , databaseName: 'MyDayDatabase'
+            });
+            dayTestDB.onReady(function() {
+                var existingTasks = dayTestDB.Days.filter("nid", "==", $scope.day.nid).toLiveArray();
+                existingTasks.then(function(results) {
+                    var todo = dayTestDB.Days.attachOrGet($scope.day);
+                    todo.read = 1;
+                    todo.created = results[0].created;
+
+                    
+                    dayTestDB.saveChanges();
+                });
+            });
+        }
+        
+        $scope.markUnread = function () {
+            $scope.day.read = 0;
+            
+            var dayTestDB = new DayDatabase({
+                provider: 'sqLite' , databaseName: 'MyDayDatabase'
+            });
+            dayTestDB.onReady(function() {
+                var existingTasks = dayTestDB.Days.filter("nid", "==", $scope.day.nid).toLiveArray();
+                existingTasks.then(function(results) {
+                    var todo = dayTestDB.Days.attachOrGet($scope.day);
+                    todo.read = 0;
+                    todo.created = results[0].created;
+
+                    dayTestDB.saveChanges();
+                });
+            });
+        }
+        
         function fileExists(fileEntry){
             $scope.$apply(function () {
                 $scope.offline = true;
@@ -210,6 +317,7 @@ angular.module('bioy.controllers', [])
                         'dayId' : results[0].day,
                         'created' : results[0].created * 1000,
                         'nid' : results[0].nid,
+                        'read' : results[0].read,
                     };
                     $scope.init();
                     dayDB.saveChanges();
@@ -369,7 +477,7 @@ angular.module('bioy.controllers', [])
 
             for (var i=0; i<12; i++) {
                 $scope.months [i] = {
-                    name: monthNames[i],
+                    name: monthNames[12 - i],
                     items: []
                 };
             }
@@ -389,7 +497,9 @@ angular.module('bioy.controllers', [])
                         'nid' : day.nid,
                     });
                     var month = new Date(day.created * 1000).getMonth(); 
-                    $scope.months[month].items.push(day);
+                    //var month = new Date(day.created).getMonth(); 
+                    var test = $scope;
+                    $scope.months[12 - month].items.push(day);
                 });
 
             });
@@ -419,12 +529,48 @@ angular.module('bioy.controllers', [])
         $scope.hide = function(){
             $scope.loading.hide();
         };
+        
+        var getReadData = function (uid) {
+            $http({method: 'GET', url: 'http://bible.soulsurvivor.com/rest/views/read/' + uid}).
+            //$http({method: 'GET', url: 'http://soulsurvivor.bible/rest/views/read/' + uid}).
+            success(function(data, status, headers, config) {                    
+                data.forEach(function (data) {
+                    var day = [];
+
+                    day.nid = data.node.nid;
+                    day.read = data.node.read;
+
+
+                    var dayTestDB = new DayDatabase({
+                        provider: 'sqLite' , databaseName: 'MyDayDatabase'
+                    });
+
+                    dayTestDB.onReady(function() {
+                        var existingTasks = dayTestDB.Days.filter("nid", "==", day.nid).toLiveArray();
+                        existingTasks.then(function(results) {
+                            var todo = dayTestDB.Days.attachOrGet(day);
+                            todo.read = day.read;
+
+                            /*if (results.length == 0) {
+                                //create
+                                dayTestDB.Days.add(day);
+                            }*/
+                            dayTestDB.saveChanges();
+                        });
+                    });
+                });
+            }).
+            error(function(data, status, headers, config) {
+                console.log(status);
+            });
+        }
                 
          $scope.doRefresh = function () {
             console.log('Refreshing!');
              $scope.show();
             $timeout( function() {
                 $http({method: 'GET', url: 'http://bible.soulsurvivor.com/rest/views/days'}).
+                //$http({method: 'GET', url: 'http://soulsurvivor.bible/rest/views/days'}).
                 success(function(data, status, headers, config) {
                     var days = [];
                     
@@ -432,11 +578,18 @@ angular.module('bioy.controllers', [])
                     
                     data.forEach(function (data) {
                         var day = [];
-                        day.day = data.field_day_number[0].value;
+                        /*day.day = data.field_day_number[0].value;
                         day.body = data.body[0].value;
                         day.title = data.title[0].value;
                         day.created = data.created[0].value;
-                        day.nid = data.nid[0].value;
+                        day.nid = data.nid[0].value;*/
+                        day.day = data.node.field_day_number
+                        day.body = data.node.body;
+                        day.title = data.node.title;
+                        day.created = data.node.date;
+                        day.nid = data.node.nid;
+                        day.read = data.node.read;
+
 
                         days.push(day);
 
@@ -457,7 +610,7 @@ angular.module('bioy.controllers', [])
                                 }
                                 dayTestDB.saveChanges();
                                 var month = new Date(day.created * 1000).getMonth(); 
-                                $scope.months[month].items.push(day);
+                                $scope.months[12 - month].items.push(day);
                                 //$scope.months[month - 1].items[day.nid] = day;
                             });
                         });
@@ -466,7 +619,16 @@ angular.module('bioy.controllers', [])
                 error(function(data, status, headers, config) {
                     console.log(status);
                 });
-
+                
+                
+                /*******************************************/
+                
+                var uid = JSON.parse(window.localStorage.getItem('user_uid'));
+                if (uid) {
+                    getReadData(uid);
+                }
+                
+                
                 //Stop the ion-refresher from spinning
                 $scope.$broadcast('scroll.refreshComplete');
 

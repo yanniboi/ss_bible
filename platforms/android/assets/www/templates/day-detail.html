@@ -10,7 +10,7 @@
                         <img src="resources/andy.jpg">
                         <h2>{{day.title}}</h2>
                         <p>{{day.created | date:'MMM d, y h:mma'}}</p>
-                        <div ng-bind-html="day.body">></div>
+                        <div ng-bind-html="day.body"></div>
                     </div>
 
                     <div class="item item-body">
@@ -42,6 +42,14 @@
                         <a class="tab-item" ng-click="comment()">
                             <i class="icon ion-chatbox"></i>
                             Comment
+                        </a>
+                        <a ng-show="!day.read" class="tab-item" ng-click="markRead()">
+                            <i class="icon ion-checkmark"></i>
+                            Mark as Read
+                        </a>
+                        <a ng-show="day.read" class="tab-item" ng-click="markUnread()">
+                            <i class="icon ion-email"></i>
+                            Mark as Unread
                         </a>
                         <a class="tab-item" ng-click="share()">
                             <i class="icon ion-share"></i>

@@ -76,6 +76,7 @@
             $data.Entity.extend("Days", {
                 title: {type: String, required: true, maxLength: 200 },
                 day: { type: "int" },
+                read: { type: "int" },
                 nid: { type: "int", key: true, computed: true },
                 created: { type: String },
                 body: { type: String }
