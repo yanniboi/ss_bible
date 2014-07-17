@@ -1,3 +1,3 @@
 # view AndroidManifest.xml #generated:6
--keep class com.soulsurvivor.bible.HelloCordova { <init>(...); }
+-keep class com.soulsurvivor.bible.BibleInOneYear { <init>(...); }
 

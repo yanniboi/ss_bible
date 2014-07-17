@@ -32,6 +32,15 @@ h1,h2,h3,h4,h5 {
         }
         margin-bottom: 20px;
     }
+    
+    iframe {
+        margin: auto;
+        display: block;
+    }
+    #video-preview img {
+        margin: auto;
+        display: block;
+    }
 }
 
 body {

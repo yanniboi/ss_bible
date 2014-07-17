@@ -1,6 +1,6 @@
 angular.module('bioy.services', ['http-auth-interceptor'])
 
-    .factory('AuthenticationService', ['$rootScope', '$state', '$http', 'authService', '$httpBackend', function($rootScope, $state, $http, authService, $httpBackend) {
+    /*.factory('AuthenticationService', ['$rootScope', '$state', '$http', 'authService', '$httpBackend', function($rootScope, $state, $http, authService, $httpBackend) {
         var service = {
             login: function(user) {
                 $http.post('https://login', { user: user }, { ignoreAuthModule: true })
@@ -35,4 +35,27 @@ angular.module('bioy.services', ['http-auth-interceptor'])
             }
         };
         return service;
+    }])*/
+
+    .factory('Utils', ['$rootScope', '$ionicLoading', '$window', function ($rootScope, $ionicLoading, $window) {
+        $rootScope.show = function (text) {
+            $rootScope.loading = $ionicLoading.show({
+                content: text ? text : 'Loading...',
+                animation: 'fade-in',
+                showBackdrop: true,
+                maxWidth: 200,
+                showDelay: 0
+            });
+        };
+
+        $rootScope.hide = function () {
+            $ionicLoading.hide();
+        };
+
+        $rootScope.notify =function(text){
+            $rootScope.show(text);
+            $window.setTimeout(function () {
+              $rootScope.hide();
+            }, 1999);
+        };
     }])

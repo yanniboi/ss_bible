@@ -14,35 +14,27 @@
                     </div>
 
                     <div class="item item-body">
-                        <div id="download-progress"></div>
-                        <div id="video-preview" ng-click="startVideo(day.dayId)"><img src="img/preview.jpg"></img></div>
+                        <div id="video-preview" ng-click="showYoutube()"><img src="img/preview.jpg"></img></div>
                         <!--<h4>Streaming...</h4>-->
                         <div id="streamed-video"></div>
-                        <!--<h4>Local file...</h4>-->
-                        <div id="downloaded-video"></div>
                     
                         <p>
-                            Click 'Download' to watch this video offline!
+                            Click 'Mark as Read' to indicate you have seen this Video!
                         </p>
                         <p>
-                            <a href="#" class="subdued">1 Like</a>
+                            <a href="#" class="subdued">12 People have seen this Video</a>
                             <a href="#" class="subdued">5 Comments</a>
                         </p>
                     </div>
 
                     <div class="item tabs tabs-secondary tabs-icon-left">
-                        <!--<a class="tab-item" ng-show="!offline" ng-click="downloadVideo()">
-                            <i class="icon ion-arrow-down-a"></i>
-                            Download
-                        </a>
-                        <a class="tab-item" ng-show="offline" ng-click="deleteVideo()">
-                            <i class="icon ion-trash-a"></i>
-                            Delete
-                        </a>
+                        <!--
                         <a class="tab-item" ng-click="comment()">
                             <i class="icon ion-chatbox"></i>
                             Comment
-                        </a>-->
+                        </a>
+                        -->
+
                         <a ng-show="!day.read" class="tab-item" ng-click="markRead()">
                             <i class="icon ion-checkmark"></i>
                             Mark as Read
@@ -62,7 +54,7 @@
         </ion-tab>
 
 
-        <!-- Verses Tab -->
+        <!-- Verses Tab --
         <ion-tab title="Verses" icon="icon ion-chatboxes">
             <ion-content has-header="true" padding="true">
                 <h2>Day {{day.dayId}} Verses</h2>
@@ -74,7 +66,7 @@
                     <a class="button button-outline" ng-click="showPopup(1)">Psalms</a>
                 </div>
             </ion-content>
-        </ion-tab>
+        </ion-tab> -->
 
     </ion-tabs>
 </ion-view>
