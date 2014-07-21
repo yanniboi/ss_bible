@@ -202,6 +202,7 @@
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/recent.html \
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/menu.html \
 /var/www/mobile/ss_bible/platforms/android/assets/www/plugins/org.apache.cordova.device \
+/var/www/mobile/ss_bible/platforms/android/assets/www/plugins/org.apache.cordova.network-information \
 /var/www/mobile/ss_bible/platforms/android/assets/www/plugins/org.apache.cordova.inappbrowser \
 /var/www/mobile/ss_bible/platforms/android/assets/www/plugins/nl.x-services.plugins.socialsharing \
 /var/www/mobile/ss_bible/platforms/android/assets/www/plugins/com.ionic.keyboard \
@@ -210,6 +211,9 @@
 /var/www/mobile/ss_bible/platforms/android/assets/www/plugins/nl.x-services.plugins.toast \
 /var/www/mobile/ss_bible/platforms/android/assets/www/plugins/org.apache.cordova.device/www \
 /var/www/mobile/ss_bible/platforms/android/assets/www/plugins/org.apache.cordova.device/www/device.js \
+/var/www/mobile/ss_bible/platforms/android/assets/www/plugins/org.apache.cordova.network-information/www \
+/var/www/mobile/ss_bible/platforms/android/assets/www/plugins/org.apache.cordova.network-information/www/network.js \
+/var/www/mobile/ss_bible/platforms/android/assets/www/plugins/org.apache.cordova.network-information/www/Connection.js \
 /var/www/mobile/ss_bible/platforms/android/assets/www/plugins/org.apache.cordova.inappbrowser/www \
 /var/www/mobile/ss_bible/platforms/android/assets/www/plugins/org.apache.cordova.inappbrowser/www/inappbrowser.js \
 /var/www/mobile/ss_bible/platforms/android/assets/www/plugins/nl.x-services.plugins.socialsharing/www \

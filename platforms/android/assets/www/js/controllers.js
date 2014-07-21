@@ -1,6 +1,6 @@
 angular.module('bioy.controllers', [])
 
-    .controller('AppCtrl', ['$scope', '$state', '$ionicModal', function ($scope, $state, $ionicModal) {
+    .controller('AppCtrl', ['$scope', '$rootScope', '$state', '$ionicModal', function ($scope, $rootScope, $state, $ionicModal) {
         if ($scope.login == null) {
             $scope.login = false;
         }
@@ -30,6 +30,18 @@ angular.module('bioy.controllers', [])
         $scope.$on('$destroy', function() {
             $scope.loginModal.remove();
         });
+        
+        // Method to check for internet connection.
+        $rootScope.checkNetwork = function () {
+            //@TODO remove debug for production.
+            if (typeof navigator.connection === 'undefined') {
+                return true;
+            }
+            if (navigator.connection.type == Connection.NONE) {
+                return false;
+            }
+            return true;
+        };
         
     }])
 
@@ -258,23 +270,28 @@ angular.module('bioy.controllers', [])
         }
         
         $scope.showYoutube = function () {
-            var vidVid = document.createElement("iframe");
-            vidVid.setAttribute("width", "300");
-            vidVid.setAttribute("height", "315");
-            vidVid.setAttribute("src", "http://www.youtube.com/embed/" + $scope.day.youtube + "?modestbranding=1&rel=0&theme=light&color=white&autohide=0&disablekb=1");
-            vidVid.setAttribute("frameborder", "0");
-            vidVid.setAttribute("autoplay", "true");
-            vidVid.setAttribute("allowfullscreen", "true");
-                        
-            var vidEl = document.getElementById("streamed-video");
-            vidEl.appendChild(vidVid); 
-            
-            var vidPrev = document.getElementById("video-preview");
-            vidPrev.style.display = 'none';
+            if (!$rootScope.checkNetwork()) {
+                $rootScope.notify("You are not connected to the internet...");
+            }
+            else {
+                var vidVid = document.createElement("iframe");
+                vidVid.setAttribute("width", "300");
+                vidVid.setAttribute("height", "315");
+                vidVid.setAttribute("src", "http://www.youtube.com/embed/" + $scope.day.youtube + "?modestbranding=1&rel=0&theme=light&color=white&autohide=0&disablekb=1");
+                vidVid.setAttribute("frameborder", "0");
+                vidVid.setAttribute("autoplay", "true");
+                vidVid.setAttribute("allowfullscreen", "true");
+
+                var vidEl = document.getElementById("streamed-video");
+                vidEl.appendChild(vidVid); 
+
+                var vidPrev = document.getElementById("video-preview");
+                vidPrev.style.display = 'none';
+            }
         }
         
         $scope.comment = function() {
-            window.open('http://bible.soulsurvivor.com/node/' + $scope.nid + '#comment-form', '_blank', 'location=no');
+            window.open('http://bible.soulsurvivor.com/node/' + $scope.nid + '#comment-form', '_system');
         }
         
         $scope.share = function() {
@@ -295,7 +312,7 @@ angular.module('bioy.controllers', [])
                             text: '<b>Download</b>',
                             type: 'button-positive',
                             onTap: function() {
-                                window.open('http://m.facebook.com/install', '_blank', 'location=no');
+                                window.open('http://m.facebook.com/install', '_system');
                             }
                           }
                         ]
@@ -379,19 +396,33 @@ angular.module('bioy.controllers', [])
             return group.items.length;
         };
                 
-         $scope.doRefresh = function () {
-             console.log('Refreshing!');
+        $scope.doRefresh = function () {
+            if (!$rootScope.checkNetwork()) {
+                $rootScope.notify("You are not connected to the internet...");
+                $scope.$broadcast('scroll.refreshComplete');
+            }
+            else {
+                console.log('Refreshing!');
                 var uid = JSON.parse(window.localStorage.getItem('user_uid'));
-                $http({method: 'GET', url: 'http://bible.soulsurvivor.com/rest/views/days/' + uid}).
+            
+                if (!!uid) {
+                    var URL = 'http://bible.soulsurvivor.com/rest/views/days/' + uid;
+                }
+                else {
+                    var URL = 'http://bible.soulsurvivor.com/rest/views/days';
+                }
+                
+                
+                $http({method: 'GET', url: URL}).
                 //$http({method: 'GET', url: 'http://soulsurvivor.bible/rest/views/days'}).
                 success(function(data, status, headers, config) {
                     var days = [];
-                    
+
                     if (data.length) { $scope.dbIsEmpty = false; }
-                    
+
                     var i = 0,
-                    max = data.length;
-                    
+                        max = data.length;
+
                     data.forEach(function (data) {
                         var day = [];
                         day.day = data.node.field_day_number
@@ -402,7 +433,6 @@ angular.module('bioy.controllers', [])
                         day.read = JSON.parse(data.node.read);
                         day.youtube = data.node.youtube;
                         day.subtitle = data.node.subtitle;
-
 
                         days.push(day);
 
@@ -426,7 +456,7 @@ angular.module('bioy.controllers', [])
                                 $scope.months[12 - month].items.push(day);
                             });
                         });
-                        
+
                         if (i == max - 1) {
                             // Last iteration
                             $rootScope.hide();
@@ -441,7 +471,7 @@ angular.module('bioy.controllers', [])
                     $scope.$broadcast('scroll.refreshComplete');
                     $rootScope.notify('Opps! It seems like something went wrong.');
                 });
-                
+            }
         };
 
     }])

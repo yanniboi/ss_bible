@@ -66,6 +66,8 @@
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/file/FileUtils$19.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/file/FileUtils$FileOp.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/file/FileUtils$14.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/networkinformation/NetworkManager$1.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/networkinformation/NetworkManager.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/org/apache/cordova/device/Device.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/nl/xservices/plugins/SocialSharing$1.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/nl/xservices/plugins/SocialSharing.class \
