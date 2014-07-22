@@ -188,6 +188,7 @@
 /var/www/mobile/ss_bible/platforms/android/assets/www/js/directives.js \
 /var/www/mobile/ss_bible/platforms/android/assets/www/img/ionic.png \
 /var/www/mobile/ss_bible/platforms/android/assets/www/img/preview.jpg \
+/var/www/mobile/ss_bible/platforms/android/assets/www/img/preview2.jpg \
 /var/www/mobile/ss_bible/platforms/android/assets/www/css/ionic.app.css \
 /var/www/mobile/ss_bible/platforms/android/assets/www/css/style.css \
 /var/www/mobile/ss_bible/platforms/android/assets/www/css/ionic.app.min.css \

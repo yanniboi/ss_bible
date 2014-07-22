@@ -77,6 +77,13 @@
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/nl/xservices/plugins/SocialSharing$2.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/ionic/keyboard/IonicKeyboard$1.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/ionic/keyboard/IonicKeyboard.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bioy/R$xml.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bioy/R$drawable.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bioy/R$attr.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bioy/BuildConfig.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bioy/R$string.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bioy/R.class \
+/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bioy/BibleInOneYear.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bible/R$xml.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bible/R$drawable.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bible/R$attr.class \

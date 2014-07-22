@@ -11,6 +11,8 @@
                 youtube: { type: String },
                 subtitle: { type: String },
                 read: { type: "int" },
+                read_count: { type: "int" },
+                comment_count: { type: "int" },
                 nid: { type: "int", key: true, computed: true },
                 created: { type: String },
                 body: { type: String }

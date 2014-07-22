@@ -1,4 +1,4 @@
-/var/www/mobile/ss_bible/platforms/android/ant-gen/com/soulsurvivor/bible/R.java \
+/var/www/mobile/ss_bible/platforms/android/ant-gen/com/soulsurvivor/bioy/R.java \
  : /var/www/mobile/ss_bible/platforms/android/res/drawable-port-ldpi/screen.png \
 /var/www/mobile/ss_bible/platforms/android/res/drawable-land-xhdpi/screen.png \
 /var/www/mobile/ss_bible/platforms/android/res/drawable-ldpi/splash.png \
