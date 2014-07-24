@@ -5,8 +5,9 @@ angular.module('bioy.controllers', [])
             $scope.login = false;
         }
         
-        // Check for login
+        // Set up global variables
         $rootScope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
+        $rootScope.shownGroup = null;
 
         
         $ionicModal.fromTemplateUrl(
@@ -377,7 +378,10 @@ angular.module('bioy.controllers', [])
         };
         
         dayDB.onReady(function() {
-            var storedData = dayDB.Days.filter(true).toLiveArray();
+            var storedData = dayDB.Days
+            .filter(true)
+            .orderByDescending("it.title")
+            .toLiveArray();
             storedData.then(function (results) {
                 if (results.length) { $scope.dbIsEmpty = false; }
                 $scope.clearMonths();
@@ -413,16 +417,21 @@ angular.module('bioy.controllers', [])
             });
         });
         
+        // Sets the active group and unsets the inactive group
         $scope.toggleGroup = function (group) {
             if ($scope.isGroupShown(group)) {
-                $scope.shownGroup = null;
+                $rootScope.shownGroup = null;
             } else {
-                $scope.shownGroup = group;
+                $rootScope.shownGroup = group;
             }
         };
         
+        // Helper callback to check if a group is active or not.
         $scope.isGroupShown = function(group) {
-            return $scope.shownGroup === group;
+            if ($rootScope.shownGroup == null) {
+                return false;
+            }
+            return $rootScope.shownGroup.name === group.name;
         };
         
         $scope.hasChildren = function(group) {
