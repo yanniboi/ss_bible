@@ -14,8 +14,7 @@ angular.module('bioy', [
     'bioy.memoryServices',
     'bioy.services',
     'jaydata',
-    'LocalStorageModule',
-    'ngMockE2E' // Take out after site authentication is configured
+    'LocalStorageModule'
 ])
 
 
@@ -31,32 +30,6 @@ angular.module('bioy', [
                 StatusBar.styleDefault();
             }
         });
-        
-        // -------- Start of mock code ---------
-        
-        // Mocking code used for simulation purposes (using ngMockE2E module)	
-        var authorized = false;
-
-        // returns the current list of customers or a 401 depending on authorization flag
-        $httpBackend.whenGET('https://customers').respond(function (method, url, data, headers) {
-            return authorized ? [200] : [401];
-        });
-
-        $httpBackend.whenPOST('https://login').respond(function(method, url, data) {
-            //authorized = true;
-            authorized = true;
-            return  [200 , { authorizationToken: "NjMwNjM4OTQtMjE0Mi00ZWYzLWEzMDQtYWYyMjkyMzNiOGIy" } ];
-        });
-
-        $httpBackend.whenPOST('https://logout').respond(function(method, url, data) {
-            authorized = false;
-            return [200];
-        });
-
-        // All other http requests will pass through
-        $httpBackend.whenGET(/.*/).passThrough();
-        
-        // -------- End of mock code ---------
   
     }])
 

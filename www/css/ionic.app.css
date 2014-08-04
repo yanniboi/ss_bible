@@ -28,16 +28,12 @@ h1, h2, h3, h4, h5 {
   margin: auto;
   display: block; }
 
-body {
-  /*.popup {
-      width: 70%; 
-      height: 60%;
-      overflow: scroll;
-  }*/ }
-  body .video-js {
-    /*display: none;*/ }
-  body video {
-    width: 100%; }
+body .video-js {
+  /*display: none;*/ }
+body video {
+  width: 100%; }
+body div.streak {
+  text-align: center; }
 
 /*!
   Ionicons, v1.4.1

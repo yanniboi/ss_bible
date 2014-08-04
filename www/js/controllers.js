@@ -8,7 +8,25 @@ angular.module('bioy.controllers', [])
         // Set up global variables
         $rootScope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
         $rootScope.shownGroup = null;
-
+        
+        // Streak variables.
+        $rootScope.streak = {
+            today: new Date().setHours(0,0,0,0),
+            current: window.localStorage.getItem('streak_current'),
+            highscore: window.localStorage.getItem('streak_highscore'),
+            update: window.localStorage.getItem('streak_update')
+        };
+        
+        //$rootScope.streak.update = 1307106800000;
+        $rootScope.streak.today = 1407193200000;
+        
+        if (($rootScope.streak.today - $rootScope.streak.update) > 86400000) {
+            $rootScope.streak.highscore = $rootScope.streak.current
+            window.localStorage.setItem('streak_highscore', $rootScope.streak.current);
+            
+            $rootScope.streak.current = 0
+            window.localStorage.setItem('streak_current', 0);
+        }
         
         $ionicModal.fromTemplateUrl(
             'templates/login.html',
@@ -185,7 +203,7 @@ angular.module('bioy.controllers', [])
     /**
      * Controller for dealing with the Detailed Day view.
      */
-    .controller('DayDetailCtrl', ['$scope', '$rootScope', '$stateParams', '$ionicPopup', '$http', 'Day', 'Utils', function ($scope, $rootScope, $stateParams, $ionicPopup, $http, Day, Utils) {
+    .controller('DayDetailCtrl', ['$scope', '$rootScope', '$stateParams', '$ionicPopup', '$http', 'Day', 'Utils', 'Streak', function ($scope, $rootScope, $stateParams, $ionicPopup, $http, Day, Utils, Streak) {
         // Get the data from the database
         var dayDB = Day.query
         $scope.instructions = "Click 'Mark as Read' to indicate you have seen this Video!";
@@ -270,6 +288,17 @@ angular.module('bioy.controllers', [])
                     }
                 });
             });
+            
+            // Show streak popup
+            if ($rootScope.streak.update < $rootScope.streak.today) {
+                $rootScope.streak.update = $rootScope.streak.today;
+                window.localStorage.setItem('streak_update', $rootScope.streak.update);
+                
+                $rootScope.streak.current++;
+                window.localStorage.setItem('streak_current', $rootScope.streak.current);
+
+                Streak.show();
+            }
         }
         
         $scope.markUnread = function () {
