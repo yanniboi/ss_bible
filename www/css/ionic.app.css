@@ -35,6 +35,15 @@ body video {
 body div.streak {
   text-align: center; }
 
+/* iphone */
+/*@media (max-device-width : 568px) { */
+@media (max-device-width: 500px) {
+  .day-detail .card {
+    margin: 0; }
+    .day-detail .card .item-video {
+      padding: 0; }
+      .day-detail .card .item-video img {
+        width: 100%; } }
 /*!
   Ionicons, v1.4.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/

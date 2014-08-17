@@ -56,6 +56,23 @@ body {
     }
 }
 
+/* iphone */
+
+/*@media (max-device-width : 568px) { */
+@media (max-device-width : 500px) { 
+    .day-detail {
+        .card {
+            margin: 0;
+            .item-video {
+                padding: 0;
+                img {
+                    width: 100%
+                }
+            }
+        }
+    }
+}
+
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 

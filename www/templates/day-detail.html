@@ -1,23 +1,24 @@
 <ion-view class="day-detail" title="Day {{day.dayId}}">
-    <ion-tabs class="tabs-icon-top">
+    <!--<ion-tabs class="tabs-icon-top">-->
 
         <!-- Video Tab -->
-        <ion-tab title="Video" icon="icon ion-play">
+        <!--<ion-tab title="Video" icon="icon ion-play">-->
             <ion-content overflow-scroll="true" has-header="true" padding="true">
                 <div class="list card">
                     
-                    <div class="item item-avatar">
+                    <div class="item item-avatar item-text-wrap">
                         <img src="resources/andy.jpg">
                         <h2>{{day.title}}</h2>
                         <p>{{day.created | date:'MMM d, y'}}</p>
                         <div ng-bind-html="day.subtitle"></div>
                     </div>
 
-                    <div class="item item-body">
+                    <div class="item item-video">
                         <div id="video-preview" ng-click="showYoutube()"><img src="img/preview.jpg"></img></div>
                         <!--<h4>Streaming...</h4>-->
                         <div id="streamed-video"></div>
-                    
+                    </div>
+                    <div class="item item-body">
                         <p>
                             {{instructions}}
                         </p>
@@ -51,7 +52,7 @@
 
                 </div>
             </ion-content>
-        </ion-tab>
+        <!--</ion-tab>-->
 
 
         <!-- Verses Tab --
@@ -68,5 +69,5 @@
             </ion-content>
         </ion-tab> -->
 
-    </ion-tabs>
+    <!--</ion-tabs>-->
 </ion-view>
