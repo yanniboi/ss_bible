@@ -17,6 +17,15 @@
                     <i class="icon ion-home"></i>
                     Home
                 </ion-item>
+                <ion-list class="padding">
+                    <ion-item class="item-accordion item item-icon-left"
+                              ng-repeat="day in days"
+                              href="#/app/days/{{day.nid}}">
+                        <i ng-show="!day.read" class="icon ion-email"></i>
+                        <i ng-show="day.read" class="icon ion-checkmark"></i>
+                        {{day.title}}
+                    </ion-item>
+                </ion-list>
                 <ion-item class="item item-icon-left" nav-clear menu-close href="#/app/browse">
                     <i class="icon ion-ios7-bookmarks"></i>
                     Browse

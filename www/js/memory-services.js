@@ -82,7 +82,8 @@
                         });
                         
                         $q.all(days).then(function () {
-                            alert('finished!');
+                            console.log('finished updating days!');
+                            doRefreshMenu();
                         });
                         
                     }).
@@ -91,12 +92,102 @@
                     });
                 }   
             }
-            
+
+            function doRefreshMenu () {
+                var dayDB = new DayDatabase({
+                    provider: 'sqLite' , databaseName: 'MyDayDatabase'
+                });
+                if ($rootScope.CurrentDay == null) {
+                    var test = $rootScope.CurrentDay;
+                    return;
+                }
+
+                var readtest = $rootScope.CurrentDay;
+                var read = parseInt($rootScope.CurrentDay);
+                //var read = 8;
+
+                dayDB.onReady(function() {
+                    var storedData = dayDB.Days
+                        .filter("it.day >= " + (read - 1))
+                        .filter("it.day < " + (read + 4))
+                        .orderByDescending("it.title")
+                        .toLiveArray();
+                    storedData.then(function (results) {
+                        if (results.length) { /* do something */ }
+
+                        var i = 0,
+                            max = results.length;
+
+                        var menuDays = [];
+
+                        results.forEach(function (day) {
+                            menuDays.push({
+                                'title' : day.title,
+                                'day' : day.day,
+                                'body' : day.body,
+                                'created' : day.created,
+                                'nid' : day.nid,
+                                'read' : day.read,
+                                'read_count' : day.read_count,
+                                'comment_count' : day.comment_count,
+                                'youtube' : day.youtube,
+                                'subtitle' : day.subtitle
+                            });
+
+                            // Attach day to month array.
+
+
+                            if (i == max - 1) {
+                                // Last iteration
+                                //$rootScope.hide();
+                            }
+                            i++;
+                        });
+
+                        $q.all(menuDays).then(function (days) {
+                            var test = days;
+                            $rootScope.menuDays = days;
+                        })
+
+                    });
+                });
+            }
+
+            function getMaxDay () {
+                var dayDB = new DayDatabase({
+                    provider: 'sqLite' , databaseName: 'MyDayDatabase'
+                });
+
+                dayDB.onReady(function() {
+                    var storedData = dayDB.Days
+                        .orderByDescending("it.day")
+                        .first (
+                            function (person) { return person.read == 1 },
+                            {},
+                            function (result) {
+                                var test1 = result.day;
+                                $rootScope.CurrentDay = result.day;
+                                window.localStorage.setItem('currentDay', result.day);
+                                $rootScope.notify(result.day);
+                            }
+
+                        );
+                });
+            }
+
             return {
                 query: dayDB,
                 refresh: function() {
-                    console.log('refreshing db from server')
+                    console.log('refreshing db from server');
                     doRefresh();
+                },
+                refreshMenu: function () {
+                    console.log('refreshing menu');
+                    doRefreshMenu();
+                },
+                getCurrentDay: function () {
+                    console.log('getting max day');
+                    getMaxDay();
                 }
             }
         }]);

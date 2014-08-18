@@ -3,7 +3,7 @@
 (function () {
 
     angular.module('bioy.memoryServices', ['jaydata', 'bioy.services'])
-        .factory('Day', ['$data', '$rootScope', '$http', 'Utils', function ($data, $rootScope, $http, Utils) {
+        .factory('Day', ['$data', '$rootScope', '$http', '$q', 'Utils', function ($data, $rootScope, $http, $q, Utils) {
             
             $data.Entity.extend("Days", {
                 title: {type: String, required: true, maxLength: 200 },
@@ -80,6 +80,11 @@
                                 });
                             });
                         });
+                        
+                        $q.all(days).then(function () {
+                            alert('finished!');
+                        });
+                        
                     }).
                     error(function(data, status, headers, config) {
                         console.log('Error getting ajax request from server, status: ' + status);

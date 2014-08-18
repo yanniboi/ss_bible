@@ -8,6 +8,7 @@ angular.module('bioy.controllers', [])
         // Set up global variables
         $rootScope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
         $rootScope.shownGroup = null;
+        $rootScope.CurrentDay = window.localStorage.getItem('currentDay');
         
         // Streak variables.
         $rootScope.streak = {
@@ -16,7 +17,9 @@ angular.module('bioy.controllers', [])
             highscore: window.localStorage.getItem('streak_highscore'),
             update: window.localStorage.getItem('streak_update')
         };
-        
+
+        $scope.days = [];
+
         // Demo dates @todo remove.
         //$rootScope.streak.update = 1307106800000;
         //$rootScope.streak.today = 1407193200000;
@@ -31,7 +34,7 @@ angular.module('bioy.controllers', [])
         
         // Refresh the database from server.
         Day.refresh();
-        
+
         $ionicModal.fromTemplateUrl(
             'templates/login.html',
             function(modal) {
@@ -47,71 +50,27 @@ angular.module('bioy.controllers', [])
         $scope.$on('$destroy', function() {
             $scope.loginModal.remove();
         });
-        
+
+        var test1 = $scope.days;
+        var test2 = '';
+
+        $rootScope.$watch('menuDays', function () {
+            $scope.days = $rootScope.menuDays;
+        });
+
         function rebuildMenu () {
             $scope.days = [];
-
-            var dayDB = Day.query;
-
-            var read = 8;
-
-            dayDB.onReady(function() {
-                var storedData = dayDB.Days
-                .filter("it.nid >= " + (read - 1))
-                .filter("it.nid < " + (read + 4))
-                .orderByDescending("it.title")
-                .toLiveArray();
-                storedData.then(function (results) {
-                    if (results.length) { /* do something */ }
-
-                    var i = 0,
-                    max = results.length;
-
-                    results.forEach(function (day) {
-                        $scope.days.push({
-                            'title' : day.title,
-                            'day' : day.day,
-                            'body' : day.body,
-                            'created' : day.created,
-                            'nid' : day.nid,
-                            'read' : day.read,
-                            'read_count' : day.read_count,
-                            'comment_count' : day.comment_count,
-                            'youtube' : day.youtube,
-                            'subtitle' : day.subtitle,
-                        });
-
-                        // Attach day to month array.
-
-
-                        if (i == max - 1) {
-                            // Last iteration
-                            //$rootScope.hide();
-                        }
-                        i++;
-                    });
-
-                });
-            });
+            Day.refreshMenu();
         }
         
-                /*$rootScope.menuDays = new Event('rebuildmenu');
-        
-        var test = $rootScope.menuDays;
-        
-        window.addEventListener('rebuildmenu', 'rebuildMenu', false);
-
-        window.dispatchEvent($rootScope.menuDays);*/
-        
-        
         // Create the event.
-        $rootScope.menuDays = document.createEvent('Event');
+        $rootScope.menuRefreshEvent = document.createEvent('Event');
 
         // Define that the event name is 'build'.
-        $rootScope.menuDays.initEvent('rebuildmenu', true, true);
+        $rootScope.menuRefreshEvent.initEvent('rebuildmenu', true, true);
 
         // Listen for the event.
-        document.addEventListener('rebuildmenu', rebuildMenu, false);
+        window.addEventListener('rebuildmenu', rebuildMenu, false);
 
         // target can be any Element or other EventTarget.
         //document.dispatchEvent($rootScope.menuDays);
@@ -121,9 +80,14 @@ angular.module('bioy.controllers', [])
         
     }])
 
-    .controller('HomeCtrl', ['$state', '$scope', '$rootScope', 'Utils', function ($state, $scope, $rootScope, Utils) {
+    .controller('HomeCtrl', ['$state', '$scope', '$rootScope', 'Utils', 'Day', function ($state, $scope, $rootScope, Utils, Day) {
         //var isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
-        
+
+        $scope.getCurrentDay = function () {
+            Day.getCurrentDay();
+
+        };
+
         var isLoggedIn = $rootScope.isLoggedIn;
         
         if (isLoggedIn) {
@@ -176,7 +140,7 @@ angular.module('bioy.controllers', [])
             window.localStorage.setItem('user_uid', 0);
             $rootScope.isLoggedIn = 0;
             $scope.isLoggedIn = 0;
-        }
+        };
         
         // Opens login dialog
         $scope.doLogin = function() {
@@ -247,7 +211,7 @@ angular.module('bioy.controllers', [])
                     $scope.user.password = null;
                     console.log('error with connection. status: '+ status);
                 }
-            }
+            };
 
             // Build the request object.
             $rootScope.notify("Logging in...");
@@ -298,7 +262,7 @@ angular.module('bioy.controllers', [])
                         'comment_count' : results[0].comment_count,
                         'youtube' : results[0].youtube,
                         'subtitle' : results[0].subtitle,
-                        'read' : results[0].read,
+                        'read' : results[0].read
                     };
                     //$scope.init();
                     dayDB.saveChanges();
@@ -339,8 +303,12 @@ angular.module('bioy.controllers', [])
                     todo.read_count = results[0].read_count + 1;
                     $scope.day.read_count++;
 
-                    dayTestDB.saveChanges();
-                    
+                    dayTestDB.saveChanges().then(function () {
+                        window.localStorage.setItem('currentDay', $scope.day.dayId);
+                        $rootScope.CurrentDay = $scope.day.dayId;
+                        window.dispatchEvent($rootScope.menuRefreshEvent);
+                    });
+
                     // Update the website
                     if ($rootScope.isLoggedIn) {
                         var uid = JSON.parse(window.localStorage.getItem('user_uid')),
@@ -363,8 +331,8 @@ angular.module('bioy.controllers', [])
                 Streak.show();
             }
 
-            document.dispatchEvent($rootScope.menuDays);
-        }
+            //window.dispatchEvent($rootScope.menuDamenuRefreshEventys);
+        };
         
         $scope.markUnread = function () {
             $scope.day.read = 0;
@@ -381,7 +349,9 @@ angular.module('bioy.controllers', [])
                     todo.read_count = results[0].read_count - 1;
                     $scope.day.read_count--;
 
-                    dayTestDB.saveChanges();
+                    dayTestDB.saveChanges().then(function () {
+                        window.dispatchEvent($rootScope.menuRefreshEvent);
+                    });
                     
                     // Update the website
                     if ($rootScope.isLoggedIn) {
@@ -393,9 +363,10 @@ angular.module('bioy.controllers', [])
                     }
                 });
             });
-            
-            document.dispatchEvent($rootScope.menuDays);
-        }
+
+            //var test = $rootScope.menuRefreshEvent;
+
+        };
         
         $scope.verses = ['Lamentations 2:13 - 3:14', 'Philemon 1', 'Psalm 23 - 24'];
         

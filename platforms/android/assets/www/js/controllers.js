@@ -48,6 +48,77 @@ angular.module('bioy.controllers', [])
             $scope.loginModal.remove();
         });
         
+        function rebuildMenu () {
+            $scope.days = [];
+
+            var dayDB = Day.query;
+
+            var read = 8;
+
+            dayDB.onReady(function() {
+                var storedData = dayDB.Days
+                .filter("it.nid >= " + (read - 1))
+                .filter("it.nid < " + (read + 4))
+                .orderByDescending("it.title")
+                .toLiveArray();
+                storedData.then(function (results) {
+                    if (results.length) { /* do something */ }
+
+                    var i = 0,
+                    max = results.length;
+
+                    results.forEach(function (day) {
+                        $scope.days.push({
+                            'title' : day.title,
+                            'day' : day.day,
+                            'body' : day.body,
+                            'created' : day.created,
+                            'nid' : day.nid,
+                            'read' : day.read,
+                            'read_count' : day.read_count,
+                            'comment_count' : day.comment_count,
+                            'youtube' : day.youtube,
+                            'subtitle' : day.subtitle,
+                        });
+
+                        // Attach day to month array.
+
+
+                        if (i == max - 1) {
+                            // Last iteration
+                            //$rootScope.hide();
+                        }
+                        i++;
+                    });
+
+                });
+            });
+        }
+        
+                /*$rootScope.menuDays = new Event('rebuildmenu');
+        
+        var test = $rootScope.menuDays;
+        
+        window.addEventListener('rebuildmenu', 'rebuildMenu', false);
+
+        window.dispatchEvent($rootScope.menuDays);*/
+        
+        
+        // Create the event.
+        $rootScope.menuDays = document.createEvent('Event');
+
+        // Define that the event name is 'build'.
+        $rootScope.menuDays.initEvent('rebuildmenu', true, true);
+
+        // Listen for the event.
+        document.addEventListener('rebuildmenu', rebuildMenu, false);
+
+        // target can be any Element or other EventTarget.
+        //document.dispatchEvent($rootScope.menuDays);
+        
+        //rebuildMenu();
+        
+        
     }])
 
     .controller('HomeCtrl', ['$state', '$scope', '$rootScope', 'Utils', function ($state, $scope, $rootScope, Utils) {
@@ -291,6 +362,8 @@ angular.module('bioy.controllers', [])
 
                 Streak.show();
             }
+
+            document.dispatchEvent($rootScope.menuDays);
         }
         
         $scope.markUnread = function () {
@@ -320,6 +393,8 @@ angular.module('bioy.controllers', [])
                     }
                 });
             });
+            
+            document.dispatchEvent($rootScope.menuDays);
         }
         
         $scope.verses = ['Lamentations 2:13 - 3:14', 'Philemon 1', 'Psalm 23 - 24'];
