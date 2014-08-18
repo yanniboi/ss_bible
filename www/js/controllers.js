@@ -1,6 +1,6 @@
 angular.module('bioy.controllers', [])
 
-    .controller('AppCtrl', ['$scope', '$rootScope', '$state', '$ionicModal', function ($scope, $rootScope, $state, $ionicModal) {
+    .controller('AppCtrl', ['$scope', '$rootScope', '$state', '$ionicModal', 'Day', function ($scope, $rootScope, $state, $ionicModal, Day) {
         if ($scope.login == null) {
             $scope.login = false;
         }
@@ -17,8 +17,9 @@ angular.module('bioy.controllers', [])
             update: window.localStorage.getItem('streak_update')
         };
         
+        // Demo dates @todo remove.
         //$rootScope.streak.update = 1307106800000;
-        $rootScope.streak.today = 1407193200000;
+        //$rootScope.streak.today = 1407193200000;
         
         if (($rootScope.streak.today - $rootScope.streak.update) > 86400000) {
             $rootScope.streak.highscore = $rootScope.streak.current
@@ -27,6 +28,9 @@ angular.module('bioy.controllers', [])
             $rootScope.streak.current = 0
             window.localStorage.setItem('streak_current', 0);
         }
+        
+        // Refresh the database from server.
+        Day.refresh();
         
         $ionicModal.fromTemplateUrl(
             'templates/login.html',
@@ -44,17 +48,76 @@ angular.module('bioy.controllers', [])
             $scope.loginModal.remove();
         });
         
-        // Method to check for internet connection.
-        $rootScope.checkNetwork = function () {
-            //@TODO remove debug for production.
-            if (typeof navigator.connection === 'undefined') {
-                return true;
-            }
-            if (navigator.connection.type == Connection.NONE) {
-                return false;
-            }
-            return true;
-        };
+        function rebuildMenu () {
+            $scope.days = [];
+
+            var dayDB = Day.query;
+
+            var read = 8;
+
+            dayDB.onReady(function() {
+                var storedData = dayDB.Days
+                .filter("it.nid >= " + (read - 1))
+                .filter("it.nid < " + (read + 4))
+                .orderByDescending("it.title")
+                .toLiveArray();
+                storedData.then(function (results) {
+                    if (results.length) { /* do something */ }
+
+                    var i = 0,
+                    max = results.length;
+
+                    results.forEach(function (day) {
+                        $scope.days.push({
+                            'title' : day.title,
+                            'day' : day.day,
+                            'body' : day.body,
+                            'created' : day.created,
+                            'nid' : day.nid,
+                            'read' : day.read,
+                            'read_count' : day.read_count,
+                            'comment_count' : day.comment_count,
+                            'youtube' : day.youtube,
+                            'subtitle' : day.subtitle,
+                        });
+
+                        // Attach day to month array.
+
+
+                        if (i == max - 1) {
+                            // Last iteration
+                            //$rootScope.hide();
+                        }
+                        i++;
+                    });
+
+                });
+            });
+        }
+        
+                /*$rootScope.menuDays = new Event('rebuildmenu');
+        
+        var test = $rootScope.menuDays;
+        
+        window.addEventListener('rebuildmenu', 'rebuildMenu', false);
+
+        window.dispatchEvent($rootScope.menuDays);*/
+        
+        
+        // Create the event.
+        $rootScope.menuDays = document.createEvent('Event');
+
+        // Define that the event name is 'build'.
+        $rootScope.menuDays.initEvent('rebuildmenu', true, true);
+
+        // Listen for the event.
+        document.addEventListener('rebuildmenu', rebuildMenu, false);
+
+        // target can be any Element or other EventTarget.
+        //document.dispatchEvent($rootScope.menuDays);
+        
+        //rebuildMenu();
+        
         
     }])
 
@@ -203,9 +266,9 @@ angular.module('bioy.controllers', [])
     /**
      * Controller for dealing with the Detailed Day view.
      */
-    .controller('DayDetailCtrl', ['$scope', '$rootScope', '$stateParams', '$ionicPopup', '$http', 'Day', 'Utils', 'Streak', function ($scope, $rootScope, $stateParams, $ionicPopup, $http, Day, Utils, Streak) {
+    .controller('DayDetailCtrl', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPopup', '$http', 'Day', 'Utils', 'Streak', function ($scope, $rootScope, $state, $stateParams, $ionicPopup, $http, Day, Utils, Streak) {
         // Get the data from the database
-        var dayDB = Day.query
+        var dayDB = Day.query;
         $scope.instructions = "Click 'Mark as Read' to indicate you have seen this Video!";
         $scope.$watch('day.read', function() {
             if ($scope.day.read) {
@@ -299,6 +362,8 @@ angular.module('bioy.controllers', [])
 
                 Streak.show();
             }
+
+            document.dispatchEvent($rootScope.menuDays);
         }
         
         $scope.markUnread = function () {
@@ -328,7 +393,25 @@ angular.module('bioy.controllers', [])
                     }
                 });
             });
+            
+            document.dispatchEvent($rootScope.menuDays);
         }
+        
+        $scope.verses = ['Lamentations 2:13 - 3:14', 'Philemon 1', 'Psalm 23 - 24'];
+        
+        $scope.verseNotify = function(num) {
+            $rootScope.notify($scope.verses[num]);
+        }
+        
+        $scope.iPhonePortrait = window.matchMedia("(max-width: 568px)").matches;
+        
+        window.addEventListener(
+            "resize",
+            function () {
+                $scope.iPhonePortrait = window.matchMedia("(max-width: 568px)").matches;
+                $state.reload();
+            },
+            true);
         
         $scope.showYoutube = function () {
             if (!$rootScope.checkNetwork()) {

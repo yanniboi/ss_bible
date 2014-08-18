@@ -1,13 +1,36 @@
 angular.module('bioy.controllers', [])
 
-    .controller('AppCtrl', ['$scope', '$rootScope', '$state', '$ionicModal', function ($scope, $rootScope, $state, $ionicModal) {
+    .controller('AppCtrl', ['$scope', '$rootScope', '$state', '$ionicModal', 'Day', function ($scope, $rootScope, $state, $ionicModal, Day) {
         if ($scope.login == null) {
             $scope.login = false;
         }
         
-        // Check for login
+        // Set up global variables
         $rootScope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
-
+        $rootScope.shownGroup = null;
+        
+        // Streak variables.
+        $rootScope.streak = {
+            today: new Date().setHours(0,0,0,0),
+            current: window.localStorage.getItem('streak_current'),
+            highscore: window.localStorage.getItem('streak_highscore'),
+            update: window.localStorage.getItem('streak_update')
+        };
+        
+        // Demo dates @todo remove.
+        //$rootScope.streak.update = 1307106800000;
+        //$rootScope.streak.today = 1407193200000;
+        
+        if (($rootScope.streak.today - $rootScope.streak.update) > 86400000) {
+            $rootScope.streak.highscore = $rootScope.streak.current
+            window.localStorage.setItem('streak_highscore', $rootScope.streak.current);
+            
+            $rootScope.streak.current = 0
+            window.localStorage.setItem('streak_current', 0);
+        }
+        
+        // Refresh the database from server.
+        Day.refresh();
         
         $ionicModal.fromTemplateUrl(
             'templates/login.html',
@@ -24,18 +47,6 @@ angular.module('bioy.controllers', [])
         $scope.$on('$destroy', function() {
             $scope.loginModal.remove();
         });
-        
-        // Method to check for internet connection.
-        $rootScope.checkNetwork = function () {
-            //@TODO remove debug for production.
-            if (typeof navigator.connection === 'undefined') {
-                return true;
-            }
-            if (navigator.connection.type == Connection.NONE) {
-                return false;
-            }
-            return true;
-        };
         
     }])
 
@@ -184,9 +195,9 @@ angular.module('bioy.controllers', [])
     /**
      * Controller for dealing with the Detailed Day view.
      */
-    .controller('DayDetailCtrl', ['$scope', '$rootScope', '$stateParams', '$ionicPopup', '$http', 'Day', 'Utils', function ($scope, $rootScope, $stateParams, $ionicPopup, $http, Day, Utils) {
+    .controller('DayDetailCtrl', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPopup', '$http', 'Day', 'Utils', 'Streak', function ($scope, $rootScope, $state, $stateParams, $ionicPopup, $http, Day, Utils, Streak) {
         // Get the data from the database
-        var dayDB = Day.query
+        var dayDB = Day.query;
         $scope.instructions = "Click 'Mark as Read' to indicate you have seen this Video!";
         $scope.$watch('day.read', function() {
             if ($scope.day.read) {
@@ -269,6 +280,17 @@ angular.module('bioy.controllers', [])
                     }
                 });
             });
+            
+            // Show streak popup
+            if ($rootScope.streak.update < $rootScope.streak.today) {
+                $rootScope.streak.update = $rootScope.streak.today;
+                window.localStorage.setItem('streak_update', $rootScope.streak.update);
+                
+                $rootScope.streak.current++;
+                window.localStorage.setItem('streak_current', $rootScope.streak.current);
+
+                Streak.show();
+            }
         }
         
         $scope.markUnread = function () {
@@ -299,6 +321,22 @@ angular.module('bioy.controllers', [])
                 });
             });
         }
+        
+        $scope.verses = ['Lamentations 2:13 - 3:14', 'Philemon 1', 'Psalm 23 - 24'];
+        
+        $scope.verseNotify = function(num) {
+            $rootScope.notify($scope.verses[num]);
+        }
+        
+        $scope.iPhonePortrait = window.matchMedia("(max-width: 568px)").matches;
+        
+        window.addEventListener(
+            "resize",
+            function () {
+                $scope.iPhonePortrait = window.matchMedia("(max-width: 568px)").matches;
+                $state.reload();
+            },
+            true);
         
         $scope.showYoutube = function () {
             if (!$rootScope.checkNetwork()) {
@@ -377,7 +415,10 @@ angular.module('bioy.controllers', [])
         };
         
         dayDB.onReady(function() {
-            var storedData = dayDB.Days.filter(true).toLiveArray();
+            var storedData = dayDB.Days
+            .filter(true)
+            .orderByDescending("it.title")
+            .toLiveArray();
             storedData.then(function (results) {
                 if (results.length) { $scope.dbIsEmpty = false; }
                 $scope.clearMonths();
@@ -413,16 +454,21 @@ angular.module('bioy.controllers', [])
             });
         });
         
+        // Sets the active group and unsets the inactive group
         $scope.toggleGroup = function (group) {
             if ($scope.isGroupShown(group)) {
-                $scope.shownGroup = null;
+                $rootScope.shownGroup = null;
             } else {
-                $scope.shownGroup = group;
+                $rootScope.shownGroup = group;
             }
         };
         
+        // Helper callback to check if a group is active or not.
         $scope.isGroupShown = function(group) {
-            return $scope.shownGroup === group;
+            if ($rootScope.shownGroup == null) {
+                return false;
+            }
+            return $rootScope.shownGroup.name === group.name;
         };
         
         $scope.hasChildren = function(group) {

@@ -12,7 +12,20 @@
                         <p>{{day.created | date:'MMM d, y'}}</p>
                         <div ng-bind-html="day.subtitle"></div>
                     </div>
+                    
+                    <div ng-show="!iPhonePortrait" class="item tabs tabs-secondary tabs-verse">
+                        <span ng-repeat="(key, verse) in verses" ng-click="verseNotify(key)" class="tab-item tab-verse-{{key + 1}}">
+                            {{verse}}
+                        </span>
+                    </div>
 
+
+                    <ion-list ng-show="iPhonePortrait" class="list tabs-verse">
+                        <ion-item style="text-align: center;" ng-repeat="(key, verse) in verses" ng-click="verseNotify(key)" class="item tab-verse-{{key + 1}}">
+                            {{verse}}
+                        </ion-item>
+                    </ion-list>
+                    
                     <div class="item item-video">
                         <div id="video-preview" ng-click="showYoutube()"><img src="img/preview.jpg"></img></div>
                         <!--<h4>Streaming...</h4>-->

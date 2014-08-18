@@ -28,17 +28,22 @@ h1, h2, h3, h4, h5 {
   margin: auto;
   display: block; }
 
-body {
-  /*.popup {
-      width: 70%; 
-      height: 60%;
-      overflow: scroll;
-  }*/ }
-  body .video-js {
-    /*display: none;*/ }
-  body video {
-    width: 100%; }
+body .video-js {
+  /*display: none;*/ }
+body video {
+  width: 100%; }
+body div.streak {
+  text-align: center; }
 
+/* iphone */
+/*@media (max-device-width : 568px) { */
+@media (max-device-width: 568px) and (orientation: portrait) {
+  .day-detail .card {
+    margin: 0; }
+    .day-detail .card .item-video {
+      padding: 0; }
+      .day-detail .card .item-video img {
+        width: 100%; } }
 /*!
   Ionicons, v1.4.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/

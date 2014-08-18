@@ -20,6 +20,18 @@ angular.module('bioy.services', ['http-auth-interceptor'])
               $rootScope.hide();
             }, 1999);
         };
+        
+        // Method to check for internet connection.
+        $rootScope.checkNetwork = function () {
+            //@TODO remove debug for production.
+            if (typeof navigator.connection === 'undefined') {
+                return true;
+            }
+            if (navigator.connection.type == Connection.NONE) {
+                return false;
+            }
+            return true;
+        };
     }])
 
     .service('Streak', ['$rootScope', '$ionicPopup', '$window', function ($rootScope, $ionicPopup, $window) {

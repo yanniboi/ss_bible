@@ -185,6 +185,7 @@
 /var/www/mobile/ss_bible/platforms/android/assets/www/js/memory-services.js \
 /var/www/mobile/ss_bible/platforms/android/assets/www/js/app.js \
 /var/www/mobile/ss_bible/platforms/android/assets/www/js/services.js \
+/var/www/mobile/ss_bible/platforms/android/assets/www/js/events.js \
 /var/www/mobile/ss_bible/platforms/android/assets/www/js/directives.js \
 /var/www/mobile/ss_bible/platforms/android/assets/www/img/ionic.png \
 /var/www/mobile/ss_bible/platforms/android/assets/www/img/preview.jpg \
@@ -195,6 +196,7 @@
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/home.html \
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/search.html \
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/browse.html \
+/var/www/mobile/ss_bible/platforms/android/assets/www/templates/streak-popup.html \
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/facebook_error.html \
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/login.html \
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/settings.html \

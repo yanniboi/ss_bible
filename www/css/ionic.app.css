@@ -37,7 +37,7 @@ body div.streak {
 
 /* iphone */
 /*@media (max-device-width : 568px) { */
-@media (max-device-width: 500px) {
+@media (max-device-width: 568px) and (orientation: portrait) {
   .day-detail .card {
     margin: 0; }
     .day-detail .card .item-video {
