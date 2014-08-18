@@ -3,7 +3,7 @@
 (function () {
 
     angular.module('bioy.memoryServices', ['jaydata', 'bioy.services'])
-        .factory('Day', ['$data', '$rootScope', '$http', '$q', 'Utils', function ($data, $rootScope, $http, $q, Utils) {
+        .factory('Day', ['$state', '$data', '$rootScope', '$http', '$q', 'Utils', function ($state, $data, $rootScope, $http, $q, Utils) {
             
             $data.Entity.extend("Days", {
                 title: {type: String, required: true, maxLength: 200 },
@@ -162,7 +162,7 @@
                     var storedData = dayDB.Days
                         .orderByDescending("it.day")
                         .first (
-                            function (person) { return person.read == 1 },
+                            function (day) { return day.read == 1 },
                             {},
                             function (result) {
                                 var test1 = result.day;
@@ -172,6 +172,28 @@
                             }
 
                         );
+                });
+            }
+
+            function getFirstDay () {
+                var dayDB = new DayDatabase({
+                    provider: 'sqLite' , databaseName: 'MyDayDatabase'
+                });
+
+                dayDB.onReady(function() {
+                    var storedData = dayDB.Days
+                        //.orderBy("it.day")
+                        .orderBy("it.title")
+                        .first (
+                        function (day) { return day.read == 0 },
+                        {},
+                        function (result) {
+                            $rootScope.firstDayId = result.nid;
+                            $rootScope.hide();
+                            $state.go('app.day', {dayId: result.nid});
+                        }
+
+                    );
                 });
             }
 
@@ -188,6 +210,11 @@
                 getCurrentDay: function () {
                     console.log('getting max day');
                     getMaxDay();
+                },
+                getStartDay: function () {
+                    $rootScope.show('Loading...');
+                    console.log('getting start day');
+                    getFirstDay();
                 }
             }
         }]);

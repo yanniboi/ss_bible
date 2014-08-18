@@ -4,7 +4,11 @@ angular.module('bioy.controllers', [])
         if ($scope.login == null) {
             $scope.login = false;
         }
-        
+
+        $scope.startReading = function () {
+            Day.getStartDay();
+        };
+
         // Set up global variables
         $rootScope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
         $rootScope.shownGroup = null;
@@ -50,9 +54,6 @@ angular.module('bioy.controllers', [])
         $scope.$on('$destroy', function() {
             $scope.loginModal.remove();
         });
-
-        var test1 = $scope.days;
-        var test2 = '';
 
         $rootScope.$watch('menuDays', function () {
             $scope.days = $rootScope.menuDays;
