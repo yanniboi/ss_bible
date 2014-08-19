@@ -36,6 +36,8 @@ body div.streak {
   text-align: center; }
 body .bar-footer button {
   width: 50%; }
+body .hidden {
+  display: none; }
 
 /* iphone */
 /*@media (max-device-width : 568px) { */

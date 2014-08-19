@@ -19,7 +19,8 @@
         <!--<div class="button button-block" ng-click="getCurrentDay()">Get Day</div>-->
     </ion-content>
     <div class="bar bar-footer bar-dark">
-        <button  class="button button-clear pull-left padding" ng-click="startReading()" >Get Started</button>
-        <button  class="button button-clear  pull-right padding">Share</button>
+        <button ng-show="!isLoggedIn" class="button button-clear pull-left padding" ng-click="goLogin()">Login/Register</button>
+        <button ng-show="isLoggedIn" class="button button-clear pull-left padding">Personalise</button>
+        <button class="button button-clear pull-right padding" ng-click="startReading()" >Get Started</button>
     </div>
 </ion-view>

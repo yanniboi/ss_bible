@@ -5,6 +5,15 @@ angular.module('bioy.controllers', [])
             $scope.login = false;
         }
 
+        $rootScope.showLoading = true;
+
+        $rootScope.$watch('showLoading', function () {
+            $scope.showLoading = $rootScope.showLoading;
+            if (!$scope.showLoading) {
+                angular.element(document.querySelectorAll('.menu-loading')).addClass('hidden');
+            }
+        });
+
         $scope.hideBackButton = true;
 
         // Set up global variables
@@ -23,7 +32,7 @@ angular.module('bioy.controllers', [])
         $scope.days = [];
 
         $scope.settings = function () {
-            $scope.menuModal.remove();
+            $scope.menuModal.hide();
             $state.go('app.settings');
         };
 
@@ -36,6 +45,13 @@ angular.module('bioy.controllers', [])
 
         $scope.settingsMenu = function () {
             $scope.menuModal.show();
+        };
+
+        $scope.goLogin = function () {
+            $scope.menuModal.hide();
+            $state.go('app.login');
+            $scope.menuModal.hide();
+
         };
 
         // Demo dates @todo remove.
@@ -134,27 +150,11 @@ angular.module('bioy.controllers', [])
         else {
             $scope.welcome = "Hello little ones...";
         }
-        
-        $scope.settings = function () {
-            $scope.menuModal.remove();
-            $state.go('app.settings');
-        };
-
-        $ionicModal.fromTemplateUrl('templates/settings-menu.html', {
-            scope: $scope,
-            animation: 'slide-right-left'
-        }).then(function(modal) {
-            $scope.menuModal = modal;
-        });
-
-        $scope.settingsMenu = function () {
-            $scope.menuModal.show();
-        };
 
         $scope.showMessage = function () {
             var text = "Please enter valid credentials";
             $rootScope.notify(text);
-        }
+        };
 
     }])
 
@@ -189,11 +189,12 @@ angular.module('bioy.controllers', [])
             window.localStorage.setItem('user_uid', 0);
             $rootScope.isLoggedIn = 0;
             $scope.isLoggedIn = 0;
+            $rootScope.notify('Logged out successfully');
         };
         
         // Opens login dialog
         $scope.doLogin = function() {
-            $scope.loginModal.show();
+            $state.go('app.login');
         }
     }])
 
@@ -202,14 +203,93 @@ angular.module('bioy.controllers', [])
      */
     .controller('LoginCtrl', ['$scope', '$rootScope', '$state', '$http', '$ionicPopup', 'Utils', function ($scope, $rootScope, $state, $http, $ionicPopup, Utils) {
         // If username already stored load the default.
-        $scope.user = {
-            username: window.localStorage.getItem('user_name'),
-            password: null
-        };
-        
+        $scope.user = {};
+
+        $scope.regUser = {};
+
         // Create variable to be used for authentication feedback.
         $scope.message = "";
-        
+
+        $scope.register = function() {
+// Check details have been entered.
+            if(!$scope.regUser.username || !$scope.regUser.password || !$scope.regUser.email) {
+                $rootScope.notify("Please enter valid credentials");
+                return false;
+            }
+
+            // Send a post request to the rest api.
+            //var url = "http://soulsurvivor.bible/phonegap/user/login/";
+            var url = "http://bible.soulsurvivor.com/phonegap/user";
+            var method = "POST";
+            var postData = '{ "name" : "' + $scope.regUser.username + '", "password" : "' + $scope.regUser.password + '", "mail" : "' + $scope.regUser.email + '", "status" : 1 }';
+
+            // You REALLY want async = true.
+            // Otherwise, it'll block ALL execution waiting for server response.
+            var async = true;
+            var request = new XMLHttpRequest();
+
+            // Define what to do with response.
+            request.onload = function () {
+
+                // You can get all kinds of information about the HTTP response.
+                var status = request.status; // HTTP response status, e.g., 200 for "200 OK"
+                $rootScope.hide();
+                if (status == 200) {
+
+                    var data =  JSON.parse(request.responseText); // Returned data, e.g., an HTML document.
+
+                    // Store user data
+                    window.localStorage.setItem('user_name', $scope.regUser.username);
+                    //window.localStorage.setItem('user_password', $scope.user.password);
+                    window.localStorage.setItem('user_uid', data.uid);
+                    window.localStorage.setItem('user_login', 1);
+
+                    $rootScope.isLoggedIn = 1;
+
+                    $rootScope.hide();
+                    $scope.message = "Register Successful!";
+                    $rootScope.notify($scope.message);
+                    $scope.loginModal.remove();
+                    // Redirect to home page.
+                    $state.go('app.home');
+                }
+                else {
+                    var data =  JSON.parse(request.responseText); // Returned data, e.g., an HTML document.
+                    if (data.form_errors) {
+                        if (data.form_errors.mail) {
+                            $scope.message = data.form_errors.mail;
+
+                            var substr = 'The e-mail address <em class="placeholder">' + $scope.regUser.email + '</em> is already',
+                                length = substr.length;
+
+                            if ($scope.message.substring(0, length) == substr) {
+                                $scope.message = 'The e-mail address ' + $scope.regUser.email + ' is already registered';
+                            }
+                        }
+                        if (data.form_errors.name) {
+                            $scope.message = data.form_errors.name;
+                        }
+                    }
+                    // Show error message to user.
+                    $rootScope.hide();
+                    //$scope.message = "Your details are incorrect. Please try again.";
+                    $rootScope.notify($scope.message);
+                    $scope.user.password = null;
+                    console.log('error with connection. status: '+ status);
+                }
+            };
+
+            // Build the request object.
+            $rootScope.show("Logging in...");
+            request.open(method, url, async);
+
+            // Set headers.
+            request.setRequestHeader("Content-Type", "application/json");
+            request.setRequestHeader("Accept", "application/json");
+
+            // Actually sends the request to the server.
+            request.send(postData);        };
+
         // Action to handle login.
         $scope.login = function() {
             // Check details have been entered.
@@ -226,7 +306,7 @@ angular.module('bioy.controllers', [])
 
             // You REALLY want async = true.
             // Otherwise, it'll block ALL execution waiting for server response.
-            var async = true
+            var async = true;
             var request = new XMLHttpRequest();
             
             // Define what to do with response.
@@ -255,9 +335,16 @@ angular.module('bioy.controllers', [])
                     $state.go('app.home');
                 }
                 else {
+
+                    var data =  JSON.parse(request.responseText); // Returned data, e.g., an HTML document.
+                    $scope.message = "Your details are incorrect. Please try again.";
+
+                    if (data[0]) {
+                        $scope.message = data[0];
+                    }
+
                     // Show error message to user.
                     $rootScope.hide();
-                    $scope.message = "Your details are incorrect. Please try again.";
                     $rootScope.notify($scope.message);
                     $scope.user.password = null;
                     console.log('error with connection. status: '+ status);
@@ -383,6 +470,11 @@ angular.module('bioy.controllers', [])
 
                 Streak.show();
             }
+
+            // Continue to the next day.
+            $scope.continueReading = function () {
+                Day.getStartDay();
+            };
         };
 
         $scope.shareDay = function () {
@@ -418,8 +510,6 @@ angular.module('bioy.controllers', [])
                     }
                 });
             });
-
-            //var test = $rootScope.menuRefreshEvent;
 
         };
         

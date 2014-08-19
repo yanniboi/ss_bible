@@ -97,8 +97,39 @@
                 var dayDB = new DayDatabase({
                     provider: 'sqLite' , databaseName: 'MyDayDatabase'
                 });
+
                 if ($rootScope.CurrentDay == null) {
-                    var test = $rootScope.CurrentDay;
+                    dayDB.onReady(function() {
+                        var storedData = dayDB.Days
+                            .orderByDescending("it.title")
+                            .toLiveArray();
+                        storedData.then(function (results) {
+                            var i = 0,
+                                menuDays = [];
+
+                            while (i < 5) {
+                                var day = results[i];
+                                menuDays.push({
+                                    'title': day.title,
+                                    'day': day.day,
+                                    'body': day.body,
+                                    'created': day.created,
+                                    'nid': day.nid,
+                                    'read': day.read,
+                                    'read_count': day.read_count,
+                                    'comment_count': day.comment_count,
+                                    'youtube': day.youtube,
+                                    'subtitle': day.subtitle
+                                });
+                                i++;
+                            }
+
+                            $q.all(menuDays).then(function (days) {
+                                $rootScope.showLoading = false;
+                                $rootScope.menuDays = days;
+                            })
+                        });
+                    });
                     return;
                 }
 
@@ -139,13 +170,12 @@
 
                             if (i == max - 1) {
                                 // Last iteration
-                                //$rootScope.hide();
                             }
                             i++;
                         });
 
                         $q.all(menuDays).then(function (days) {
-                            var test = days;
+                            $rootScope.showLoading = false;
                             $rootScope.menuDays = days;
                         })
 

@@ -100,6 +100,16 @@ angular.module('bioy', [
                 }
             })
 
+            .state('app.login', {
+                url: "/login",
+                views: {
+                    'menuContent' : {
+                        templateUrl: "templates/login.html",
+                        controller: 'LoginCtrl'
+                    }
+                }
+            })
+
             .state('app.day', {
                 url: "/days/:dayId",
                 views: {
