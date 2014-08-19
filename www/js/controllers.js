@@ -5,12 +5,10 @@ angular.module('bioy.controllers', [])
             $scope.login = false;
         }
 
-        $scope.startReading = function () {
-            Day.getStartDay();
-        };
+        $scope.hideBackButton = true;
 
         // Set up global variables
-        $rootScope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
+        $rootScope.isLoggedIn = $scope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
         $rootScope.shownGroup = null;
         $rootScope.CurrentDay = window.localStorage.getItem('currentDay');
         
@@ -23,6 +21,22 @@ angular.module('bioy.controllers', [])
         };
 
         $scope.days = [];
+
+        $scope.settings = function () {
+            $scope.menuModal.remove();
+            $state.go('app.settings');
+        };
+
+        $ionicModal.fromTemplateUrl('templates/settings-menu.html', {
+            scope: $scope,
+            animation: 'slide-right-left'
+        }).then(function(modal) {
+            $scope.menuModal = modal;
+        });
+
+        $scope.settingsMenu = function () {
+            $scope.menuModal.show();
+        };
 
         // Demo dates @todo remove.
         //$rootScope.streak.update = 1307106800000;
@@ -73,20 +87,42 @@ angular.module('bioy.controllers', [])
         // Listen for the event.
         window.addEventListener('rebuildmenu', rebuildMenu, false);
 
-        // target can be any Element or other EventTarget.
-        //document.dispatchEvent($rootScope.menuDays);
-        
-        //rebuildMenu();
+        // Logout action to logout user.
+        $scope.doLogout = function() {
+            window.localStorage.setItem('user_login', 0);
+            window.localStorage.setItem('user_uid', 0);
+            $rootScope.isLoggedIn = 0;
+            $scope.isLoggedIn = 0;
+        };
+
+        // Opens login dialog
+        $scope.doLogin = function() {
+            $scope.loginModal.show();
+        }
         
         
     }])
 
-    .controller('HomeCtrl', ['$state', '$scope', '$rootScope', 'Utils', 'Day', function ($state, $scope, $rootScope, Utils, Day) {
+    .controller('HomeCtrl', ['$state', '$scope', '$rootScope', '$ionicModal', 'Utils', 'Day', function ($state, $scope, $rootScope, $ionicModal, Utils, Day) {
         //var isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
 
-        $scope.getCurrentDay = function () {
-            Day.getCurrentDay();
+        $scope.startReading = function () {
+            Day.getStartDay();
+        };
 
+        $scope.shareApp = function () {
+            //<button onclick="window.plugins.socialsharing.share('Message only')">message only</button>
+            //<button onclick="window.plugins.socialsharing.share('Message and subject', 'The subject')">message and subject</button>
+            //<button onclick="window.plugins.socialsharing.share(null, null, null, 'http://www.x-services.nl')">link only</button>
+            window.plugins.socialsharing.share('Checkout soulsurvivors new Bible in One Year App!', null, null, 'https://play.google.com/store/apps/details?id=com.soulsurvivor.bioy');
+            //<button onclick="window.plugins.socialsharing.share(null, null, 'https://www.google.nl/images/srpr/logo4w.png', null)">image only</button>
+// Beware: passing a base64 file as 'data:' is not supported on Android 2.x: https://code.google.com/p/android/issues/detail?id=7901#c43
+// Hint: when sharing a base64 encoded file on Android you can set the filename by passing it as the subject (second param)
+            //<button onclick="window.plugins.socialsharing.share(null, 'Android filename', 'data:image/png;base64,R0lGODlhDAAMALMBAP8AAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAUKAAEALAAAAAAMAAwAQAQZMMhJK7iY4p3nlZ8XgmNlnibXdVqolmhcRQA7', null)">base64 image only</button>
+// Hint: you can share multiple files by using an array as thirds param: ['file 1','file 2', ..], but beware of this Android Kitkat Facebook issue: [#164]
+            //<button onclick="window.plugins.socialsharing.share('Message and image', null, 'https://www.google.nl/images/srpr/logo4w.png', null)">message and image</button>
+            //<button onclick="window.plugins.socialsharing.share('Message, image and link', null, 'https://www.google.nl/images/srpr/logo4w.png', 'http://www.x-services.nl')">message, image and link</button>
+            //<button onclick="window.plugins.socialsharing.share('Message, subject, image and link', 'The subject', 'https://www.google.nl/images/srpr/logo4w.png', 'http://www.x-services.nl')">message, subject, image and link</button>
         };
 
         var isLoggedIn = $rootScope.isLoggedIn;
@@ -100,9 +136,21 @@ angular.module('bioy.controllers', [])
         }
         
         $scope.settings = function () {
+            $scope.menuModal.remove();
             $state.go('app.settings');
-        }
-        
+        };
+
+        $ionicModal.fromTemplateUrl('templates/settings-menu.html', {
+            scope: $scope,
+            animation: 'slide-right-left'
+        }).then(function(modal) {
+            $scope.menuModal = modal;
+        });
+
+        $scope.settingsMenu = function () {
+            $scope.menuModal.show();
+        };
+
         $scope.showMessage = function () {
             var text = "Please enter valid credentials";
             $rootScope.notify(text);
@@ -126,7 +174,7 @@ angular.module('bioy.controllers', [])
             //window.localStorage.setItem('lightsabre', $scope.settings.lightsabre);
             //window.localStorage.setItem('download', $scope.settings.download);
             $state.go('app.home');            
-        }
+        };
         
         // Boolean to determin whether user is logged in.
         //$scope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
@@ -198,15 +246,17 @@ angular.module('bioy.controllers', [])
                     window.localStorage.setItem('user_login', 1);
                     
                     $rootScope.isLoggedIn = 1;
-                    
+
+                    $rootScope.hide();
                     $scope.message = "Login Successful!";
                     $rootScope.notify($scope.message);
                     $scope.loginModal.remove();
                     // Redirect to home page.
-                    //$state.go('app.home');
+                    $state.go('app.home');
                 }
                 else {
                     // Show error message to user.
+                    $rootScope.hide();
                     $scope.message = "Your details are incorrect. Please try again.";
                     $rootScope.notify($scope.message);
                     $scope.user.password = null;
@@ -215,7 +265,7 @@ angular.module('bioy.controllers', [])
             };
 
             // Build the request object.
-            $rootScope.notify("Logging in...");
+            $rootScope.show("Logging in...");
             request.open(method, url, async);
 
             // Set headers.
@@ -243,7 +293,9 @@ angular.module('bioy.controllers', [])
                 $scope.instructions = "Click 'Mark as Read' to indicate you have seen this Video!";
             }
         });
-        
+
+        $scope.hideBackButton = true;
+
         $scope.day = [];
         $scope.nid = $stateParams.dayId;
         $rootScope.notify();
@@ -331,8 +383,10 @@ angular.module('bioy.controllers', [])
 
                 Streak.show();
             }
+        };
 
-            //window.dispatchEvent($rootScope.menuDamenuRefreshEventys);
+        $scope.shareDay = function () {
+            window.plugins.socialsharing.share('I just watched ' + $scope.day.title + ' on Youtube!', null, null, 'https://www.youtube.com/watch?v=' + $scope.day.youtube);
         };
         
         $scope.markUnread = function () {

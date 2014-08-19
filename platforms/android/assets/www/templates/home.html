@@ -1,10 +1,12 @@
-<ion-view title="The Bible in One Year with Soul Survivor">
+<ion-view hide-back-button="{{hideBackButton}}"  title="Bible in One Year">
     <div class="bar-calm">
         <ion-nav-buttons side="left">
             <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
         </ion-nav-buttons>
         <ion-nav-buttons side="right">
-            <button ng-click="settings()" class="button button-icon icon ion-gear-b"></button>
+            <button ng-click="shareApp()" class="button button-icon icon ion-share"></button>
+            <button ng-click="settingsMenu()" class="button button-icon icon ion-gear-b"></button>
+            &nbsp;
         </ion-nav-buttons>
     </div>
     <ion-content class="has-header">
@@ -14,5 +16,10 @@
                 <p>Share thoughts, reflections and questions as we journey together in reading the Bible In One Year</p>
             </div>
         </div>
+        <!--<div class="button button-block" ng-click="getCurrentDay()">Get Day</div>-->
     </ion-content>
+    <div class="bar bar-footer bar-dark">
+        <button  class="button button-clear pull-left padding" ng-click="startReading()" >Get Started</button>
+        <button  class="button button-clear  pull-right padding">Share</button>
+    </div>
 </ion-view>

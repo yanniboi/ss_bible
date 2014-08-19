@@ -202,6 +202,7 @@
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/settings.html \
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/day-detail.html \
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/verse.html \
+/var/www/mobile/ss_bible/platforms/android/assets/www/templates/settings-menu.html \
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/recent.html \
 /var/www/mobile/ss_bible/platforms/android/assets/www/templates/menu.html \
 /var/www/mobile/ss_bible/platforms/android/assets/www/plugins/org.apache.cordova.device \

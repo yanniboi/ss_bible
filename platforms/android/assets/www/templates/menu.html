@@ -18,22 +18,23 @@
                     Home
                 </ion-item>
                 <ion-list class="padding">
-                    <ion-item class="item-accordion item item-icon-left"
+                    <ion-item class="item-accordion item item-text-wrap item-icon-left"
                               ng-repeat="day in days"
                               href="#/app/days/{{day.nid}}">
                         <i ng-show="!day.read" class="icon ion-email"></i>
                         <i ng-show="day.read" class="icon ion-checkmark"></i>
-                        {{day.title}}
+                        <strong>{{day.day}} | {{day.subtitle}}</strong></br>
+                        <p class="subdued">{{day.title}}</p>
                     </ion-item>
                 </ion-list>
                 <ion-item class="item item-icon-left" nav-clear menu-close href="#/app/browse">
                     <i class="icon ion-ios7-bookmarks"></i>
                     Browse
                 </ion-item>
-                <ion-item class="item item-icon-left" nav-clear menu-close href="#/app/settings">
+                <!--<ion-item class="item item-icon-left" nav-clear menu-close href="#/app/settings">
                     <i class="icon ion-gear-b"></i>
                     Settings
-                </ion-item>
+                </ion-item>-->
                 <!--<ion-item class="item item-icon-left" nav-clear menu-close href="#/app/search">
                     <i class="icon ion-search"></i>
                     Search

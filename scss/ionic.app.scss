@@ -22,7 +22,7 @@ $calm: #009d8e;
 $dark: #4c4c4c;
 
 h1,h2,h3,h4,h5 {
-    text-align: center;   
+    text-align: center;
 }
 
 .day-detail {
@@ -30,9 +30,9 @@ h1,h2,h3,h4,h5 {
         h2 {
             text-align: left;
         }
-        margin-bottom: 20px;
+        margin-bottom: 63px;
     }
-    
+
     iframe {
         margin: auto;
         display: block;
@@ -54,12 +54,16 @@ body {
     div.streak {
         text-align: center;
     }
+
+    .bar-footer button {
+        width: 50%;
+    }
 }
 
 /* iphone */
 
 /*@media (max-device-width : 568px) { */
-@media (max-device-width : 568px) and (orientation:portrait) { 
+@media (max-device-width : 568px) and (orientation:portrait) {
     .day-detail {
         .card {
             margin: 0;
