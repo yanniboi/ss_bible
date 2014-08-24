@@ -24,7 +24,8 @@ h1, h2, h3, h4, h5 {
 .day-detail iframe {
   margin: auto;
   display: block; }
-.day-detail #video-preview img {
+.day-detail #ot-video-preview img,
+.day-detail #nt-video-preview img {
   margin: auto;
   display: block; }
 

@@ -8,7 +8,12 @@
             $data.Entity.extend("Days", {
                 title: {type: String, required: true, maxLength: 200 },
                 day: { type: "int" },
-                youtube: { type: String },
+                youtubeOT: { type: String },
+                youtubeNT: { type: String },
+                verseBooks: { type: String },
+                verseOT: { type: String },
+                verseNT: { type: String },
+                verseP: { type: String },
                 subtitle: { type: String },
                 read: { type: "int" },
                 read_count: { type: "int" },
@@ -45,10 +50,16 @@
                     //$http({method: 'GET', url: 'http://soulsurvivor.bible/rest/views/days'}).
                     success(function(data, status, headers, config) {
                         var days = [];
-                        
+
+                        // The first day that is come across that is read is the max read.
+                        var maxRead = true;
+
                         data.forEach(function (data) {
                             var day = [];
-                            day.day = data.node.field_day_number
+                            var verses = data.node.bible_full.split(",");
+
+
+                            day.day = data.node.field_day_number;
                             day.body = data.node.body;
                             day.title = data.node.title;
                             day.created = data.node.date;
@@ -56,8 +67,19 @@
                             day.read = JSON.parse(data.node.read);
                             day.read_count = data.node.read_count;
                             day.comment_count = data.node.comment_count;
-                            day.youtube = data.node.youtube;
+                            day.youtubeOT = data.node.youtubeOT;
+                            day.youtubeNT = data.node.youtubeNT;
                             day.subtitle = data.node.subtitle;
+                            day.verseBooks = data.node.bible_book;
+                            day.verseOT = verses[0];
+                            day.verseNT = verses[1];
+                            day.verseP = verses[2];
+
+                            if (maxRead && JSON.parse(data.node.read)) {
+                                maxRead = false;
+                                $rootScope.CurrentDay = data.node.field_day_number;
+                                window.localStorage.setItem('currentDay', data.node.field_day_number);
+                            }
 
                             days.push(day);
 
@@ -70,7 +92,17 @@
                                 var existingDays = dayTestDB.Days.filter("nid", "==", day.nid).toLiveArray();
                                 existingDays.then(function(results) {
                                     var todo = dayTestDB.Days.attachOrGet(day);
-                                    todo = day;
+                                    todo.youtubeNT = day.youtubeNT;
+                                    todo.youtubeOT = day.youtubeOT;
+                                    todo.verseBooks = day.verseBooks;
+                                    todo.verseOT = day.verseOT;
+                                    todo.verseNT = day.verseNT;
+                                    todo.verseP = day.verseP;
+                                    todo.read_count = day.read_count;
+                                    if (day.read) {
+                                        todo.read = day.read;
+                                    }
+                                    todo.comment_count = day.comment_count;
 
                                     if (results.length == 0) {
                                         //create
@@ -101,9 +133,15 @@
                 if ($rootScope.CurrentDay == null) {
                     dayDB.onReady(function() {
                         var storedData = dayDB.Days
-                            .orderByDescending("it.title")
+                            .orderBy("it.created")
                             .toLiveArray();
                         storedData.then(function (results) {
+
+                            if (results.length == 0) {
+                                doRefreshMenu();
+                                return;
+                            }
+
                             var i = 0,
                                 menuDays = [];
 
@@ -117,8 +155,12 @@
                                     'nid': day.nid,
                                     'read': day.read,
                                     'read_count': day.read_count,
-                                    'comment_count': day.comment_count,
-                                    'youtube': day.youtube,
+                                    'verseBooks': day.verseBooks,
+                                    'verseOT': day.verseOT,
+                                    'verseNT': day.verseNT,
+                                    'verseP': day.verseP,
+                                    'youtubeOT': day.youtubeOT,
+                                    'youtubeNT': day.youtubeNT,
                                     'subtitle': day.subtitle
                                 });
                                 i++;
@@ -133,15 +175,13 @@
                     return;
                 }
 
-                var readtest = $rootScope.CurrentDay;
                 var read = parseInt($rootScope.CurrentDay);
-                //var read = 8;
 
                 dayDB.onReady(function() {
                     var storedData = dayDB.Days
                         .filter("it.day >= " + (read - 1))
                         .filter("it.day < " + (read + 4))
-                        .orderByDescending("it.title")
+                        .orderByDescending("it.created")
                         .toLiveArray();
                     storedData.then(function (results) {
                         if (results.length) { /* do something */ }
@@ -161,12 +201,14 @@
                                 'read' : day.read,
                                 'read_count' : day.read_count,
                                 'comment_count' : day.comment_count,
-                                'youtube' : day.youtube,
+                                'verseBooks': day.verseBooks,
+                                'verseOT': day.verseOT,
+                                'verseNT': day.verseNT,
+                                'verseP': day.verseP,
+                                'youtubeOT' : day.youtubeOT,
+                                'youtubeNT' : day.youtubeNT,
                                 'subtitle' : day.subtitle
                             });
-
-                            // Attach day to month array.
-
 
                             if (i == max - 1) {
                                 // Last iteration
@@ -190,7 +232,7 @@
 
                 dayDB.onReady(function() {
                     var storedData = dayDB.Days
-                        .orderByDescending("it.day")
+                        .orderByDescending("it.created")
                         .first (
                             function (day) { return day.read == 1 },
                             {},
@@ -212,8 +254,8 @@
 
                 dayDB.onReady(function() {
                     var storedData = dayDB.Days
-                        //.orderBy("it.day")
-                        .orderBy("it.title")
+                        .orderBy("it.created")
+                        //.orderBy("it.title")
                         .first (
                         function (day) { return day.read == 0 },
                         {},

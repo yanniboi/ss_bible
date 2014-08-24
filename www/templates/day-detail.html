@@ -22,7 +22,7 @@
                 <p>{{day.created | date:'MMM d, y'}}</p>
                 <div ng-bind-html="day.subtitle"></div>
             </div>
-
+{{verses2}}
             <div ng-show="!iPhonePortrait" class="item tabs tabs-secondary tabs-verse">
                         <span ng-repeat="(key, verse) in verses" ng-click="verseNotify(key)" class="tab-item tab-verse-{{key + 1}}">
                             {{verse}}
@@ -35,11 +35,24 @@
                     {{verse}}
                 </ion-item>
             </ion-list>
+            <div ng-show="plan == 'Bible in One Year'" class="item item-divider text-center">
+                Old Testament
+            </div>
+
+            <div ng-show="plan == 'Bible in One Year'" class="item item-video">
+                <div id="ot-video-preview" ng-click="showYoutubeOT()"><img src="img/preview.jpg" /></div>
+                <!--<h4>Streaming...</h4>-->
+                <div id="ot-streamed-video"></div>
+            </div>
+
+            <div ng-show="plan == 'Bible in One Year'" class="item item-divider text-center">
+                New Testament
+            </div>
 
             <div class="item item-video">
-                <div id="video-preview" ng-click="showYoutube()"><img src="img/preview.jpg"></img></div>
+                <div id="nt-video-preview" ng-click="showYoutubeNT()"><img src="img/preview.jpg" /></div>
                 <!--<h4>Streaming...</h4>-->
-                <div id="streamed-video"></div>
+                <div id="nt-streamed-video"></div>
             </div>
             <div class="item item-body">
                 <p>

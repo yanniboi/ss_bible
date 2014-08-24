@@ -3,6 +3,9 @@
         <ion-nav-buttons side="left">
             <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
         </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <button ng-click="save()" class="button button-clear">Save</button>
+        </ion-nav-buttons>
     </div>
     <ion-content class="has-header">
         <h4>Settings</h4>
@@ -35,6 +38,19 @@
             </label>-->
 
             <div class="item item-divider">
+                Preferences
+            </div>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Reading Plan
+                </div>
+                <select ng-model="settings.plan">
+                    <option selected>Bible in One Year</option>
+                    <option>New Testament in One Year</option>
+                </select>
+            </label>
+
+            <div class="item item-divider">
                 User Settings
             </div>
 
@@ -45,13 +61,14 @@
                 </button>
             </label>
             <label ng-show="isLoggedIn" class="item item-button">
+                You are currently logged in as {{username}}
                 <button ng-click="doLogout()" class="button button-block button-positive">
                     Logout
                 </button>
             </label>
-            <!--<div class="padding">
+            <div class="padding">
                 <button class="button button-block button-stable" ng-click="save()">Save</button>
-            </div>-->
+            </div>
         </div>
     </ion-content>
 </ion-view>

@@ -24,7 +24,8 @@ h1, h2, h3, h4, h5 {
 .day-detail iframe {
   margin: auto;
   display: block; }
-.day-detail #video-preview img {
+.day-detail #ot-video-preview img,
+.day-detail #nt-video-preview img {
   margin: auto;
   display: block; }
 
@@ -36,6 +37,8 @@ body div.streak {
   text-align: center; }
 body .bar-footer button {
   width: 50%; }
+body .hidden {
+  display: none; }
 
 /* iphone */
 /*@media (max-device-width : 568px) { */

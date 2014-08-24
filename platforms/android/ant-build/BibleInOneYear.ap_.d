@@ -180,6 +180,7 @@
 /var/www/mobile/ss_bible/platforms/android/assets/www/lib/angular/angular.js \
 /var/www/mobile/ss_bible/platforms/android/assets/www/lib/angular/bower.json \
 /var/www/mobile/ss_bible/platforms/android/assets/www/lib/angular-http-auth/http-auth-interceptor.js \
+/var/www/mobile/ss_bible/platforms/android/assets/www/resources/mike.png \
 /var/www/mobile/ss_bible/platforms/android/assets/www/resources/andy.jpg \
 /var/www/mobile/ss_bible/platforms/android/assets/www/js/controllers.js \
 /var/www/mobile/ss_bible/platforms/android/assets/www/js/memory-services.js \

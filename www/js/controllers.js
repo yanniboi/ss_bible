@@ -14,13 +14,20 @@ angular.module('bioy.controllers', [])
             }
         });
 
+        $rootScope.$watch('isLoggedIn', function () {
+            $scope.isLoggedIn = $rootScope.isLoggedIn;
+        });
+
         $scope.hideBackButton = true;
 
         // Set up global variables
         $rootScope.isLoggedIn = $scope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
         $rootScope.shownGroup = null;
         $rootScope.CurrentDay = window.localStorage.getItem('currentDay');
-        
+
+        $rootScope.readingPlan = window.localStorage.getItem('plan') != null ? window.localStorage.getItem('plan') : 'Bible in One Year';
+
+
         // Streak variables.
         $rootScope.streak = {
             today: new Date().setHours(0,0,0,0),
@@ -120,25 +127,12 @@ angular.module('bioy.controllers', [])
     }])
 
     .controller('HomeCtrl', ['$state', '$scope', '$rootScope', '$ionicModal', 'Utils', 'Day', function ($state, $scope, $rootScope, $ionicModal, Utils, Day) {
-        //var isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
-
         $scope.startReading = function () {
             Day.getStartDay();
         };
 
         $scope.shareApp = function () {
-            //<button onclick="window.plugins.socialsharing.share('Message only')">message only</button>
-            //<button onclick="window.plugins.socialsharing.share('Message and subject', 'The subject')">message and subject</button>
-            //<button onclick="window.plugins.socialsharing.share(null, null, null, 'http://www.x-services.nl')">link only</button>
             window.plugins.socialsharing.share('Checkout soulsurvivors new Bible in One Year App!', null, null, 'https://play.google.com/store/apps/details?id=com.soulsurvivor.bioy');
-            //<button onclick="window.plugins.socialsharing.share(null, null, 'https://www.google.nl/images/srpr/logo4w.png', null)">image only</button>
-// Beware: passing a base64 file as 'data:' is not supported on Android 2.x: https://code.google.com/p/android/issues/detail?id=7901#c43
-// Hint: when sharing a base64 encoded file on Android you can set the filename by passing it as the subject (second param)
-            //<button onclick="window.plugins.socialsharing.share(null, 'Android filename', 'data:image/png;base64,R0lGODlhDAAMALMBAP8AAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAUKAAEALAAAAAAMAAwAQAQZMMhJK7iY4p3nlZ8XgmNlnibXdVqolmhcRQA7', null)">base64 image only</button>
-// Hint: you can share multiple files by using an array as thirds param: ['file 1','file 2', ..], but beware of this Android Kitkat Facebook issue: [#164]
-            //<button onclick="window.plugins.socialsharing.share('Message and image', null, 'https://www.google.nl/images/srpr/logo4w.png', null)">message and image</button>
-            //<button onclick="window.plugins.socialsharing.share('Message, image and link', null, 'https://www.google.nl/images/srpr/logo4w.png', 'http://www.x-services.nl')">message, image and link</button>
-            //<button onclick="window.plugins.socialsharing.share('Message, subject, image and link', 'The subject', 'https://www.google.nl/images/srpr/logo4w.png', 'http://www.x-services.nl')">message, subject, image and link</button>
         };
 
         var isLoggedIn = $rootScope.isLoggedIn;
@@ -164,16 +158,23 @@ angular.module('bioy.controllers', [])
     .controller('SettingsCtrl', ['$state', '$scope', '$rootScope', 'localStorageService', function ($state, $scope, $rootScope, localStorageService) {
         // Array for storing settings values.
         $scope.settings = {
+            'plan': $rootScope.readingPlan
             // @TODO think of some settings to use.
             //'lightsabre': window.localStorage.getItem('lightsabre'),
             //'download': JSON.parse(window.localStorage.getItem('download'))
         };
-        
+
+        // Get username if logged in.
+        $scope.username = window.localStorage.getItem('user_name');
+
         // Save action for save button.
         $scope.save = function () {
+            window.localStorage.setItem('plan', $scope.settings.plan);
+            $rootScope.readingPlan = $scope.settings.plan;
             //window.localStorage.setItem('lightsabre', $scope.settings.lightsabre);
             //window.localStorage.setItem('download', $scope.settings.download);
-            $state.go('app.home');            
+            $rootScope.notify('Settings saved...');
+
         };
         
         // Boolean to determin whether user is logged in.
@@ -201,7 +202,7 @@ angular.module('bioy.controllers', [])
     /**
      * Login controller to handle user login.
      */
-    .controller('LoginCtrl', ['$scope', '$rootScope', '$state', '$http', '$ionicPopup', 'Utils', function ($scope, $rootScope, $state, $http, $ionicPopup, Utils) {
+    .controller('LoginCtrl', ['$scope', '$rootScope', '$state', '$http', '$ionicPopup', 'Utils', 'Day', function ($scope, $rootScope, $state, $http, $ionicPopup, Utils, Day) {
         // If username already stored load the default.
         $scope.user = {};
 
@@ -250,6 +251,7 @@ angular.module('bioy.controllers', [])
                     $scope.message = "Register Successful!";
                     $rootScope.notify($scope.message);
                     $scope.loginModal.remove();
+
                     // Redirect to home page.
                     $state.go('app.home');
                 }
@@ -331,6 +333,8 @@ angular.module('bioy.controllers', [])
                     $scope.message = "Login Successful!";
                     $rootScope.notify($scope.message);
                     $scope.loginModal.remove();
+                    Day.refresh();
+
                     // Redirect to home page.
                     $state.go('app.home');
                 }
@@ -386,6 +390,8 @@ angular.module('bioy.controllers', [])
         $scope.day = [];
         $scope.nid = $stateParams.dayId;
         $rootScope.notify();
+
+        $scope.plan = $rootScope.readingPlan;
         
         dayDB.onReady(function() {
             var storedData = dayDB.Days
@@ -400,10 +406,30 @@ angular.module('bioy.controllers', [])
                         'nid' : results[0].nid,
                         'read_count' : results[0].read_count,
                         'comment_count' : results[0].comment_count,
-                        'youtube' : results[0].youtube,
+                        'verseBooks' : results[0].verseBooks,
+                        'verseOT' : results[0].verseOT,
+                        'verseNT' : results[0].verseNT,
+                        'verseP' : results[0].verseP,
+                        'youtubeOT' : results[0].youtubeOT,
+                        'youtubeNT' : results[0].youtubeNT,
                         'subtitle' : results[0].subtitle,
                         'read' : results[0].read
                     };
+
+                    if ($rootScope.readingPlan == 'Bible in One Year') {
+                        $rootScope.verses = [
+                            results[0].verseOT,
+                            results[0].verseNT,
+                            results[0].verseP
+                        ];
+                    }
+                    else {
+                        $rootScope.verses = [
+                            results[0].verseNT
+                        ];
+                    }
+
+
                     //$scope.init();
                     dayDB.saveChanges();
                     $rootScope.hide();
@@ -470,15 +496,15 @@ angular.module('bioy.controllers', [])
 
                 Streak.show();
             }
+        };
 
-            // Continue to the next day.
-            $scope.continueReading = function () {
-                Day.getStartDay();
-            };
+        // Continue to the next day.
+        $scope.continueReading = function () {
+            Day.getStartDay();
         };
 
         $scope.shareDay = function () {
-            window.plugins.socialsharing.share('I just watched ' + $scope.day.title + ' on Youtube!', null, null, 'https://www.youtube.com/watch?v=' + $scope.day.youtube);
+            window.plugins.socialsharing.share('I just watched ' + $scope.day.title + ' on Youtube!', null, null, 'https://www.youtube.com/watch?v=' + $scope.day.youtubeNT);
         };
         
         $scope.markUnread = function () {
@@ -513,11 +539,15 @@ angular.module('bioy.controllers', [])
 
         };
         
-        $scope.verses = ['Lamentations 2:13 - 3:14', 'Philemon 1', 'Psalm 23 - 24'];
+        $scope.verses = ['Old Testament', 'New Testament', 'Psalms/Provervs'];
+
+        $rootScope.$watch('verses', function () {
+            $scope.verses = $rootScope.verses;
+        });
         
         $scope.verseNotify = function(num) {
             $rootScope.notify($scope.verses[num]);
-        }
+        };
         
         $scope.iPhonePortrait = window.matchMedia("(max-width: 568px)").matches;
         
@@ -528,8 +558,8 @@ angular.module('bioy.controllers', [])
                 $state.reload();
             },
             true);
-        
-        $scope.showYoutube = function () {
+
+        $scope.showYoutubeOT = function () {
             if (!$rootScope.checkNetwork()) {
                 $rootScope.notify("You are not connected to the internet...");
             }
@@ -537,22 +567,43 @@ angular.module('bioy.controllers', [])
                 var vidVid = document.createElement("iframe");
                 vidVid.setAttribute("width", "300");
                 vidVid.setAttribute("height", "315");
-                vidVid.setAttribute("src", "http://www.youtube.com/embed/" + $scope.day.youtube + "?modestbranding=1&rel=0&theme=light&color=white&autohide=0&disablekb=1");
+                vidVid.setAttribute("src", "http://www.youtube.com/embed/" + $scope.day.youtubeOT + "?modestbranding=1&rel=0&theme=light&color=white&autohide=0&disablekb=1");
                 vidVid.setAttribute("frameborder", "0");
                 vidVid.setAttribute("autoplay", "true");
                 vidVid.setAttribute("allowfullscreen", "true");
 
-                var vidEl = document.getElementById("streamed-video");
-                vidEl.appendChild(vidVid); 
+                var vidEl = document.getElementById("ot-streamed-video");
+                vidEl.appendChild(vidVid);
 
-                var vidPrev = document.getElementById("video-preview");
+                var vidPrev = document.getElementById("ot-video-preview");
                 vidPrev.style.display = 'none';
             }
-        }
+        };
+
+        $scope.showYoutubeNT = function () {
+            if (!$rootScope.checkNetwork()) {
+                $rootScope.notify("You are not connected to the internet...");
+            }
+            else {
+                var vidVid = document.createElement("iframe");
+                vidVid.setAttribute("width", "300");
+                vidVid.setAttribute("height", "315");
+                vidVid.setAttribute("src", "http://www.youtube.com/embed/" + $scope.day.youtubeNT + "?modestbranding=1&rel=0&theme=light&color=white&autohide=0&disablekb=1");
+                vidVid.setAttribute("frameborder", "0");
+                vidVid.setAttribute("autoplay", "true");
+                vidVid.setAttribute("allowfullscreen", "true");
+
+                var vidEl = document.getElementById("nt-streamed-video");
+                vidEl.appendChild(vidVid); 
+
+                var vidPrev = document.getElementById("nt-video-preview");
+                vidPrev.style.display = 'none';
+            }
+        };
         
         $scope.comment = function() {
             window.open('http://bible.soulsurvivor.com/node/' + $scope.nid + '#comment-form', '_system');
-        }
+        };
         
         $scope.share = function() {
             window.plugins.socialsharing.shareViaFacebook(
@@ -599,7 +650,7 @@ angular.module('bioy.controllers', [])
 
             for (var i=0; i<12; i++) {
                 $scope.months [i] = {
-                    name: monthNames[12 - i],
+                    name: monthNames[11 - i],
                     items: []
                 };
             }
@@ -608,7 +659,7 @@ angular.module('bioy.controllers', [])
         dayDB.onReady(function() {
             var storedData = dayDB.Days
             .filter(true)
-            .orderByDescending("it.title")
+            .orderByDescending("it.day")
             .toLiveArray();
             storedData.then(function (results) {
                 if (results.length) { $scope.dbIsEmpty = false; }
@@ -627,13 +678,14 @@ angular.module('bioy.controllers', [])
                         'read' : day.read,
                         'read_count' : day.read_count,
                         'comment_count' : day.comment_count,
-                        'youtube' : day.youtube,
-                        'subtitle' : day.subtitle,
+                        'youtubeOT' : day.youtubeOT,
+                        'youtubeNT' : day.youtubeNT,
+                        'subtitle' : day.subtitle
                     });
                     
                     // Attach day to month array.
                     var month = new Date(day.created * 1000).getMonth(); 
-                    $scope.months[12 - month].items.push(day);
+                    $scope.months[11 - month].items.push(day);
                     
                     if (i == max - 1) {
                         // Last iteration
@@ -703,7 +755,8 @@ angular.module('bioy.controllers', [])
                         day.read = JSON.parse(data.node.read);
                         day.read_count = data.node.read_count;
                         day.comment_count = data.node.comment_count;
-                        day.youtube = data.node.youtube;
+                        day.youtubeOT = data.node.youtubeOT;
+                        day.youtubeNT = data.node.youtubeNT;
                         day.subtitle = data.node.subtitle;
 
                         days.push(day);

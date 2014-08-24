@@ -18,8 +18,17 @@
                     Home
                 </ion-item>
                 <ion-list class="padding">
+                    <ion-item ng-show="" class="item item-icon-left" nav-clear menu-close href="#/app/settings">
+                        <i class="icon ion-gear-b"></i>
+                        Get Started
+                    </ion-item>
+                    <!--<ion-item class="item" nav-clear menu-close>-->
+                    <ion-item ng-show="{{showLoading}}" class="item menu-loading" nav-clear menu-close>
+                        Loading...
+                    </ion-item>
                     <ion-item class="item-accordion item item-text-wrap item-icon-left"
                               ng-repeat="day in days"
+                              nav-clear menu-close
                               href="#/app/days/{{day.nid}}">
                         <i ng-show="!day.read" class="icon ion-email"></i>
                         <i ng-show="day.read" class="icon ion-checkmark"></i>
