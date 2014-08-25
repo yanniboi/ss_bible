@@ -52,6 +52,9 @@ body .hidden {
       padding: 0; }
       .day-detail .card .item-video img {
         width: 100%; } }
+.platform-ios .ion-share {
+  display: none; }
+
 /*!
   Ionicons, v1.4.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/

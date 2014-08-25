@@ -294,16 +294,15 @@
                     var storedData = dayDB.Days
                         .orderBy("it.created")
                         //.orderBy("it.title")
-                        .first (
-                        function (day) { return day.read == 0 },
-                        {},
-                        function (result) {
-                            $rootScope.firstDayId = result.nid;
+                        .toLiveArray();
+                    storedData.then(function (results) {
+                        if (results.length == 0) { console.log('Days are empty...') }
+                        else {
+                            $rootScope.firstDayId = results[0].nid;
                             $rootScope.hide();
-                            $state.go('app.day', {dayId: result.nid});
+                            $state.go('app.day', {dayId: results[0].nid});
                         }
-
-                    );
+                    });
                 });
             }
 
