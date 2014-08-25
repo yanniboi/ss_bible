@@ -14,13 +14,20 @@ angular.module('bioy.controllers', [])
             }
         });
 
+        $rootScope.$watch('isLoggedIn', function () {
+            $scope.isLoggedIn = $rootScope.isLoggedIn;
+        });
+
         $scope.hideBackButton = true;
 
         // Set up global variables
         $rootScope.isLoggedIn = $scope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
         $rootScope.shownGroup = null;
         $rootScope.CurrentDay = window.localStorage.getItem('currentDay');
-        
+
+        $rootScope.readingPlan = window.localStorage.getItem('plan') != null ? window.localStorage.getItem('plan') : 'Bible in One Year';
+
+
         // Streak variables.
         $rootScope.streak = {
             today: new Date().setHours(0,0,0,0),
@@ -53,16 +60,12 @@ angular.module('bioy.controllers', [])
             $scope.menuModal.hide();
 
         };
-
-        // Demo dates @todo remove.
-        //$rootScope.streak.update = 1307106800000;
-        //$rootScope.streak.today = 1407193200000;
         
         if (($rootScope.streak.today - $rootScope.streak.update) > 86400000) {
-            $rootScope.streak.highscore = $rootScope.streak.current
+            $rootScope.streak.highscore = $rootScope.streak.current;
             window.localStorage.setItem('streak_highscore', $rootScope.streak.current);
             
-            $rootScope.streak.current = 0
+            $rootScope.streak.current = 0;
             window.localStorage.setItem('streak_current', 0);
         }
         
@@ -129,7 +132,14 @@ angular.module('bioy.controllers', [])
         };
 
         var isLoggedIn = $rootScope.isLoggedIn;
-        
+
+        $scope.firstTime = true;
+        $scope.highscore = JSON.parse($rootScope.streak.highscore) + 1;
+
+        if ($rootScope.CurrentDay) {
+            $scope.firstTime = false;
+        }
+
         if (isLoggedIn) {
             var username = window.localStorage.getItem('user_name');
             $scope.welcome = "Hello " + username + '...';
@@ -137,10 +147,6 @@ angular.module('bioy.controllers', [])
         else {
             $scope.welcome = "Hello little ones...";
         }
-
-        $rootScope.$watch('isLoggedIn', function () {
-            $scope.isLoggedIn = $rootScope.isLoggedIn;
-        });
 
         $scope.showMessage = function () {
             var text = "Please enter valid credentials";
@@ -155,16 +161,23 @@ angular.module('bioy.controllers', [])
     .controller('SettingsCtrl', ['$state', '$scope', '$rootScope', 'localStorageService', function ($state, $scope, $rootScope, localStorageService) {
         // Array for storing settings values.
         $scope.settings = {
+            'plan': $rootScope.readingPlan
             // @TODO think of some settings to use.
             //'lightsabre': window.localStorage.getItem('lightsabre'),
             //'download': JSON.parse(window.localStorage.getItem('download'))
         };
-        
+
+        // Get username if logged in.
+        $scope.username = window.localStorage.getItem('user_name');
+
         // Save action for save button.
         $scope.save = function () {
+            window.localStorage.setItem('plan', $scope.settings.plan);
+            $rootScope.readingPlan = $scope.settings.plan;
             //window.localStorage.setItem('lightsabre', $scope.settings.lightsabre);
             //window.localStorage.setItem('download', $scope.settings.download);
-            $state.go('app.home');            
+            $rootScope.notify('Settings saved...');
+
         };
         
         // Boolean to determin whether user is logged in.
@@ -380,6 +393,8 @@ angular.module('bioy.controllers', [])
         $scope.day = [];
         $scope.nid = $stateParams.dayId;
         $rootScope.notify();
+
+        $scope.plan = $rootScope.readingPlan;
         
         dayDB.onReady(function() {
             var storedData = dayDB.Days
@@ -404,11 +419,19 @@ angular.module('bioy.controllers', [])
                         'read' : results[0].read
                     };
 
-                    $rootScope.verses = [
-                        results[0].verseOT,
-                        results[0].verseNT,
-                        results[0].verseP
-                    ];
+                    if ($rootScope.readingPlan == 'Bible in One Year') {
+                        $rootScope.verses = [
+                            results[0].verseOT,
+                            results[0].verseNT,
+                            results[0].verseP
+                        ];
+                    }
+                    else {
+                        $rootScope.verses = [
+                            results[0].verseNT
+                        ];
+                    }
+
 
                     //$scope.init();
                     dayDB.saveChanges();

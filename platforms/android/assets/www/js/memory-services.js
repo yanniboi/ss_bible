@@ -4,6 +4,24 @@
 
     angular.module('bioy.memoryServices', ['jaydata', 'bioy.services'])
         .factory('Day', ['$state', '$data', '$rootScope', '$http', '$q', 'Utils', function ($state, $data, $rootScope, $http, $q, Utils) {
+
+            var dayOne = {
+                title: 'The Year Begins',
+                day: 1,
+                youtubeOT: 'Rgh3g5EiWmg',
+                youtubeNT: 'Rgh3g5EiWmg',
+                verseBooks: 'Genesis, Matthew, Psalms',
+                verseOT: 'Genesis 1:1 - 2:17',
+                verseNT: 'Matthew 1:1-25',
+                verseP: 'Psalms 1:1-6',
+                subtitle: '',
+                read: 0,
+                read_count: 0,
+                comment_count: 0,
+                nid: 181,
+                created: 1409575349,
+                body: ''
+            };
             
             $data.Entity.extend("Days", {
                 title: {type: String, required: true, maxLength: 200 },
@@ -30,10 +48,24 @@
             var dayDB = new DayDatabase({
                 provider: 'sqLite' , databaseName: 'MyDayDatabase'
             });
+
+            function doBackupDayOne () {
+                var dayTestDB = new DayDatabase({
+                    provider: 'sqLite' , databaseName: 'MyDayDatabase'
+                });
+
+                dayTestDB.onReady(function() {
+                    dayTestDB.Days.add(dayOne);
+                    dayTestDB.saveChanges();
+                    doRefreshMenu();
+                });
+            }
             
             function doRefresh () {
                 if (!$rootScope.checkNetwork()) {
-                    console.log('no internet connection for refresh')
+                    console.log('no internet connection for refresh');
+                    doBackupDayOne();
+
                 }
                 else {
                     var uid = JSON.parse(window.localStorage.getItem('user_uid'));
@@ -142,10 +174,16 @@
                                 return;
                             }
 
+                            var dayNo = 5;
+
+                            if (results.length < 6) {
+                                var dayNo = results.length;
+                            }
+
                             var i = 0,
                                 menuDays = [];
 
-                            while (i < 5) {
+                            while (i < dayNo) {
                                 var day = results[i];
                                 menuDays.push({
                                     'title': day.title,

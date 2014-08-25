@@ -35,17 +35,17 @@
                     {{verse}}
                 </ion-item>
             </ion-list>
-            <div class="item item-divider text-center">
+            <div ng-show="plan == 'Bible in One Year'" class="item item-divider text-center">
                 Old Testament
             </div>
 
-            <div class="item item-video">
+            <div ng-show="plan == 'Bible in One Year'" class="item item-video">
                 <div id="ot-video-preview" ng-click="showYoutubeOT()"><img src="img/preview.jpg" /></div>
                 <!--<h4>Streaming...</h4>-->
                 <div id="ot-streamed-video"></div>
             </div>
 
-            <div class="item item-divider text-center">
+            <div ng-show="plan == 'Bible in One Year'" class="item item-divider text-center">
                 New Testament
             </div>
 

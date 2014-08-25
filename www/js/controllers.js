@@ -60,16 +60,12 @@ angular.module('bioy.controllers', [])
             $scope.menuModal.hide();
 
         };
-
-        // Demo dates @todo remove.
-        //$rootScope.streak.update = 1307106800000;
-        //$rootScope.streak.today = 1407193200000;
         
         if (($rootScope.streak.today - $rootScope.streak.update) > 86400000) {
-            $rootScope.streak.highscore = $rootScope.streak.current
+            $rootScope.streak.highscore = $rootScope.streak.current;
             window.localStorage.setItem('streak_highscore', $rootScope.streak.current);
             
-            $rootScope.streak.current = 0
+            $rootScope.streak.current = 0;
             window.localStorage.setItem('streak_current', 0);
         }
         
@@ -136,7 +132,14 @@ angular.module('bioy.controllers', [])
         };
 
         var isLoggedIn = $rootScope.isLoggedIn;
-        
+
+        $scope.firstTime = true;
+        $scope.highscore = JSON.parse($rootScope.streak.highscore) + 1;
+
+        if ($rootScope.CurrentDay) {
+            $scope.firstTime = false;
+        }
+
         if (isLoggedIn) {
             var username = window.localStorage.getItem('user_name');
             $scope.welcome = "Hello " + username + '...';

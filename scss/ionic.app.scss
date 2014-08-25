@@ -44,6 +44,12 @@ h1,h2,h3,h4,h5 {
     }
 }
 
+.home {
+    .welcome-image img {
+        border-radius: 10px;
+    }
+}
+
 body {
     .video-js {
         /*display: none;*/

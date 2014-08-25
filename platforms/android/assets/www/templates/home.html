@@ -1,4 +1,4 @@
-<ion-view hide-back-button="{{hideBackButton}}"  title="Bible in One Year">
+<ion-view hide-back-button="{{hideBackButton}}"  class="home" title="Bible in One Year">
     <div class="bar-calm">
         <ion-nav-buttons side="left">
             <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
@@ -11,12 +11,42 @@
     </div>
     <ion-content class="has-header">
         <h4 ng-bind="welcome"></h4>
+        <div class="welcome-image image text-center">
+            <img src="resources/mike-and-andy.png">
+        </div>
         <div class="card">
-            <div class="item item-text-wrap">
+            <div ng-show="firstTime" class="item item-text-wrap">
                 <p>Share thoughts, reflections and questions as we journey together in reading the Bible In One Year</p>
             </div>
+            <div ng-show="!firstTime" class="item item-text-wrap">
+                <p>Welcome back to another day with Mike and Andy...</p>
+            </div>
         </div>
-        <!--<div class="button button-block" ng-click="getCurrentDay()">Get Day</div>-->
+
+        <div ng-show="!firstTime" class="list stats">
+
+            <div class="item item-divider">
+               Days completed
+            </div>
+
+            <span class="item text-center" ng-pluralize count="streak.current" when="{'1': '{} Day', 'other': '{} Days'}"></span>
+
+            <div class="item item-divider">
+                Current Streak
+            </div>
+
+            <span class="item text-center" ng-pluralize count="streak.current" when="{'1': '{} Day', 'other': '{} Days'}"></span>
+
+
+            <div class="item item-divider">
+                Best Streak
+            </div>
+
+            <span class="item text-center" ng-pluralize count="highscore" when="{'1': '{} Day', 'other': '{} Days'}"></span>
+
+
+        </div>
+
     </ion-content>
     <div class="bar bar-footer bar-dark">
         <button ng-show="!isLoggedIn" class="button button-clear pull-left padding" ng-click="goLogin()">Login/Register</button>

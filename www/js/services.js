@@ -26,8 +26,10 @@ angular.module('bioy.services', ['http-auth-interceptor'])
             //@TODO remove debug for production.
             if (typeof navigator.connection === 'undefined') {
                 return true;
+                // Temp for checking offline behaviour
+                //return false;
             }
-            if (navigator.connection.type == Connection.NONE) {
+            else if (navigator.connection.type == Connection.NONE) {
                 return false;
             }
             return true;
