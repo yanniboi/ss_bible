@@ -30,9 +30,9 @@
                           ng-repeat="day in month.items"
                           href="#/app/days/{{day.nid}}"
                           ng-show="isGroupShown(month)">
-                    <i ng-show="!day.read" class="icon ion-email"></i>
-                    <i ng-show="day.read" class="icon ion-checkmark"></i>
-                    {{day.title}}
+                    <i ng-show="!day.read" class="icon icon-green padding-right"></i>
+                    <i ng-show="day.read" class="icon icon-grey padding-right"></i>
+                    Day {{day.day}}
                 </ion-item>
             </div>
         </ion-list>

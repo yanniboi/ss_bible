@@ -30,10 +30,10 @@
                               ng-repeat="day in days"
                               nav-clear menu-close
                               href="#/app/days/{{day.nid}}">
-                        <i ng-show="!day.read" class="icon ion-email"></i>
-                        <i ng-show="day.read" class="icon ion-checkmark"></i>
-                        <strong>{{day.day}} | {{day.subtitle}}</strong></br>
-                        <p class="subdued">{{day.title}}</p>
+                        <i ng-show="!day.read" class=" icon-green"></i>
+                        <i ng-show="day.read" class=" icon-grey"></i>
+                        <strong>{{day.day}} | {{day.verseBooks}}</strong></br>
+                        <p class="subdued">{{day.created | date:'MMM d, y'}}</p>
                     </ion-item>
                 </ion-list>
                 <ion-item class="item item-icon-left" nav-clear menu-close href="#/app/browse">

@@ -402,10 +402,11 @@ angular.module('bioy.controllers', [])
             storedData.then(function (results) {
                 if (results.length) {
                     $scope.day = {
-                        'title' : results[0].title,
+                        //'title' : results[0].title,
                         'body' : results[0].body,
+                        'author' : results[0].author,
                         'dayId' : results[0].day,
-                        'created' : results[0].created * 1000,
+                        'created' : results[0].created,
                         'nid' : results[0].nid,
                         'read_count' : results[0].read_count,
                         'comment_count' : results[0].comment_count,
@@ -415,7 +416,7 @@ angular.module('bioy.controllers', [])
                         'verseP' : results[0].verseP,
                         'youtubeOT' : results[0].youtubeOT,
                         'youtubeNT' : results[0].youtubeNT,
-                        'subtitle' : results[0].subtitle,
+                        //'subtitle' : results[0].subtitle,
                         'read' : results[0].read
                     };
 
@@ -507,7 +508,7 @@ angular.module('bioy.controllers', [])
         };
 
         $scope.shareDay = function () {
-            window.plugins.socialsharing.share('I just watched ' + $scope.day.title + ' on Youtube!', null, null, 'https://www.youtube.com/watch?v=' + $scope.day.youtubeNT);
+            window.plugins.socialsharing.share('I just watched Day ' + $scope.day.dayId + ' of Soul Survivor\'s Bible in One year!', null, null, 'https://bible.soulsurvivor.com/' + $scope.day.nid);
         };
         
         $scope.markUnread = function () {
@@ -673,8 +674,9 @@ angular.module('bioy.controllers', [])
                 
                 results.forEach(function (day) {
                     $scope.days.push({
-                        'title' : day.title,
+                        //'title' : day.title,
                         'day' : day.day,
+                        'author' : day.author,
                         'body' : day.body,
                         'created' : day.created,
                         'nid' : day.nid,
@@ -683,11 +685,11 @@ angular.module('bioy.controllers', [])
                         'comment_count' : day.comment_count,
                         'youtubeOT' : day.youtubeOT,
                         'youtubeNT' : day.youtubeNT,
-                        'subtitle' : day.subtitle
+                        //'subtitle' : day.subtitle
                     });
                     
                     // Attach day to month array.
-                    var month = new Date(day.created * 1000).getMonth(); 
+                    var month = new Date(day.created / 1000).getMonth();
                     $scope.months[11 - month].items.push(day);
                     
                     if (i == max - 1) {
@@ -752,7 +754,8 @@ angular.module('bioy.controllers', [])
                         var day = [];
                         day.day = data.node.field_day_number
                         day.body = data.node.body;
-                        day.title = data.node.title;
+                        day.author = data.node.author;
+                        //day.title = data.node.title;
                         day.created = data.node.date;
                         day.nid = data.node.nid;
                         day.read = JSON.parse(data.node.read);
@@ -760,7 +763,7 @@ angular.module('bioy.controllers', [])
                         day.comment_count = data.node.comment_count;
                         day.youtubeOT = data.node.youtubeOT;
                         day.youtubeNT = data.node.youtubeNT;
-                        day.subtitle = data.node.subtitle;
+                        //day.subtitle = data.node.subtitle;
 
                         days.push(day);
 
@@ -780,7 +783,7 @@ angular.module('bioy.controllers', [])
                                     dayTestDB.Days.add(day);
                                 }
                                 dayTestDB.saveChanges();
-                                var month = new Date(day.created * 1000).getMonth(); 
+                                var month = new Date(day.created).getMonth();
                                 $scope.months[12 - month].items.push(day);
                             });
                         });

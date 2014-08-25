@@ -32,6 +32,18 @@ h1, h2, h3, h4, h5 {
 .home .welcome-image img {
   border-radius: 10px; }
 
+.icon-green,
+.icon-grey {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 50px;
+  height: 50px;
+  background: transparent url(../resources/talkGreen.png) no-repeat center center; }
+
+.icon-grey {
+  background: transparent url(../resources/talkGrey.png) no-repeat center center; }
+
 body .video-js {
   /*display: none;*/ }
 body video {

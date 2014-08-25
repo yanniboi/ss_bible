@@ -6,33 +6,35 @@
         .factory('Day', ['$state', '$data', '$rootScope', '$http', '$q', 'Utils', function ($state, $data, $rootScope, $http, $q, Utils) {
 
             var dayOne = {
-                title: 'The Year Begins',
+                //title: 'The Year Begins',
                 day: 1,
+                author: 1,
                 youtubeOT: 'Rgh3g5EiWmg',
                 youtubeNT: 'Rgh3g5EiWmg',
                 verseBooks: 'Genesis, Matthew, Psalms',
                 verseOT: 'Genesis 1:1 - 2:17',
                 verseNT: 'Matthew 1:1-25',
                 verseP: 'Psalms 1:1-6',
-                subtitle: '',
+                //subtitle: '',
                 read: 0,
                 read_count: 0,
                 comment_count: 0,
                 nid: 181,
-                created: 1409575349,
+                created: 1409575349000,
                 body: ''
             };
             
             $data.Entity.extend("Days", {
-                title: {type: String, required: true, maxLength: 200 },
+                //title: {type: String, required: true, maxLength: 200 },
                 day: { type: "int" },
+                author: { type: "int" },
                 youtubeOT: { type: String },
                 youtubeNT: { type: String },
                 verseBooks: { type: String },
                 verseOT: { type: String },
                 verseNT: { type: String },
                 verseP: { type: String },
-                subtitle: { type: String },
+                //subtitle: { type: String },
                 read: { type: "int" },
                 read_count: { type: "int" },
                 comment_count: { type: "int" },
@@ -115,15 +117,16 @@
 
                             day.day = data.node.field_day_number;
                             day.body = data.node.body;
-                            day.title = data.node.title;
-                            day.created = data.node.date;
+                            day.author = data.node.author;
+                            //day.title = data.node.title;
+                            day.created = data.node.date * 1000;
                             day.nid = data.node.nid;
                             day.read = JSON.parse(data.node.read);
                             day.read_count = data.node.read_count;
                             day.comment_count = data.node.comment_count;
                             day.youtubeOT = data.node.youtubeOT;
                             day.youtubeNT = data.node.youtubeNT;
-                            day.subtitle = data.node.subtitle;
+                            //day.subtitle = data.node.subtitle;
                             day.verseBooks = data.node.bible_book;
                             day.verseOT = verses[0];
                             day.verseNT = verses[1];
@@ -208,8 +211,9 @@
                             while (i < dayNo) {
                                 var day = results[i];
                                 menuDays.push({
-                                    'title': day.title,
+                                    //'title': day.title,
                                     'day': day.day,
+                                    'author': day.author,
                                     'body': day.body,
                                     'created': day.created,
                                     'nid': day.nid,
@@ -220,8 +224,8 @@
                                     'verseNT': day.verseNT,
                                     'verseP': day.verseP,
                                     'youtubeOT': day.youtubeOT,
-                                    'youtubeNT': day.youtubeNT,
-                                    'subtitle': day.subtitle
+                                    'youtubeNT': day.youtubeNT
+                                    //'subtitle': day.subtitle
                                 });
                                 i++;
                             }
@@ -253,8 +257,9 @@
 
                         results.forEach(function (day) {
                             menuDays.push({
-                                'title' : day.title,
+                                //'title' : day.title,
                                 'day' : day.day,
+                                'author' : day.author,
                                 'body' : day.body,
                                 'created' : day.created,
                                 'nid' : day.nid,
@@ -266,8 +271,8 @@
                                 'verseNT': day.verseNT,
                                 'verseP': day.verseP,
                                 'youtubeOT' : day.youtubeOT,
-                                'youtubeNT' : day.youtubeNT,
-                                'subtitle' : day.subtitle
+                                'youtubeNT' : day.youtubeNT
+                                //'subtitle' : day.subtitle
                             });
 
                             if (i == max - 1) {
@@ -315,6 +320,7 @@
                 dayDB.onReady(function() {
                     var storedData = dayDB.Days
                         .orderBy("it.created")
+                        .filter("it.read == 0")
                         //.orderBy("it.title")
                         .toLiveArray();
                     storedData.then(function (results) {
