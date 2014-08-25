@@ -31,20 +31,35 @@ var filestocopy = [{
     "config/android/res/drawable-xhdpi/icon.png": 
     "platforms/android/res/drawable-xhdpi/icon.png"
 }, {
-    "config/android/res/drawable/splash.png": 
-    "platforms/android/res/drawable/splash.png"
+    "config/android/res/drawable/default.png":
+        "platforms/android/res/drawable/splash.png"
 }, {
-    "config/android/res/drawable-hdpi/splash.png": 
-    "platforms/android/res/drawable-hdpi/splash.png"
+    "config/android/res/drawable-hdpi/default.png":
+        "platforms/android/res/drawable-hdpi/splash.png"
 }, {
-    "config/android/res/drawable-ldpi/splash.png": 
-    "platforms/android/res/drawable-ldpi/splash.png"
+    "config/android/res/drawable-ldpi/default.png":
+        "platforms/android/res/drawable-ldpi/splash.png"
 }, {
-    "config/android/res/drawable-mdpi/splash.png": 
-    "platforms/android/res/drawable-mdpi/splash.png"
+    "config/android/res/drawable-mdpi/default.png":
+        "platforms/android/res/drawable-mdpi/splash.png"
 }, {
-    "config/android/res/drawable-xhdpi/splash.png": 
-    "platforms/android/res/drawable-xhdpi/splash.png"
+    "config/android/res/drawable-xhdpi/default.png":
+        "platforms/android/res/drawable-xhdpi/splash.png"
+}, {
+    "config/android/res/drawable/default-land.png":
+        "platforms/android/res/drawable-land/splash.png"
+}, {
+    "config/android/res/drawable-hdpi/default-land.png":
+        "platforms/android/res/drawable-hdpi-land/splash.png"
+}, {
+    "config/android/res/drawable-ldpi/default-land.png":
+        "platforms/android/res/drawable-ldpi-land/splash.png"
+}, {
+    "config/android/res/drawable-mdpi/default-land.png":
+        "platforms/android/res/drawable-mdpi-land/splash.png"
+}, {
+    "config/android/res/drawable-xhdpi/default-land.png":
+        "platforms/android/res/drawable-xhdpi-land/splash.png"
 }, {
     "config/ios/Resources/icons/Icon-72.png": 
     "platforms/ios/Bible\ In\ One\ Year/Resources/icons/icon-72.png"
@@ -88,25 +103,25 @@ var filestocopy = [{
     "config/ios/Resources/icons/icon-72@2x.png": 
     "platforms/ios/Bible\ In\ One\ Year/Resources/icons/icon-72@2x.png"
 }, {
-    "config/ios/Resources/splash/iphone5_ios7.png": 
+    "config/ios/Resources/splash/Default@2x.png":
     "platforms/ios/Bible\ In\ One\ Year/Resources/splash/Default@2x~iphone.png"
 }, {
-    "config/ios/Resources/splash/iphone4_ios7.png": 
+    "config/ios/Resources/splash/Default-568h@2x.png":
     "platforms/ios/Bible\ In\ One\ Year/Resources/splash/Default-568h@2x~iphone.png"
 }, {
     "config/ios/Resources/splash/iphone3G.png":
     "platforms/ios/Bible\ In\ One\ Year/Resources/splash/Default~iphone.png"
 }, {
-    "config/ios/Resources/splash/ipad_ios7_landscape.png": 
+    "config/ios/Resources/splash/Default-Landscape.png":
     "platforms/ios/Bible\ In\ One\ Year/Resources/splash/Default-Landscape~ipad.png"
 }, {
-    "config/ios/Resources/splash/ipad_2x_ios7_landscape.png": 
+    "config/ios/Resources/splash/Default-Landscape@2x.png":
     "platforms/ios/Bible\ In\ One\ Year/Resources/splash/Default-Landscape@2x~ipad.png"
 }, {
-    "config/ios/Resources/splash/ipad_ios7_portrait.png": 
+    "config/ios/Resources/splash/Default-Portrait.png":
     "platforms/ios/Bible\ In\ One\ Year/Resources/splash/Default-Portrait~ipad.png"
 }, {
-    "config/ios/Resources/splash/ipad_2x_ios7_portrait.png": 
+    "config/ios/Resources/splash/Default-Portrait@2x.png":
     "platforms/ios/Bible\ In\ One\ Year/Resources/splash/Default-Portrait@2x~ipad.png"
 }, ];
  

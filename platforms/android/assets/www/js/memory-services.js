@@ -57,17 +57,39 @@
                 dayTestDB.onReady(function() {
                     dayTestDB.Days.add(dayOne);
                     dayTestDB.saveChanges();
+                    dayOneDone = true;
+                    doRefresh();
+                });
+            }
+
+            var dayOneDone = false;
+
+            function doBackupDayOneNoInternet () {
+                var dayTestDB = new DayDatabase({
+                    provider: 'sqLite' , databaseName: 'MyDayDatabase'
+                });
+
+                dayTestDB.onReady(function() {
+                    dayTestDB.Days.add(dayOne);
+                    dayTestDB.saveChanges();
                     doRefreshMenu();
                 });
             }
-            
+
+
             function doRefresh () {
                 if (!$rootScope.checkNetwork()) {
                     console.log('no internet connection for refresh');
-                    doBackupDayOne();
+                    doBackupDayOneNoInternet();
 
                 }
                 else {
+
+                    if (!dayOneDone) {
+                        doBackupDayOne();
+                        return;
+                    }
+
                     var uid = JSON.parse(window.localStorage.getItem('user_uid'));
 
                     if (!!uid) {
@@ -177,7 +199,7 @@
                             var dayNo = 5;
 
                             if (results.length < 6) {
-                                var dayNo = results.length;
+                                dayNo = results.length;
                             }
 
                             var i = 0,
@@ -296,7 +318,12 @@
                         //.orderBy("it.title")
                         .toLiveArray();
                     storedData.then(function (results) {
-                        if (results.length == 0) { console.log('Days are empty...') }
+                        if (results.length == 0) {
+                            console.log('Days are empty...')
+                            $rootScope.hide();
+                            $rootScope.hide();
+
+                        }
                         else {
                             $rootScope.firstDayId = results[0].nid;
                             $rootScope.hide();

@@ -84,11 +84,4 @@
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bioy/R$string.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bioy/R.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bioy/BibleInOneYear.class \
-/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bible/R$xml.class \
-/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bible/R$drawable.class \
-/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bible/R$attr.class \
-/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bible/BuildConfig.class \
-/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bible/R$string.class \
-/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bible/R.class \
-/var/www/mobile/ss_bible/platforms/android/ant-build/classes/com/soulsurvivor/bible/BibleInOneYear.class \
 /var/www/mobile/ss_bible/platforms/android/ant-build/dexedLibs/classes-f2b7d13ac204865e97732d1572117f43.jar \
