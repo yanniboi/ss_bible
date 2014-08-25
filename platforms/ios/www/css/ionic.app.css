@@ -18,26 +18,54 @@ h1, h2, h3, h4, h5 {
   text-align: center; }
 
 .day-detail .list.card {
-  margin-bottom: 20px; }
+  margin-bottom: 63px; }
   .day-detail .list.card h2 {
     text-align: left; }
 .day-detail iframe {
   margin: auto;
   display: block; }
-.day-detail #video-preview img {
+.day-detail #ot-video-preview img,
+.day-detail #nt-video-preview img {
   margin: auto;
   display: block; }
 
-body {
-  /*.popup {
-      width: 70%; 
-      height: 60%;
-      overflow: scroll;
-  }*/ }
-  body .video-js {
-    /*display: none;*/ }
-  body video {
-    width: 100%; }
+.home .welcome-image img {
+  border-radius: 10px; }
+
+.icon-green,
+.icon-grey {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 50px;
+  height: 50px;
+  background: transparent url(../resources/talkGreen.png) no-repeat center center; }
+
+.icon-grey {
+  background: transparent url(../resources/talkGrey.png) no-repeat center center; }
+
+body .video-js {
+  /*display: none;*/ }
+body video {
+  width: 100%; }
+body div.streak {
+  text-align: center; }
+body .bar-footer button {
+  width: 50%; }
+body .hidden {
+  display: none; }
+
+/* iphone */
+/*@media (max-device-width : 568px) { */
+@media (max-device-width: 568px) and (orientation: portrait) {
+  .day-detail .card {
+    margin: 0; }
+    .day-detail .card .item-video {
+      padding: 0; }
+      .day-detail .card .item-video img {
+        width: 100%; } }
+.platform-ios .ion-share {
+  display: none; }
 
 /*!
   Ionicons, v1.4.1

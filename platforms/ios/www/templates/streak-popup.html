@@ -1,0 +1,10 @@
+<div class="streak streak-{{streak.state}}">
+    <h2>{{streak.current}} Day Streak</h2>
+    <div ng-show="showNumber">
+        <span>You are:</span>
+        <h3 ng-pluralize count="streakNumber"
+          when="{'one': '{} Day', 'other': '{} Days'}"></h3>
+    </div>
+    <span>{{streakMessage}}</span>
+    
+</div>

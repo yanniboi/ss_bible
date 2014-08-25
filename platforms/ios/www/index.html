@@ -17,9 +17,14 @@
         <script src="cordova.js"></script>
 
         <!-- your app's js -->
-        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-        <script src="http://include.jaydata.org/jaydata.js"></script>
-        <script src="http://include.jaydata.org/jaydatamodules/angular.js"></script>
+        <script src="lib/jaydata/q.js"></script>
+        <script src="lib/jaydata/jaydata.js"></script>
+        <script src="lib/jaydata/jaydatamodules/angular.js"></script>
+        <script src="lib/jaydata/jaydatamodules/deferred.js"></script>
+        <script src="lib/jaydata/jaydatamodules/qDeferred.js"></script>
+        <script src="lib/jaydata/jaydataproviders/SqLiteProvider.js"></script>
+        <script src="lib/jquery/jquery-1.11.1.min.js"></script>
+
         <script src="js/app.js"></script>
         <script src="js/controllers.js"></script>
         <script src="js/memory-services.js"></script>
@@ -27,13 +32,13 @@
         <script src="js/directives.js"></script>
 
         <!-- videojs -->
-        <link href="http://vjs.zencdn.net/4.6/video-js.css" rel="stylesheet">
+        <!--<link href="http://vjs.zencdn.net/4.6/video-js.css" rel="stylesheet">
         <script src="http://vjs.zencdn.net/4.6/video.js"></script>
         <style type="text/css">
             .vjs-default-skin .vjs-play-progress,
             .vjs-default-skin .vjs-volume-level { background-color: #009d8e }
             .vjs-default-skin .vjs-control-bar { font-size: 101% }
-        </style>
+        </style>-->
     </head>
 
     <body ng-app="bioy">

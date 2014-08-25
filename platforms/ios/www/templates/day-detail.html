@@ -1,72 +1,104 @@
-<ion-view class="day-detail" title="Day {{day.dayId}}">
-    <ion-tabs class="tabs-icon-top">
+<ion-view hide-back-button="{{hideBackButton}}" class="day-detail" title="Day {{day.dayId}}">
+    <div class="bar-clam">
+        <ion-nav-buttons side="left">
+            <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <button ng-click="shareDay()" class="button button-icon icon ion-share"></button>
+            <button ng-click="settingsMenu()" class="button button-icon icon ion-gear-b"></button>
+            &nbsp;
+        </ion-nav-buttons>
+    </div>
+    <!--<ion-tabs class="tabs-icon-top">-->
 
-        <!-- Video Tab -->
-        <ion-tab title="Video" icon="icon ion-play">
-            <ion-content overflow-scroll="true" has-header="true" padding="true">
-                <div class="list card">
-                    
-                    <div class="item item-avatar">
-                        <img src="resources/andy.jpg">
-                        <h2>{{day.title}}</h2>
-                        <p>{{day.created | date:'MMM d, y'}}</p>
-                        <div ng-bind-html="day.subtitle"></div>
-                    </div>
+    <!-- Video Tab -->
+    <!--<ion-tab title="Video" icon="icon ion-play">-->
+    <ion-content overflow-scroll="true" has-header="true" padding="true">
+        <div class="list card">
 
-                    <div class="item item-body">
-                        <div id="video-preview" ng-click="showYoutube()"><img src="img/preview.jpg"></img></div>
-                        <!--<h4>Streaming...</h4>-->
-                        <div id="streamed-video"></div>
-                    
-                        <p>
-                            {{instructions}}
-                        </p>
-                        <p>
-                            <a class="subdued">{{day.read_count}} People have seen this Video</a>
-                            <a class="subdued">{{day.comment_count}} Comments</a>
-                        </p>
-                    </div>
-
-                    <div class="item tabs tabs-secondary tabs-icon-left">
-                        <!--
-                        <a class="tab-item" ng-click="comment()">
-                            <i class="icon ion-chatbox"></i>
-                            Comment
-                        </a>
-                        -->
-
-                        <a ng-show="!day.read" class="tab-item" ng-click="markRead()">
-                            <i class="icon ion-checkmark"></i>
-                            Mark as Read
-                        </a>
-                        <a ng-show="day.read" class="tab-item" ng-click="markUnread()">
-                            <i class="icon ion-trash-a"></i>
-                            Mark as Unread
-                        </a>
-                        <a class="tab-item" ng-click="share()">
-                            <i class="icon ion-social-facebook"></i>
-                            Share on Facebook
-                        </a>
-                    </div>
-
-                </div>
-            </ion-content>
-        </ion-tab>
+            <div class="item item-avatar item-text-wrap">
+                <img src="resources/{{day.author}}.png">
+                <h2>Day {{day.dayId}}</h2>
+                <p>{{day.created | date:'MMM d, y'}}</p>
+            </div>
+{{verses2}}
+            <div ng-show="!iPhonePortrait" class="item tabs tabs-secondary tabs-verse">
+                        <span ng-repeat="(key, verse) in verses" ng-click="verseNotify(key)" class="tab-item tab-verse-{{key + 1}}">
+                            {{verse}}
+                        </span>
+            </div>
 
 
-        <!-- Verses Tab --
-        <ion-tab title="Verses" icon="icon ion-chatboxes">
-            <ion-content has-header="true" padding="true">
-                <h2>Day {{day.dayId}} Verses</h2>
-                {{day.title}}
-                <div>{{day.videoUrl}}</div>
-                <div class="button-bar">
-                    <a class="button button-outline button-positive" ng-click="showPopup(1)">Old Testament</a>
-                    <a class="button button-outline button-dark" ng-click="showPopup(1)">New Testament</a>
-                    <a class="button button-outline" ng-click="showPopup(1)">Psalms</a>
-                </div>
-            </ion-content>
-        </ion-tab> -->
+            <ion-list ng-show="iPhonePortrait" class="list tabs-verse">
+                <ion-item style="text-align: center;" ng-repeat="(key, verse) in verses" ng-click="verseNotify(key)" class="item tab-verse-{{key + 1}}">
+                    {{verse}}
+                </ion-item>
+            </ion-list>
+            <div ng-show="plan == 'Bible in One Year'" class="item item-divider text-center">
+                Old Testament
+            </div>
 
-    </ion-tabs>
+            <div ng-show="plan == 'Bible in One Year'" class="item item-video">
+                <div id="ot-video-preview" ng-click="showYoutubeOT()"><img src="resources/play1.png" /></div>
+                <!--<h4>Streaming...</h4>-->
+                <div id="ot-streamed-video"></div>
+            </div>
+
+            <div ng-show="plan == 'Bible in One Year'" class="item item-divider text-center">
+                New Testament
+            </div>
+
+            <div class="item item-video">
+                <div id="nt-video-preview" ng-click="showYoutubeNT()"><img src="resources/play2.png" /></div>
+                <!--<h4>Streaming...</h4>-->
+                <div id="nt-streamed-video"></div>
+            </div>
+            <div class="item item-body">
+                <p>
+                    {{instructions}}
+                </p>
+                <p>
+                    <a class="subdued">{{day.read_count}} People have seen this Video</a>
+                    <a class="subdued">{{day.comment_count}} Comments</a>
+                </p>
+            </div>
+
+        </div>
+    </ion-content>
+
+    <div class="bar bar-footer bar-dark">
+        <!--<button  class="button button-clear pull-left padding" ng-click="startReading()" >Get Started</button>
+        <button  class="button button-clear  pull-right padding">Share</button>-->
+        <button ng-show="!day.read" class="button button-clear pull-left padding" ng-click="markRead()">
+            <i class="icon ion-checkmark"></i>
+            Mark as Read
+        </button>
+        <button ng-show="day.read" class="button button-clear pull-left padding" ng-click="markUnread()">
+            <i class="icon ion-trash-a"></i>
+            Mark as Unread
+        </button>
+        <button class="button button-clear pull-right padding" ng-click="continueReading()">
+            <i class="icon ion-paper-airplane"></i>
+            Next Day
+        </button>
+
+    </div>
+    <!--</ion-tab>-->
+
+
+    <!-- Verses Tab --
+    <ion-tab title="Verses" icon="icon ion-chatboxes">
+        <ion-content has-header="true" padding="true">
+            <h2>Day {{day.dayId}} Verses</h2>
+            {{day.title}}
+            <div>{{day.videoUrl}}</div>
+            <div class="button-bar">
+                <a class="button button-outline button-positive" ng-click="showPopup(1)">Old Testament</a>
+                <a class="button button-outline button-dark" ng-click="showPopup(1)">New Testament</a>
+                <a class="button button-outline" ng-click="showPopup(1)">Psalms</a>
+            </div>
+        </ion-content>
+    </ion-tab> -->
+
+    <!--</ion-tabs>-->
 </ion-view>

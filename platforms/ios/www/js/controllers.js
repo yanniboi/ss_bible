@@ -1,15 +1,77 @@
 angular.module('bioy.controllers', [])
 
-    .controller('AppCtrl', ['$scope', '$rootScope', '$state', '$ionicModal', function ($scope, $rootScope, $state, $ionicModal) {
+    .controller('AppCtrl', ['$scope', '$rootScope', '$state', '$ionicModal', 'Day', function ($scope, $rootScope, $state, $ionicModal, Day) {
         if ($scope.login == null) {
             $scope.login = false;
         }
-        
-        // Set up global variables
-        $rootScope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
-        $rootScope.shownGroup = null;
 
+        $rootScope.showLoading = true;
+
+        $rootScope.$watch('showLoading', function () {
+            $scope.showLoading = $rootScope.showLoading;
+            if (!$scope.showLoading) {
+                angular.element(document.querySelectorAll('.menu-loading')).addClass('hidden');
+            }
+        });
+
+        $rootScope.$watch('isLoggedIn', function () {
+            $scope.isLoggedIn = $rootScope.isLoggedIn;
+        });
+
+        $scope.hideBackButton = true;
+
+        // Set up global variables
+        $rootScope.isLoggedIn = $scope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
+        $rootScope.shownGroup = null;
+        $rootScope.CurrentDay = window.localStorage.getItem('currentDay');
+
+        $rootScope.readingPlan = window.localStorage.getItem('plan') != null ? window.localStorage.getItem('plan') : 'Bible in One Year';
+
+
+        // Streak variables.
+        $rootScope.streak = {
+            today: new Date().setHours(0,0,0,0),
+            current: window.localStorage.getItem('streak_current'),
+            highscore: window.localStorage.getItem('streak_highscore'),
+            update: window.localStorage.getItem('streak_update')
+        };
+
+        $scope.days = [];
+
+        $scope.settings = function () {
+            $scope.menuModal.hide();
+            $state.go('app.settings');
+        };
+
+        $ionicModal.fromTemplateUrl('templates/settings-menu.html', {
+            scope: $scope,
+            animation: 'slide-right-left'
+        }).then(function(modal) {
+            $scope.menuModal = modal;
+        });
+
+        $scope.settingsMenu = function () {
+            $scope.menuModal.show();
+        };
+
+        $scope.goLogin = function () {
+            $scope.menuModal.hide();
+            $state.go('app.login');
+            $scope.menuModal.hide();
+
+        };
         
+        if (($rootScope.streak.today - $rootScope.streak.update) > 86400000) {
+            $rootScope.streak.highscore = $rootScope.streak.current;
+            window.localStorage.setItem('streak_highscore', $rootScope.streak.current);
+            
+            $rootScope.streak.current = 0;
+            window.localStorage.setItem('streak_current', 0);
+        }
+        
+        // Refresh the database from server.
+        Day.refresh();
+
         $ionicModal.fromTemplateUrl(
             'templates/login.html',
             function(modal) {
@@ -25,26 +87,59 @@ angular.module('bioy.controllers', [])
         $scope.$on('$destroy', function() {
             $scope.loginModal.remove();
         });
+
+        $rootScope.$watch('menuDays', function () {
+            $scope.days = $rootScope.menuDays;
+        });
+
+        function rebuildMenu () {
+            $scope.days = [];
+            Day.refreshMenu();
+        }
         
-        // Method to check for internet connection.
-        $rootScope.checkNetwork = function () {
-            //@TODO remove debug for production.
-            if (typeof navigator.connection === 'undefined') {
-                return true;
-            }
-            if (navigator.connection.type == Connection.NONE) {
-                return false;
-            }
-            return true;
+        // Create the event.
+        $rootScope.menuRefreshEvent = document.createEvent('Event');
+
+        // Define that the event name is 'build'.
+        $rootScope.menuRefreshEvent.initEvent('rebuildmenu', true, true);
+
+        // Listen for the event.
+        window.addEventListener('rebuildmenu', rebuildMenu, false);
+
+        // Logout action to logout user.
+        $scope.doLogout = function() {
+            window.localStorage.setItem('user_login', 0);
+            window.localStorage.setItem('user_uid', 0);
+            $rootScope.isLoggedIn = 0;
+            $scope.isLoggedIn = 0;
         };
+
+        // Opens login dialog
+        $scope.doLogin = function() {
+            $scope.loginModal.show();
+        }
+        
         
     }])
 
-    .controller('HomeCtrl', ['$state', '$scope', '$rootScope', 'Utils', function ($state, $scope, $rootScope, Utils) {
-        //var isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
-        
+    .controller('HomeCtrl', ['$state', '$scope', '$rootScope', '$ionicModal', 'Utils', 'Day', function ($state, $scope, $rootScope, $ionicModal, Utils, Day) {
+        $scope.startReading = function () {
+            Day.getStartDay();
+        };
+
+        $scope.shareApp = function () {
+            window.plugins.socialsharing.share('Checkout soulsurvivors new Bible in One Year App!', null, null, 'https://play.google.com/store/apps/details?id=com.soulsurvivor.bioy');
+        };
+
         var isLoggedIn = $rootScope.isLoggedIn;
-        
+
+        $scope.firstTime = true;
+        $scope.highscore = JSON.parse($rootScope.streak.highscore) + 1;
+
+        if ($rootScope.CurrentDay) {
+            $scope.firstTime = false;
+        }
+
         if (isLoggedIn) {
             var username = window.localStorage.getItem('user_name');
             $scope.welcome = "Hello " + username + '...';
@@ -52,15 +147,11 @@ angular.module('bioy.controllers', [])
         else {
             $scope.welcome = "Hello little ones...";
         }
-        
-        $scope.settings = function () {
-            $state.go('app.settings');
-        }
-        
+
         $scope.showMessage = function () {
             var text = "Please enter valid credentials";
             $rootScope.notify(text);
-        }
+        };
 
     }])
 
@@ -70,17 +161,24 @@ angular.module('bioy.controllers', [])
     .controller('SettingsCtrl', ['$state', '$scope', '$rootScope', 'localStorageService', function ($state, $scope, $rootScope, localStorageService) {
         // Array for storing settings values.
         $scope.settings = {
+            'plan': $rootScope.readingPlan
             // @TODO think of some settings to use.
             //'lightsabre': window.localStorage.getItem('lightsabre'),
             //'download': JSON.parse(window.localStorage.getItem('download'))
         };
-        
+
+        // Get username if logged in.
+        $scope.username = window.localStorage.getItem('user_name');
+
         // Save action for save button.
         $scope.save = function () {
+            window.localStorage.setItem('plan', $scope.settings.plan);
+            $rootScope.readingPlan = $scope.settings.plan;
             //window.localStorage.setItem('lightsabre', $scope.settings.lightsabre);
             //window.localStorage.setItem('download', $scope.settings.download);
-            $state.go('app.home');            
-        }
+            $rootScope.notify('Settings saved...');
+
+        };
         
         // Boolean to determin whether user is logged in.
         //$scope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
@@ -95,27 +193,108 @@ angular.module('bioy.controllers', [])
             window.localStorage.setItem('user_uid', 0);
             $rootScope.isLoggedIn = 0;
             $scope.isLoggedIn = 0;
-        }
+            $rootScope.notify('Logged out successfully');
+        };
         
         // Opens login dialog
         $scope.doLogin = function() {
-            $scope.loginModal.show();
+            $state.go('app.login');
         }
     }])
 
     /**
      * Login controller to handle user login.
      */
-    .controller('LoginCtrl', ['$scope', '$rootScope', '$state', '$http', '$ionicPopup', 'Utils', function ($scope, $rootScope, $state, $http, $ionicPopup, Utils) {
+    .controller('LoginCtrl', ['$scope', '$rootScope', '$state', '$http', '$ionicPopup', 'Utils', 'Day', function ($scope, $rootScope, $state, $http, $ionicPopup, Utils, Day) {
         // If username already stored load the default.
-        $scope.user = {
-            username: window.localStorage.getItem('user_name'),
-            password: null
-        };
-        
+        $scope.user = {};
+
+        $scope.regUser = {};
+
         // Create variable to be used for authentication feedback.
         $scope.message = "";
-        
+
+        $scope.register = function() {
+// Check details have been entered.
+            if(!$scope.regUser.username || !$scope.regUser.password || !$scope.regUser.email) {
+                $rootScope.notify("Please enter valid credentials");
+                return false;
+            }
+
+            // Send a post request to the rest api.
+            //var url = "http://soulsurvivor.bible/phonegap/user/login/";
+            var url = "http://bible.soulsurvivor.com/phonegap/user";
+            var method = "POST";
+            var postData = '{ "name" : "' + $scope.regUser.username + '", "password" : "' + $scope.regUser.password + '", "mail" : "' + $scope.regUser.email + '", "status" : 1 }';
+
+            // You REALLY want async = true.
+            // Otherwise, it'll block ALL execution waiting for server response.
+            var async = true;
+            var request = new XMLHttpRequest();
+
+            // Define what to do with response.
+            request.onload = function () {
+
+                // You can get all kinds of information about the HTTP response.
+                var status = request.status; // HTTP response status, e.g., 200 for "200 OK"
+                $rootScope.hide();
+                if (status == 200) {
+
+                    var data =  JSON.parse(request.responseText); // Returned data, e.g., an HTML document.
+
+                    // Store user data
+                    window.localStorage.setItem('user_name', $scope.regUser.username);
+                    //window.localStorage.setItem('user_password', $scope.user.password);
+                    window.localStorage.setItem('user_uid', data.uid);
+                    window.localStorage.setItem('user_login', 1);
+
+                    $rootScope.isLoggedIn = 1;
+
+                    $rootScope.hide();
+                    $scope.message = "Register Successful!";
+                    $rootScope.notify($scope.message);
+                    $scope.loginModal.remove();
+
+                    // Redirect to home page.
+                    $state.go('app.home');
+                }
+                else {
+                    var data =  JSON.parse(request.responseText); // Returned data, e.g., an HTML document.
+                    if (data.form_errors) {
+                        if (data.form_errors.mail) {
+                            $scope.message = data.form_errors.mail;
+
+                            var substr = 'The e-mail address <em class="placeholder">' + $scope.regUser.email + '</em> is already',
+                                length = substr.length;
+
+                            if ($scope.message.substring(0, length) == substr) {
+                                $scope.message = 'The e-mail address ' + $scope.regUser.email + ' is already registered';
+                            }
+                        }
+                        if (data.form_errors.name) {
+                            $scope.message = data.form_errors.name;
+                        }
+                    }
+                    // Show error message to user.
+                    $rootScope.hide();
+                    //$scope.message = "Your details are incorrect. Please try again.";
+                    $rootScope.notify($scope.message);
+                    $scope.user.password = null;
+                    console.log('error with connection. status: '+ status);
+                }
+            };
+
+            // Build the request object.
+            $rootScope.show("Logging in...");
+            request.open(method, url, async);
+
+            // Set headers.
+            request.setRequestHeader("Content-Type", "application/json");
+            request.setRequestHeader("Accept", "application/json");
+
+            // Actually sends the request to the server.
+            request.send(postData);        };
+
         // Action to handle login.
         $scope.login = function() {
             // Check details have been entered.
@@ -132,7 +311,7 @@ angular.module('bioy.controllers', [])
 
             // You REALLY want async = true.
             // Otherwise, it'll block ALL execution waiting for server response.
-            var async = true
+            var async = true;
             var request = new XMLHttpRequest();
             
             // Define what to do with response.
@@ -152,24 +331,35 @@ angular.module('bioy.controllers', [])
                     window.localStorage.setItem('user_login', 1);
                     
                     $rootScope.isLoggedIn = 1;
-                    
+
+                    $rootScope.hide();
                     $scope.message = "Login Successful!";
                     $rootScope.notify($scope.message);
                     $scope.loginModal.remove();
+                    Day.refresh();
+
                     // Redirect to home page.
-                    //$state.go('app.home');
+                    $state.go('app.home');
                 }
                 else {
-                    // Show error message to user.
+
+                    var data =  JSON.parse(request.responseText); // Returned data, e.g., an HTML document.
                     $scope.message = "Your details are incorrect. Please try again.";
+
+                    if (data[0]) {
+                        $scope.message = data[0];
+                    }
+
+                    // Show error message to user.
+                    $rootScope.hide();
                     $rootScope.notify($scope.message);
                     $scope.user.password = null;
                     console.log('error with connection. status: '+ status);
                 }
-            }
+            };
 
             // Build the request object.
-            $rootScope.notify("Logging in...");
+            $rootScope.show("Logging in...");
             request.open(method, url, async);
 
             // Set headers.
@@ -185,9 +375,9 @@ angular.module('bioy.controllers', [])
     /**
      * Controller for dealing with the Detailed Day view.
      */
-    .controller('DayDetailCtrl', ['$scope', '$rootScope', '$stateParams', '$ionicPopup', '$http', 'Day', 'Utils', function ($scope, $rootScope, $stateParams, $ionicPopup, $http, Day, Utils) {
+    .controller('DayDetailCtrl', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPopup', '$http', 'Day', 'Utils', 'Streak', function ($scope, $rootScope, $state, $stateParams, $ionicPopup, $http, Day, Utils, Streak) {
         // Get the data from the database
-        var dayDB = Day.query
+        var dayDB = Day.query;
         $scope.instructions = "Click 'Mark as Read' to indicate you have seen this Video!";
         $scope.$watch('day.read', function() {
             if ($scope.day.read) {
@@ -197,10 +387,14 @@ angular.module('bioy.controllers', [])
                 $scope.instructions = "Click 'Mark as Read' to indicate you have seen this Video!";
             }
         });
-        
+
+        $scope.hideBackButton = true;
+
         $scope.day = [];
         $scope.nid = $stateParams.dayId;
         $rootScope.notify();
+
+        $scope.plan = $rootScope.readingPlan;
         
         dayDB.onReady(function() {
             var storedData = dayDB.Days
@@ -208,17 +402,38 @@ angular.module('bioy.controllers', [])
             storedData.then(function (results) {
                 if (results.length) {
                     $scope.day = {
-                        'title' : results[0].title,
+                        //'title' : results[0].title,
                         'body' : results[0].body,
+                        'author' : results[0].author,
                         'dayId' : results[0].day,
-                        'created' : results[0].created * 1000,
+                        'created' : results[0].created,
                         'nid' : results[0].nid,
                         'read_count' : results[0].read_count,
                         'comment_count' : results[0].comment_count,
-                        'youtube' : results[0].youtube,
-                        'subtitle' : results[0].subtitle,
-                        'read' : results[0].read,
+                        'verseBooks' : results[0].verseBooks,
+                        'verseOT' : results[0].verseOT,
+                        'verseNT' : results[0].verseNT,
+                        'verseP' : results[0].verseP,
+                        'youtubeOT' : results[0].youtubeOT,
+                        'youtubeNT' : results[0].youtubeNT,
+                        //'subtitle' : results[0].subtitle,
+                        'read' : results[0].read
                     };
+
+                    if ($rootScope.readingPlan == 'Bible in One Year') {
+                        $rootScope.verses = [
+                            results[0].verseOT,
+                            results[0].verseNT,
+                            results[0].verseP
+                        ];
+                    }
+                    else {
+                        $rootScope.verses = [
+                            results[0].verseNT
+                        ];
+                    }
+
+
                     //$scope.init();
                     dayDB.saveChanges();
                     $rootScope.hide();
@@ -258,8 +473,12 @@ angular.module('bioy.controllers', [])
                     todo.read_count = results[0].read_count + 1;
                     $scope.day.read_count++;
 
-                    dayTestDB.saveChanges();
-                    
+                    dayTestDB.saveChanges().then(function () {
+                        window.localStorage.setItem('currentDay', $scope.day.dayId);
+                        $rootScope.CurrentDay = $scope.day.dayId;
+                        window.dispatchEvent($rootScope.menuRefreshEvent);
+                    });
+
                     // Update the website
                     if ($rootScope.isLoggedIn) {
                         var uid = JSON.parse(window.localStorage.getItem('user_uid')),
@@ -270,7 +489,27 @@ angular.module('bioy.controllers', [])
                     }
                 });
             });
-        }
+            
+            // Show streak popup
+            if ($rootScope.streak.update < $rootScope.streak.today) {
+                $rootScope.streak.update = $rootScope.streak.today;
+                window.localStorage.setItem('streak_update', $rootScope.streak.update);
+                
+                $rootScope.streak.current++;
+                window.localStorage.setItem('streak_current', $rootScope.streak.current);
+
+                Streak.show();
+            }
+        };
+
+        // Continue to the next day.
+        $scope.continueReading = function () {
+            Day.getStartDay();
+        };
+
+        $scope.shareDay = function () {
+            window.plugins.socialsharing.share('I just watched Day ' + $scope.day.dayId + ' of Soul Survivor\'s Bible in One year!', null, null, 'https://bible.soulsurvivor.com/' + $scope.day.nid);
+        };
         
         $scope.markUnread = function () {
             $scope.day.read = 0;
@@ -287,7 +526,9 @@ angular.module('bioy.controllers', [])
                     todo.read_count = results[0].read_count - 1;
                     $scope.day.read_count--;
 
-                    dayTestDB.saveChanges();
+                    dayTestDB.saveChanges().then(function () {
+                        window.dispatchEvent($rootScope.menuRefreshEvent);
+                    });
                     
                     // Update the website
                     if ($rootScope.isLoggedIn) {
@@ -299,9 +540,30 @@ angular.module('bioy.controllers', [])
                     }
                 });
             });
-        }
+
+        };
         
-        $scope.showYoutube = function () {
+        $scope.verses = ['Old Testament', 'New Testament', 'Psalms/Provervs'];
+
+        $rootScope.$watch('verses', function () {
+            $scope.verses = $rootScope.verses;
+        });
+        
+        $scope.verseNotify = function(num) {
+            $rootScope.notify($scope.verses[num]);
+        };
+        
+        $scope.iPhonePortrait = window.matchMedia("(max-width: 568px)").matches;
+        
+        window.addEventListener(
+            "resize",
+            function () {
+                $scope.iPhonePortrait = window.matchMedia("(max-width: 568px)").matches;
+                $state.reload();
+            },
+            true);
+
+        $scope.showYoutubeOT = function () {
             if (!$rootScope.checkNetwork()) {
                 $rootScope.notify("You are not connected to the internet...");
             }
@@ -309,22 +571,43 @@ angular.module('bioy.controllers', [])
                 var vidVid = document.createElement("iframe");
                 vidVid.setAttribute("width", "300");
                 vidVid.setAttribute("height", "315");
-                vidVid.setAttribute("src", "http://www.youtube.com/embed/" + $scope.day.youtube + "?modestbranding=1&rel=0&theme=light&color=white&autohide=0&disablekb=1");
+                vidVid.setAttribute("src", "http://www.youtube.com/embed/" + $scope.day.youtubeOT + "?modestbranding=1&rel=0&theme=light&color=white&autohide=0&disablekb=1");
                 vidVid.setAttribute("frameborder", "0");
                 vidVid.setAttribute("autoplay", "true");
                 vidVid.setAttribute("allowfullscreen", "true");
 
-                var vidEl = document.getElementById("streamed-video");
-                vidEl.appendChild(vidVid); 
+                var vidEl = document.getElementById("ot-streamed-video");
+                vidEl.appendChild(vidVid);
 
-                var vidPrev = document.getElementById("video-preview");
+                var vidPrev = document.getElementById("ot-video-preview");
                 vidPrev.style.display = 'none';
             }
-        }
+        };
+
+        $scope.showYoutubeNT = function () {
+            if (!$rootScope.checkNetwork()) {
+                $rootScope.notify("You are not connected to the internet...");
+            }
+            else {
+                var vidVid = document.createElement("iframe");
+                vidVid.setAttribute("width", "300");
+                vidVid.setAttribute("height", "315");
+                vidVid.setAttribute("src", "http://www.youtube.com/embed/" + $scope.day.youtubeNT + "?modestbranding=1&rel=0&theme=light&color=white&autohide=0&disablekb=1");
+                vidVid.setAttribute("frameborder", "0");
+                vidVid.setAttribute("autoplay", "true");
+                vidVid.setAttribute("allowfullscreen", "true");
+
+                var vidEl = document.getElementById("nt-streamed-video");
+                vidEl.appendChild(vidVid); 
+
+                var vidPrev = document.getElementById("nt-video-preview");
+                vidPrev.style.display = 'none';
+            }
+        };
         
         $scope.comment = function() {
             window.open('http://bible.soulsurvivor.com/node/' + $scope.nid + '#comment-form', '_system');
-        }
+        };
         
         $scope.share = function() {
             window.plugins.socialsharing.shareViaFacebook(
@@ -371,7 +654,7 @@ angular.module('bioy.controllers', [])
 
             for (var i=0; i<12; i++) {
                 $scope.months [i] = {
-                    name: monthNames[12 - i],
+                    name: monthNames[11 - i],
                     items: []
                 };
             }
@@ -380,7 +663,7 @@ angular.module('bioy.controllers', [])
         dayDB.onReady(function() {
             var storedData = dayDB.Days
             .filter(true)
-            .orderByDescending("it.title")
+            .orderByDescending("it.day")
             .toLiveArray();
             storedData.then(function (results) {
                 if (results.length) { $scope.dbIsEmpty = false; }
@@ -391,21 +674,23 @@ angular.module('bioy.controllers', [])
                 
                 results.forEach(function (day) {
                     $scope.days.push({
-                        'title' : day.title,
+                        //'title' : day.title,
                         'day' : day.day,
+                        'author' : day.author,
                         'body' : day.body,
                         'created' : day.created,
                         'nid' : day.nid,
                         'read' : day.read,
                         'read_count' : day.read_count,
                         'comment_count' : day.comment_count,
-                        'youtube' : day.youtube,
-                        'subtitle' : day.subtitle,
+                        'youtubeOT' : day.youtubeOT,
+                        'youtubeNT' : day.youtubeNT,
+                        //'subtitle' : day.subtitle
                     });
                     
                     // Attach day to month array.
-                    var month = new Date(day.created * 1000).getMonth(); 
-                    $scope.months[12 - month].items.push(day);
+                    var month = new Date(day.created / 1000).getMonth();
+                    $scope.months[11 - month].items.push(day);
                     
                     if (i == max - 1) {
                         // Last iteration
@@ -469,14 +754,16 @@ angular.module('bioy.controllers', [])
                         var day = [];
                         day.day = data.node.field_day_number
                         day.body = data.node.body;
-                        day.title = data.node.title;
+                        day.author = data.node.author;
+                        //day.title = data.node.title;
                         day.created = data.node.date;
                         day.nid = data.node.nid;
                         day.read = JSON.parse(data.node.read);
                         day.read_count = data.node.read_count;
                         day.comment_count = data.node.comment_count;
-                        day.youtube = data.node.youtube;
-                        day.subtitle = data.node.subtitle;
+                        day.youtubeOT = data.node.youtubeOT;
+                        day.youtubeNT = data.node.youtubeNT;
+                        //day.subtitle = data.node.subtitle;
 
                         days.push(day);
 
@@ -496,7 +783,7 @@ angular.module('bioy.controllers', [])
                                     dayTestDB.Days.add(day);
                                 }
                                 dayTestDB.saveChanges();
-                                var month = new Date(day.created * 1000).getMonth(); 
+                                var month = new Date(day.created).getMonth();
                                 $scope.months[12 - month].items.push(day);
                             });
                         });

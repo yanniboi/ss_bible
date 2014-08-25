@@ -1,0 +1,31 @@
+2014-08-18 14:51:42.097 Bible In One Year[1145:60b] ERROR: Error: 'undefined' is not an object (evaluating 'window.plugins.socialsharing')
+share@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/js/controllers.js:413:27
+file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:19149:26
+file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:41592:21
+$eval@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:20906:28
+$apply@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:21006:28
+file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:41591:19
+file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:11545:14
+forEach@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:9239:24
+eventHandler@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:11544:12
+dispatchEvent@[native code]
+triggerMouseEvent@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:2691:20
+tapClick@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:2680:20
+tapTouchEnd@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:2798:13
+2014-08-18 14:51:42.114 Bible In One Year[1145:60b] THREAD WARNING: ['Console'] took '20.377930' ms. Plugin should use a background thread.
+2014-08-18 14:52:05.434 Bible In One Year[1145:60b] ERROR: Error: 'undefined' is not an object (evaluating 'window.plugins.socialsharing')
+share@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/js/controllers.js:413:27
+file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:19149:26
+file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:41592:21
+$eval@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:20906:28
+$apply@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:21006:28
+file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:41591:19
+file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:11545:14
+forEach@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:9239:24
+eventHandler@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:11544:12
+dispatchEvent@[native code]
+triggerMouseEvent@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:2691:20
+tapClick@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:2680:20
+tapTouchEnd@file:///var/mobile/Applications/E277587D-3366-4A41-B80D-4D54718320D6/Bible%20In%20One%20Year.app/www/lib/ionic/js/ionic.bundle.js:2798:13
+2014-08-18 14:52:05.451 Bible In One Year[1145:60b] THREAD WARNING: ['Console'] took '17.399170' ms. Plugin should use a background thread.
+

@@ -20,4 +20,67 @@ angular.module('bioy.services', ['http-auth-interceptor'])
               $rootScope.hide();
             }, 1999);
         };
+        
+        // Method to check for internet connection.
+        $rootScope.checkNetwork = function () {
+            //@TODO remove debug for production.
+            if (typeof navigator.connection === 'undefined') {
+                return true;
+                // Temp for checking offline behaviour
+                //return false;
+            }
+            else if (navigator.connection.type == Connection.NONE) {
+                return false;
+            }
+            return true;
+        };
+    }])
+
+    .service('Streak', ['$rootScope', '$ionicPopup', '$window', function ($rootScope, $ionicPopup, $window) {
+    
+        
+        this.show = function () {
+            //Temp
+            //$rootScope.streak.current = 7;
+            //$rootScope.streak.highscore = 6;
+
+            var state = '',
+                title = 'Good Job';
+
+            $rootScope.streakNumber = Math.abs($rootScope.streak.current - $rootScope.streak.highscore);
+            $rootScope.showNumber = true;
+            $rootScope.streakMessage = "Great Job";
+
+            if ($rootScope.streak.current < $rootScope.streak.highscore) {
+                state = 'chase';
+                title = 'You are Gaining';
+                $rootScope.streakMessage = "behind your Highscore";
+            } 
+            else if ($rootScope.streak.current > $rootScope.streak.highscore) {
+                state = 'lead';
+                title = 'You are Ahead';
+                $rootScope.streakMessage = "That's a new Highscore!!!";
+                $rootScope.showNumber = false;
+            }
+            else {
+                state = 'equal';
+                title = 'Head to Head';
+                $rootScope.streakMessage = "You are one day away from a new Highscore!";
+                $rootScope.showNumber = false;
+                //$rootScope.streakMessage = "You are right on target for a new Highscore";
+            }
+
+            $rootScope.streak.state = state;
+            
+            
+            $ionicPopup.show({
+                title: title,
+                templateUrl: "templates/streak-popup.html",
+                scope: $rootScope,
+                //subTitle: 'Looks like you haven\'t got the Facebook App installed',
+                buttons: [
+                  { text: 'Close' }
+                ]
+            });
+        }
     }])
