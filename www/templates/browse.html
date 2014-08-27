@@ -17,8 +17,8 @@
             Pull down to refresh...
         </div>
         <ion-list>
-            <div ng-repeat="month in months">
-                <ion-item class="item-stable"
+            <div class="month-list" ng-repeat="month in months">
+                <ion-item class="item-stable month"
                           ng-show="hasChildren(month)"
                           ng-click="toggleGroup(month)"
                           ng-class="{active: isGroupShown(month)}">
@@ -26,13 +26,13 @@
                     &nbsp;
                     {{month.name}}
                 </ion-item>
-                <ion-item class="item-accordion item item-icon-left"
+                <ion-item class="item-accordion item item-icon-left day"
                           ng-repeat="day in month.items"
                           href="#/app/days/{{day.nid}}"
                           ng-show="isGroupShown(month)">
                     <i ng-show="!day.read" class="icon icon-green padding-right"></i>
                     <i ng-show="day.read" class="icon icon-grey padding-right"></i>
-                    Day {{day.day}}
+                    <span>Day {{day.day}}</span>
                 </ion-item>
             </div>
         </ion-list>

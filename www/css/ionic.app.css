@@ -54,6 +54,11 @@ body .bar-footer button {
   width: 50%; }
 body .hidden {
   display: none; }
+body .month-list .day a {
+  padding-top: 20px;
+  padding-bottom: 20px; }
+  body .month-list .day a span {
+    margin-left: 10px; }
 
 /* iphone */
 /*@media (max-device-width : 568px) { */
