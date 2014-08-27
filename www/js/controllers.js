@@ -693,12 +693,12 @@ angular.module('bioy.controllers', [])
                         'read_count' : day.read_count,
                         'comment_count' : day.comment_count,
                         'youtubeOT' : day.youtubeOT,
-                        'youtubeNT' : day.youtubeNT,
+                        'youtubeNT' : day.youtubeNT
                         //'subtitle' : day.subtitle
                     });
                     
                     // Attach day to month array.
-                    var month = new Date(day.created / 1000).getMonth();
+                    var month = new Date(JSON.parse(day.created)).getMonth();
                     $scope.months[11 - month].items.push(day);
                     
                     if (i == max - 1) {
