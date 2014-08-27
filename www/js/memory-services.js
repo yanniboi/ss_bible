@@ -103,12 +103,12 @@
 
 
                     $http({method: 'GET', url: URL}).
-                    //$http({method: 'GET', url: 'http://soulsurvivor.bible/rest/views/days'}).
                     success(function(data, status, headers, config) {
                         var days = [];
 
                         // The first day that is come across that is read is the max read.
                         var maxRead = true;
+                        var totalRead = 0;
 
                         data.forEach(function (data) {
                             var day = [];
@@ -132,10 +132,14 @@
                             day.verseNT = verses[1];
                             day.verseP = verses[2];
 
-                            if (maxRead && JSON.parse(data.node.read)) {
-                                maxRead = false;
-                                $rootScope.CurrentDay = data.node.field_day_number;
-                                window.localStorage.setItem('currentDay', data.node.field_day_number);
+                            if (JSON.parse(data.node.read)) {
+                                totalRead++;
+
+                                if (maxRead) {
+                                    maxRead = false;
+                                    $rootScope.CurrentDay = data.node.field_day_number;
+                                    window.localStorage.setItem('currentDay', data.node.field_day_number);
+                                }
                             }
 
                             days.push(day);
@@ -171,6 +175,9 @@
                         });
                         
                         $q.all(days).then(function () {
+                            window.localStorage.setItem('total_days', totalRead);
+                            $rootScope.totalDays = totalRead;
+
                             console.log('finished updating days!');
                             doRefreshMenu();
                         });

@@ -18,10 +18,15 @@ angular.module('bioy.controllers', [])
             $scope.isLoggedIn = $rootScope.isLoggedIn;
         });
 
+        $rootScope.$watch('totalDays', function () {
+            $scope.totalDays = $rootScope.totalDays;
+        });
+
         $scope.hideBackButton = true;
 
         // Set up global variables
         $rootScope.isLoggedIn = $scope.isLoggedIn = JSON.parse(window.localStorage.getItem('user_login'));
+        $rootScope.totalDays = $scope.totalDays = window.localStorage.getItem('total_days') != null ? window.localStorage.getItem('total_days') : 0;
         $rootScope.shownGroup = null;
         $rootScope.CurrentDay = window.localStorage.getItem('currentDay');
 
@@ -471,6 +476,8 @@ angular.module('bioy.controllers', [])
                     todo.read = 1;
                     todo.created = results[0].created;
                     todo.read_count = results[0].read_count + 1;
+                    $rootScope.totalDays++;
+                    window.localStorage.setItem('total_days', $rootScope.totalDays);
                     $scope.day.read_count++;
 
                     dayTestDB.saveChanges().then(function () {
@@ -524,6 +531,8 @@ angular.module('bioy.controllers', [])
                     todo.read = 0;
                     todo.created = results[0].created;
                     todo.read_count = results[0].read_count - 1;
+                    $rootScope.totalDays--;
+                    window.localStorage.setItem('total_days', $rootScope.totalDays);
                     $scope.day.read_count--;
 
                     dayTestDB.saveChanges().then(function () {
