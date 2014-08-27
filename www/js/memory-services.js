@@ -332,9 +332,9 @@
                         .toLiveArray();
                     storedData.then(function (results) {
                         if (results.length == 0) {
-                            console.log('Days are empty...')
+                            console.log('No new days..');
                             $rootScope.hide();
-                            $rootScope.hide();
+                            $rootScope.notify('Looks like you are up to date!');
 
                         }
                         else {
