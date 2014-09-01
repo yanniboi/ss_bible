@@ -29,6 +29,10 @@ angular.module('bioy.services', ['http-auth-interceptor'])
                 // Temp for checking offline behaviour
                 //return false;
             }
+            else if (navigator.connection.type == 0) {
+                console.log('Connection not accessible');
+                return true;
+            }
             else if (navigator.connection.type == Connection.NONE) {
                 return false;
             }
