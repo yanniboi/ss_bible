@@ -175,8 +175,10 @@
                         });
                         
                         $q.all(days).then(function () {
-                            window.localStorage.setItem('total_days', totalRead);
-                            $rootScope.totalDays = totalRead;
+                            if (!!uid) {
+                                window.localStorage.setItem('total_days', totalRead);
+                                $rootScope.totalDays = totalRead;
+                            }
 
                             console.log('finished updating days!');
                             doRefreshMenu();
