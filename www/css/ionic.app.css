@@ -18,7 +18,7 @@ h1, h2, h3, h4, h5 {
   text-align: center; }
 
 .day-detail .list.card {
-  margin-bottom: 63px; }
+  margin-bottom: 40px; }
   .day-detail .list.card h2 {
     text-align: left; }
 .day-detail iframe {
@@ -29,6 +29,8 @@ h1, h2, h3, h4, h5 {
   margin: auto;
   display: block; }
 
+.home .list.stats {
+  margin-bottom: 40px; }
 .home .welcome-image img {
   border-radius: 10px; }
 
@@ -43,6 +45,9 @@ h1, h2, h3, h4, h5 {
 
 .icon-grey {
   background: transparent url(../resources/talkGrey.png) no-repeat center center; }
+
+ion-content {
+  margin-bottom: 44px; }
 
 body .video-js {
   /*display: none;*/ }

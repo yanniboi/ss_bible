@@ -30,7 +30,7 @@ h1,h2,h3,h4,h5 {
         h2 {
             text-align: left;
         }
-        margin-bottom: 63px;
+        margin-bottom: 40px;
     }
 
     iframe {
@@ -45,6 +45,10 @@ h1,h2,h3,h4,h5 {
 }
 
 .home {
+    .list.stats {
+        margin-bottom: 40px;
+    }
+
     .welcome-image img {
         border-radius: 10px;
     }
@@ -62,6 +66,10 @@ h1,h2,h3,h4,h5 {
 
 .icon-grey {
     background: transparent url(../resources/talkGrey.png) no-repeat center center;
+}
+
+ion-content {
+    margin-bottom: 44px;
 }
 
 body {
