@@ -121,7 +121,9 @@
                             //day.title = data.node.title;
                             day.created = data.node.date * 1000;
                             day.nid = data.node.nid;
-                            day.read = JSON.parse(data.node.read);
+                            if (JSON.parse(data.node.read)) {
+                              day.read = JSON.parse(data.node.read);
+                            }
                             day.read_count = data.node.read_count;
                             day.comment_count = data.node.comment_count;
                             day.youtubeOT = data.node.youtubeOT;
