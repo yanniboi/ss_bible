@@ -31,6 +31,7 @@ angular.module('bioy.controllers', [])
         $rootScope.CurrentDay = window.localStorage.getItem('currentDay');
 
         $rootScope.readingPlan = window.localStorage.getItem('plan') != null ? window.localStorage.getItem('plan') : 'Bible in One Year';
+        $rootScope.bibleLink = window.localStorage.getItem('link') != null ? window.localStorage.getItem('link') : 'Nothing';
 
 
         // Streak variables.
@@ -166,7 +167,8 @@ angular.module('bioy.controllers', [])
     .controller('SettingsCtrl', ['$state', '$scope', '$rootScope', 'localStorageService', function ($state, $scope, $rootScope, localStorageService) {
         // Array for storing settings values.
         $scope.settings = {
-            'plan': $rootScope.readingPlan
+            'plan': $rootScope.readingPlan,
+            'link': $rootScope.bibleLink
             // @TODO think of some settings to use.
             //'lightsabre': window.localStorage.getItem('lightsabre'),
             //'download': JSON.parse(window.localStorage.getItem('download'))
@@ -179,6 +181,8 @@ angular.module('bioy.controllers', [])
         $scope.save = function () {
             window.localStorage.setItem('plan', $scope.settings.plan);
             $rootScope.readingPlan = $scope.settings.plan;
+            window.localStorage.setItem('link', $scope.settings.link);
+            $rootScope.bibleLink = $scope.settings.link;
             //window.localStorage.setItem('lightsabre', $scope.settings.lightsabre);
             //window.localStorage.setItem('download', $scope.settings.download);
             $rootScope.notify('Settings saved...');
@@ -380,7 +384,7 @@ angular.module('bioy.controllers', [])
     /**
      * Controller for dealing with the Detailed Day view.
      */
-    .controller('DayDetailCtrl', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPopup', '$http', 'Day', 'Utils', 'Streak', function ($scope, $rootScope, $state, $stateParams, $ionicPopup, $http, Day, Utils, Streak) {
+    .controller('DayDetailCtrl', ['$scope', '$rootScope', '$state', '$stateParams', '$ionicPopup', '$http', 'Day', 'Utils', 'Books', 'Streak', function ($scope, $rootScope, $state, $stateParams, $ionicPopup, $http, Day, Utils, Books, Streak) {
         // Get the data from the database
         var dayDB = Day.query;
         $scope.instructions = "Click 'Mark as Read' to indicate you have seen this Video!";
@@ -559,7 +563,26 @@ angular.module('bioy.controllers', [])
         });
         
         $scope.verseNotify = function(num) {
-            $rootScope.notify($scope.verses[num]);
+            var link = $scope.verses[num];
+
+            if ($rootScope.bibleLink == 'Bible Gateway') {
+                link = 'http://www.biblegateway.com/bible?version=NIV&passage=' + encodeURI(link);
+                window.open(link, '_system');
+            }
+            else if ($rootScope.bibleLink == 'YouVersion') {
+                var books = Books;
+                link = link.split("-")[0];
+                link = $rootScope.trim(link);
+                var pieces = link.split(" ");
+                var book = pieces.shift();
+                var verse = pieces.shift();
+                verse.replace(":", ".");
+                link = 'http://www.bible.com/en-GB/bible/111/' + books[book] + "." + verse;
+                window.open(link, '_blank');
+            }
+            else {
+                $rootScope.notify(link);
+            }
         };
         
         $scope.iPhonePortrait = window.matchMedia("(max-width: 568px)").matches;

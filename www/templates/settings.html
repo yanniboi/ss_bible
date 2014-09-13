@@ -42,13 +42,24 @@
             </div>
             <label class="item item-input item-select">
                 <div class="input-label">
-                    Reading Plan
+                    Reading Plan:
                 </div>
                 <select ng-model="settings.plan">
                     <option selected>Bible in One Year</option>
                     <option>New Testament in One Year</option>
                 </select>
             </label>
+
+          <label class="item item-input item-select">
+            <div class="input-label">
+              Link bible verses to:
+            </div>
+            <select ng-model="settings.link">
+              <option selected>Nothing</option>
+              <option>Bible Gateway</option>
+              <option>YouVersion</option>
+            </select>
+          </label>
 
             <div class="item item-divider">
                 User Settings
