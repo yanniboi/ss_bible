@@ -559,7 +559,9 @@ angular.module('bioy.controllers', [])
         });
         
         $scope.verseNotify = function(num) {
-            $rootScope.notify($scope.verses[num]);
+            var link = $scope.verses[num];
+            link = 'http://www.biblegateway.com/bible?version=NIV&passage=' + encodeURI(link);
+            window.open(link, '_system');
         };
         
         $scope.iPhonePortrait = window.matchMedia("(max-width: 568px)").matches;

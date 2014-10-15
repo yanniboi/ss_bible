@@ -41,8 +41,7 @@ angular.module('bioy.services', ['http-auth-interceptor'])
     }])
 
     .service('Streak', ['$rootScope', '$ionicPopup', '$window', function ($rootScope, $ionicPopup, $window) {
-    
-        
+
         this.show = function () {
             //Temp
             //$rootScope.streak.current = 7;
@@ -87,4 +86,4 @@ angular.module('bioy.services', ['http-auth-interceptor'])
                 ]
             });
         }
-    }])
+    }]);
