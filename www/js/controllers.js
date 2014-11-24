@@ -65,6 +65,39 @@ angular.module('bioy.controllers', [])
             $scope.menuModal.hide();
 
         };
+
+        // Show/Hide the share links in the settings menu.
+        $rootScope.isHome = true;
+        $rootScope.isDay = false;
+
+        $rootScope.$on('$stateChangeStart',
+          function(event, toState, toParams, fromState, fromParams){
+            if (toState.name == "app.home") {
+              $rootScope.isHome = true;
+              $rootScope.isDay = false;
+
+            }
+            else if (toState.name == "app.day") {
+              $rootScope.isDay = true;
+              $rootScope.isHome = false;
+
+            }
+            else {
+              $rootScope.isHome = false;
+              $rootScope.isDay = false;
+
+            }
+            console.log('to state'+toState);
+          });
+
+        $rootScope.$watch('isDay', function () {
+          $scope.isDay = $rootScope.isDay;
+        });
+
+        $rootScope.$watch('isHome', function () {
+          $scope.isHome = $rootScope.isHome;
+        });
+
         
         if (($rootScope.streak.today - $rootScope.streak.update) > 86400000) {
             $rootScope.streak.highscore = $rootScope.streak.current;

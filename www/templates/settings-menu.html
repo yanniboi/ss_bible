@@ -12,6 +12,8 @@
      <div class="list">
         <button ng-click="goLogin()" ng-show="!isLoggedIn" class="item button-block button-calm">Login</button>
         <button ng-click="goLogin()" ng-show="!isLoggedIn" class="item  button-block">Register</button>
+        <button ng-click="shareApp()" ng-show="isHome" class="item  button-block">Share</button>
+        <button ng-click="shareDay()" ng-show="isDay" class="item  button-block">Share</button>
         <button ng-click="settings()" ng-show="isLoggedIn" class="item  button-block button-calm">Logout</button>
         <button ng-click="settings()" class="item  button-block button-calm">Settings</button>
     </div>
