@@ -27,7 +27,10 @@ angular.module('bioy', [
             }
             if (window.StatusBar) {
                 // org.apache.cordova.statusbar required
+                // Use the default statusbar (dark text, for light backgrounds).
                 StatusBar.styleDefault();
+                // StatusBar.overlaysWebView(true);
+                // StatusBar.hide();
             }
         });
   
