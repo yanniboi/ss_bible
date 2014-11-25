@@ -57,20 +57,20 @@ angular.module('bioy.services', ['http-auth-interceptor'])
             if ($rootScope.streak.current < $rootScope.streak.highscore) {
                 state = 'chase';
                 title = 'You are Gaining';
-                $rootScope.streakMessage = "behind your Highscore";
+                $rootScope.streakMessage = "behind your highscore";
             } 
             else if ($rootScope.streak.current > $rootScope.streak.highscore) {
                 state = 'lead';
-                title = 'You are Ahead';
-                $rootScope.streakMessage = "That's a new Highscore!!!";
+                title = 'You are ahead';
+                $rootScope.streakMessage = "That's a new highscore!";
                 $rootScope.showNumber = false;
             }
             else {
                 state = 'equal';
                 title = 'Head to Head';
-                $rootScope.streakMessage = "You are one day away from a new Highscore!";
+                $rootScope.streakMessage = "You are one day away from a new highscore!";
                 $rootScope.showNumber = false;
-                //$rootScope.streakMessage = "You are right on target for a new Highscore";
+                //$rootScope.streakMessage = "You are right on target for a new highscore";
             }
 
             $rootScope.streak.state = state;

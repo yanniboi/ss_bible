@@ -175,6 +175,9 @@ angular.module('bioy.controllers', [])
         $scope.highscore = JSON.parse($rootScope.streak.highscore) + 1;
 
         if ($rootScope.CurrentDay) {
+            if (isLoggedIn) {
+                $scope.showStats = true;
+            }
             $scope.firstTime = false;
         }
 
