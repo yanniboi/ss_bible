@@ -25,12 +25,14 @@ angular.module('bioy', [
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             }
+console.log('pre_status');
             if (window.StatusBar) {
+console.log('status');
                 // org.apache.cordova.statusbar required
                 // Use the default statusbar (dark text, for light backgrounds).
-                StatusBar.styleDefault();
-                // StatusBar.overlaysWebView(true);
-                // StatusBar.hide();
+                //StatusBar.styleDefault();
+                //StatusBar.overlaysWebView(true);
+                //StatusBar.hide();
             }
         });
   
