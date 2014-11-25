@@ -110,22 +110,6 @@ angular.module('bioy.controllers', [])
         // Refresh the database from server.
         Day.refresh();
 
-        $ionicModal.fromTemplateUrl(
-            'templates/login.html',
-            function(modal) {
-                $scope.loginModal = modal;
-            },
-            {
-                scope: $scope,
-                animation: 'slide-in-up',
-                focusFirstInput: true
-            }
-        );
-        //Be sure to cleanup the modal by removing it from the DOM
-        $scope.$on('$destroy', function() {
-            $scope.loginModal.remove();
-        });
-
         $rootScope.$watch('menuDays', function () {
             $scope.days = $rootScope.menuDays;
         });
@@ -154,7 +138,7 @@ angular.module('bioy.controllers', [])
 
         // Opens login dialog
         $scope.doLogin = function() {
-            $scope.loginModal.show();
+            $state.go('app.login');
         }
         
         
@@ -218,6 +202,7 @@ angular.module('bioy.controllers', [])
             //window.localStorage.setItem('lightsabre', $scope.settings.lightsabre);
             //window.localStorage.setItem('download', $scope.settings.download);
             $rootScope.notify('Settings saved...');
+            $state.go('app.home');
 
         };
         
@@ -294,7 +279,6 @@ angular.module('bioy.controllers', [])
                     $rootScope.hide();
                     $scope.message = "Register Successful!";
                     $rootScope.notify($scope.message);
-                    $scope.loginModal.remove();
 
                     // Redirect to home page.
                     $state.go('app.home');
@@ -376,7 +360,7 @@ angular.module('bioy.controllers', [])
                     $rootScope.hide();
                     $scope.message = "Login Successful!";
                     $rootScope.notify($scope.message);
-                    $scope.loginModal.remove();
+
                     Day.refresh();
 
                     // Redirect to home page.

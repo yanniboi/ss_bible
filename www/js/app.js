@@ -25,9 +25,7 @@ angular.module('bioy', [
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             }
-console.log('pre_status');
             if (window.StatusBar) {
-console.log('status');
                 // org.apache.cordova.statusbar required
                 // Use the default statusbar (dark text, for light backgrounds).
                 //StatusBar.styleDefault();
@@ -57,12 +55,6 @@ console.log('status');
                         controller: 'HomeCtrl'
                     }
                 }
-            })
-
-            .state('login', {
-                url: "/login",
-                templateUrl: "templates/login.html",
-                controller: 'LoginCtrl'
             })
 
             .state('app.search', {
