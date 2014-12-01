@@ -55,6 +55,15 @@ angular.module('bioy.controllers', [])
             $scope.menuModal = modal;
         });
 
+        // Share functions.
+        $scope.shareApp = function () {
+          window.plugins.socialsharing.share('Checkout soulsurvivors new Bible in One Year App!', null, null, 'https://play.google.com/store/apps/details?id=com.soulsurvivor.bioy');
+        };
+
+        $scope.shareDay = function () {
+          window.plugins.socialsharing.share('I just watched Day ' + $rootScope.currentDayId + ' of Soul Survivor\'s Bible in One year!', null, null, 'http://bible.soulsurvivor.com/node/' + (parseInt($rootScope.currentDayId)));
+        };
+
         $scope.settingsMenu = function () {
             $scope.menuModal.show();
         };
@@ -78,6 +87,7 @@ angular.module('bioy.controllers', [])
 
             }
             else if (toState.name == "app.day") {
+              $rootScope.currentDayId = toParams.dayId;
               $rootScope.isDay = true;
               $rootScope.isHome = false;
 
@@ -147,10 +157,6 @@ angular.module('bioy.controllers', [])
     .controller('HomeCtrl', ['$state', '$scope', '$rootScope', '$ionicModal', 'Utils', 'Day', function ($state, $scope, $rootScope, $ionicModal, Utils, Day) {
         $scope.startReading = function () {
             Day.getStartDay();
-        };
-
-        $scope.shareApp = function () {
-            window.plugins.socialsharing.share('Checkout soulsurvivors new Bible in One Year App!', null, null, 'https://play.google.com/store/apps/details?id=com.soulsurvivor.bioy');
         };
 
         var isLoggedIn = $rootScope.isLoggedIn;
@@ -532,10 +538,6 @@ angular.module('bioy.controllers', [])
         // Continue to the next day.
         $scope.continueReading = function () {
             Day.getStartDay();
-        };
-
-        $scope.shareDay = function () {
-            window.plugins.socialsharing.share('I just watched Day ' + $scope.day.dayId + ' of Soul Survivor\'s Bible in One year!', null, null, 'https://bible.soulsurvivor.com/' + $scope.day.nid);
         };
         
         $scope.markUnread = function () {
