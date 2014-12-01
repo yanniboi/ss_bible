@@ -124,6 +124,9 @@
                             if (JSON.parse(data.node.read)) {
                               day.read = JSON.parse(data.node.read);
                             }
+                            else {
+                              day.read = 0;
+                            }
                             day.read_count = data.node.read_count;
                             day.comment_count = data.node.comment_count;
                             day.youtubeOT = data.node.youtubeOT;
