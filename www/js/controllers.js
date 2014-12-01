@@ -518,7 +518,7 @@ angular.module('bioy.controllers', [])
             });
             
             // Show streak popup
-            if ($rootScope.streak.update < $rootScope.streak.today) {
+            if ($rootScope.streak.update < $rootScope.streak.today && $rootScope.isLoggedIn) {
                 $rootScope.streak.update = $rootScope.streak.today;
                 window.localStorage.setItem('streak_update', $rootScope.streak.update);
                 
