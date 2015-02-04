@@ -688,7 +688,7 @@ angular.module('bioy.controllers', [])
         $rootScope.notify();
         
         $scope.clearMonths = function () {
-            var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+            var monthNames = [ "September", "October", "November", "December", "January", "February", "March", "April", "May", "June", "July", "August" ];
 
             for (var i=0; i<12; i++) {
                 $scope.months [i] = {
@@ -728,8 +728,15 @@ angular.module('bioy.controllers', [])
                     
                     // Attach day to month array.
                     var month = new Date(JSON.parse(day.created)).getMonth();
-                    $scope.months[11 - month].items.push(day);
-                    
+
+                    // Organise in reverse order September to August.
+                    if ((11 - month) < 4) {
+                        $scope.months[11 - month + 8].items.push(day);
+                    }
+                    else {
+                        $scope.months[11 - month - 4].items.push(day);
+                    }
+
                     if (i == max - 1) {
                         // Last iteration
                         $rootScope.hide();
@@ -843,7 +850,7 @@ angular.module('bioy.controllers', [])
             }
         };
 
-    }])
+    }]);
 
 
     /*.controller('RecentCtrl', ['$scope', '$timeout', '$http', '$data', 'Day', function ($scope, $timeout, $http, $data, Day) {
