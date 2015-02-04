@@ -34,12 +34,15 @@ angular.module('bioy.controllers', [])
 
 
         // Streak variables.
+        // @TODO Taking streaks out for the time being until we can do them properly.
+        /*
         $rootScope.streak = {
             today: new Date().setHours(0,0,0,0),
             current: window.localStorage.getItem('streak_current'),
             highscore: window.localStorage.getItem('streak_highscore'),
             update: window.localStorage.getItem('streak_update')
         };
+        */
 
         $scope.days = [];
 
@@ -108,7 +111,9 @@ angular.module('bioy.controllers', [])
           $scope.isHome = $rootScope.isHome;
         });
 
-        
+
+        // @TODO Taking streaks out for the time being until we can do them properly.
+        /*
         if (($rootScope.streak.today - $rootScope.streak.update) > 86400000) {
             $rootScope.streak.highscore = $rootScope.streak.current;
             window.localStorage.setItem('streak_highscore', $rootScope.streak.current);
@@ -116,6 +121,7 @@ angular.module('bioy.controllers', [])
             $rootScope.streak.current = 0;
             window.localStorage.setItem('streak_current', 0);
         }
+        */
         
         // Refresh the database from server.
         Day.refresh();
@@ -162,7 +168,8 @@ angular.module('bioy.controllers', [])
         var isLoggedIn = $rootScope.isLoggedIn;
 
         $scope.firstTime = true;
-        $scope.highscore = JSON.parse($rootScope.streak.highscore) + 1;
+        // @TODO Taking streaks out for the time being until we can do them properly.
+        //$scope.highscore = JSON.parse($rootScope.streak.highscore) + 1;
 
         if ($rootScope.CurrentDay) {
             if (isLoggedIn) {
@@ -526,6 +533,8 @@ angular.module('bioy.controllers', [])
             });
             
             // Show streak popup
+            // @TODO Taking streaks out for the time being until we can do them properly.
+            /*
             if ($rootScope.streak.update < $rootScope.streak.today && $rootScope.isLoggedIn) {
                 $rootScope.streak.update = $rootScope.streak.today;
                 window.localStorage.setItem('streak_update', $rootScope.streak.update);
@@ -535,6 +544,7 @@ angular.module('bioy.controllers', [])
 
                 Streak.show();
             }
+            */
         };
 
         // Continue to the most recent unread day.
