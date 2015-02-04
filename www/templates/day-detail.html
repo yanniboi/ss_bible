@@ -76,28 +76,16 @@
             <i class="icon ion-trash-a"></i>
             Mark as Unread
         </button>
-        <button class="button button-clear pull-right padding" ng-click="continueReading()">
+        <!-- Button takes you to the EARLIEST UNREAD DAY -->
+        <!--<button class="button button-clear pull-right padding" ng-click="continueReading()">
+            <i class="icon ion-paper-airplane"></i>
+            Next Day
+        </button>-->
+
+        <!-- Button takes you to the NEXT DAY from where you are -->
+        <button class="button button-clear pull-right padding" ng-click="nextReading()">
             <i class="icon ion-paper-airplane"></i>
             Next Day
         </button>
-
     </div>
-    <!--</ion-tab>-->
-
-
-    <!-- Verses Tab --
-    <ion-tab title="Verses" icon="icon ion-chatboxes">
-        <ion-content has-header="true" padding="true">
-            <h2>Day {{day.dayId}} Verses</h2>
-            {{day.title}}
-            <div>{{day.videoUrl}}</div>
-            <div class="button-bar">
-                <a class="button button-outline button-positive" ng-click="showPopup(1)">Old Testament</a>
-                <a class="button button-outline button-dark" ng-click="showPopup(1)">New Testament</a>
-                <a class="button button-outline" ng-click="showPopup(1)">Psalms</a>
-            </div>
-        </ion-content>
-    </ion-tab> -->
-
-    <!--</ion-tabs>-->
 </ion-view>

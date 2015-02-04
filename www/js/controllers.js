@@ -535,9 +535,14 @@ angular.module('bioy.controllers', [])
             }
         };
 
-        // Continue to the next day.
+        // Continue to the most recent unread day.
         $scope.continueReading = function () {
             Day.getStartDay();
+        };
+
+        // Continue to the next day.
+        $scope.nextReading = function () {
+            Day.getNextReading($scope.nid);
         };
         
         $scope.markUnread = function () {

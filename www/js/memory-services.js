@@ -353,6 +353,32 @@
                 });
             }
 
+            function getNextDay (nid) {
+                var dayDB = new DayDatabase({
+                    provider: 'sqLite' , databaseName: 'MyDayDatabase'
+                });
+
+                dayDB.onReady(function() {
+                    var newNid = parseInt(nid) + 1;
+                    var storedData = dayDB.Days
+                        .filter("it.nid == " + newNid)
+                        .toLiveArray();
+                    storedData.then(function (results) {
+                        if (results.length == 0) {
+                            console.log('No new days..');
+                            $rootScope.hide();
+                            $rootScope.notify('Looks like you are up to date!');
+
+                        }
+                        else {
+                            $rootScope.firstDayId = results[0].nid;
+                            $rootScope.hide();
+                            $state.go('app.day', {dayId: results[0].nid});
+                        }
+                    });
+                });
+            }
+
             return {
                 query: dayDB,
                 refresh: function() {
@@ -371,6 +397,11 @@
                     $rootScope.show('Loading...');
                     console.log('getting start day');
                     getFirstDay();
+                },
+                getNextReading: function (nid) {
+                    $rootScope.show('Loading...');
+                    console.log('getting start day');
+                    getNextDay(nid);
                 }
             }
         }]);
