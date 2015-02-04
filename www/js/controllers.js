@@ -166,7 +166,9 @@ angular.module('bioy.controllers', [])
 
         if ($rootScope.CurrentDay) {
             if (isLoggedIn) {
-                $scope.showStats = true;
+                // @TODO Stats have proven too difficult for now.
+                //$scope.showStats = true;
+                $scope.showStats = false;
             }
             $scope.firstTime = false;
         }
